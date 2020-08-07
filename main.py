@@ -21,13 +21,13 @@ quantile = 0.05 # 5%
 strategy = ls.combine_loss_min
 
 print(qcd_sig_data['qcdSigReco'].features())
-# train selector (and plot results => TODO)
-selector = dis.FlatCutDiscriminator(quantile=quantile, loss_strategy=strategy)
-selector.fit(qcd_sig_data['qcdSigReco'])
+# train discriminator (and plot results => TODO)
+discriminator = dis.FlatCutDiscriminator(quantile=quantile, loss_strategy=strategy)
+discriminator.fit(qcd_sig_data['qcdSigReco'])
 
 # apply selection to datasample
-qcd_sig_train_selected = selector.select(qcd_sig_data['qcdSigReco'])
-#qcd_sig_test_selected = selector.apply(qcd_sig_test)
+qcd_sig_train_selected = discriminator.select(qcd_sig_data['qcdSigReco'])
+#qcd_sig_test_selected = discriminator.apply(qcd_sig_test)
 
 # plot mjj qcd sig to check for flat ratio
 
