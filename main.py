@@ -3,6 +3,7 @@ import pofah.util.sample_factory as sf
 import pofah.util.experiment as ex
 import selection.discriminator as dis
 import selection.loss_strategy as ls
+import analysis.analyze_discriminator_cut as an
 
 
 # read in qcd signal region sample
@@ -26,11 +27,12 @@ discriminator = dis.FlatCutDiscriminator(quantile=quantile, loss_strategy=strate
 discriminator.fit(qcd_sig_data['qcdSigReco'])
 
 # apply selection to datasample
-qcd_sig_train_selected = discriminator.select(qcd_sig_data['qcdSigReco'])
+qcd_sig_train_selection = discriminator.select(qcd_sig_data['qcdSigReco'])
 #qcd_sig_test_selected = discriminator.apply(qcd_sig_test)
+qcd_sig_data['qcdSigReco'].add_feature('sel', qcd_sig_train_selection)
 
 # plot mjj qcd sig to check for flat ratio
-
+an.analyze_discriminator_cut(discriminator, qcd_sig_data['qcdSigReco'])
 
 # plot mjj accepted vs rejected signal to check for mass sculpting
 
