@@ -22,7 +22,7 @@ class Discriminator():
 		pass
 
 	def __repr__(self):
-		pass
+		'{}% qnt, {} strategy'.format(str(self.quantile*100), self.loss_strategy.__name__)
 
 
 class FlatCutDiscriminator(Discriminator):
@@ -39,13 +39,13 @@ class FlatCutDiscriminator(Discriminator):
 		return loss > self.cut
 
 	def __repr__(self):
-		return 'Flat Cut: {}% qnt, {} strategy'.format(str(self.quantile*100), self.loss_strategy.__name__)
+		return 'Flat Cut: ' + Discriminator.__repr__(self)
 
 
 class QRDiscriminator(Discriminator):
 
 	def __init__(self, *args, **kwargs):
-		Discriminator.__init__(*args, **kwargs)
+		Discriminator.__init__(self, *args, **kwargs)
 		self.model = qr.QuantileRegression()
 
 	def fit(self, jet_sample):
@@ -56,7 +56,11 @@ class QRDiscriminator(Discriminator):
 
 	def predict(self, jet_sample):
 		xx = np.reshape(jet_sample[self.mjj_key], (-1,1))
-		return self.model.predict(xx)
+		return self.model.predict(xx).flatten()
 
 	def select(self, jet_sample):
-		
+		loss_cut = self.predict(jet_sample)
+		return self.loss_strategy(jet_sample) > loss_cut
+
+	def __repr__(self):
+		return 'QR Cut: ' + Discriminator.__repr__(self)
