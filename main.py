@@ -3,7 +3,7 @@ import pofah.util.sample_factory as sf
 import pofah.util.experiment as ex
 import selection.discriminator as dis
 import selection.loss_strategy as ls
-import analysis.analyze_discriminator_cut as an
+import analysis.analysis_discriminator as an
 
 
 # read in qcd signal region sample
@@ -23,7 +23,7 @@ strategy = ls.combine_loss_min
 
 print(qcd_sig_data['qcdSigReco'].features())
 # train discriminator (and plot results => TODO)
-discriminator = dis.FlatCutDiscriminator(quantile=quantile, loss_strategy=strategy)
+discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy)
 discriminator.fit(qcd_sig_data['qcdSigReco'])
 
 # apply selection to datasample

@@ -1,0 +1,13 @@
+__pycache__/
+venv/
+results/
+plots/
+models/
+fig/
+data/
+.sys.v#*
+.idea/
+tensorboard/
+.git-old/
+*.pyc
+.ipynb*

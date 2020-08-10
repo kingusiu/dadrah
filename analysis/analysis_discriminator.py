@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 import numpy as np
-import dadrah.selection.discriminator as dis
 
 def analyze_discriminator_cut( discriminator, sample, feature_key='mJJ', fig_dir=None ):
     plt.figure(figsize=(8, 8))
@@ -9,7 +8,7 @@ def analyze_discriminator_cut( discriminator, sample, feature_key='mJJ', fig_dir
     x_max = np.percentile(sample[feature_key], 99.99)
     loss = discriminator.loss_strategy(sample)
     plt.hist2d(sample[feature_key], loss,
-           #range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-4)))), 
+           range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-4)))), 
            norm=LogNorm(), bins=100, label='signal data')
 
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
