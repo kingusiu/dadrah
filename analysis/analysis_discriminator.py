@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 import numpy as np
 
+import anpofah.util.plotting_util as pu
+
+
 def analyze_discriminator_cut( discriminator, sample, feature_key='mJJ', fig_dir=None ):
     plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])*0.8
@@ -19,3 +22,7 @@ def analyze_discriminator_cut( discriminator, sample, feature_key='mJJ', fig_dir
     plt.colorbar()
     plt.legend(loc='best')
     plt.draw()
+
+
+def plot_mass_spectrum_ratio():
+	pass

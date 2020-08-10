@@ -16,7 +16,6 @@ class QuantileRegression():
 
 
 	def build(self):
-		
 		self.inputs = tf.keras.Input(shape=(1,))
 		x = tf.keras.layers.Dense(self.num_nodes_per_layer, activation='relu')(self.inputs)
 		x = tf.keras.layers.Dense(self.num_nodes_per_layer, activation='relu')(x)
