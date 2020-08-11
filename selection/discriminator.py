@@ -55,7 +55,7 @@ class QRDiscriminator(Discriminator):
 	def fit(self, jet_sample):
 		loss = self.loss_strategy(jet_sample)
 		xx = np.reshape(jet_sample[self.mjj_key], (-1,1))
-		self.model.fit(xx, loss, epochs=5, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
+		self.model.fit(xx, loss, epochs=10, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
             callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
 
 	def predict(self, data):

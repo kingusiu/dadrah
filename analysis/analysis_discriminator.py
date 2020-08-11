@@ -5,6 +5,7 @@ import ROOT as rt
 import root_numpy as rtnp
 
 import anpofah.util.plotting_util as pu
+import dadrah.analysis.root_plotting_util as ropl
 
 
 def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', fig_dir=None):
@@ -26,15 +27,15 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', fig_dir=
     plt.draw()
 
 
-def plotMassSpectrum(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='', fig_dir=None):
+def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='', fig_dir=None):
     
-    h_a = create_TH1D(mjj_bg_like, name='h_acc', title='BG like', binning=binning, opt='overflow' )
+    h_a = ropl.create_TH1D(mjj_bg_like, name='h_acc', title='BG like', binning=binning, opt='overflow' )
     bin_edges = [h_a.GetXaxis().GetBinLowEdge(i) for i in range(1,h_a.GetNbinsX()+2)]
     h_a.SetLineColor(2)
     h_a.SetStats(0)
     h_a.Sumw2()
     
-    h_r = create_TH1D(mjj_sig_like, name='h_rej', title='SIG like', axis_title=['M_{jj} [GeV]', 'Events'], binning=binning,
+    h_r = ropl.create_TH1D(mjj_sig_like, name='h_rej', title='SIG like', axis_title=['M_{jj} [GeV]', 'Events'], binning=binning,
                       opt='overflow' )
     bin_edges = [h_a.GetXaxis().GetBinLowEdge(i) for i in range(1,h_a.GetNbinsX()+2)]
 
@@ -42,7 +43,7 @@ def plotMassSpectrum(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='', fig_d
     h_r.SetStats(0)
     h_r.Sumw2()
 
-    c = make_effiency_plot([h_r, h_a], ratio_bounds=[1e-4, 0.2], draw_opt = 'E', title=title)
+    c = ropl.make_effiency_plot([h_r, h_a], ratio_bounds=[1e-4, 0.2], draw_opt = 'E', title=title)
 
     c.pad1.SetLogy()
     c.pad2.SetLogy()
