@@ -3,7 +3,7 @@ import tensorflow as tf
 
 class QuantileRegression():
 
-	def __init__(self, quantile, num_nodes=100):
+	def __init__(self, quantile, num_nodes=10):
 		self.quantile = quantile
 		self.num_nodes_per_layer = num_nodes
 

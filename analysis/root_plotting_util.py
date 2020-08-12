@@ -46,6 +46,7 @@ def create_TH1D(x, name='h', title=None, binning=[None, None, None], weights=Non
         x[x>M] = M
 
     rtnp.fill_hist(h, x, weights=weights)
+    h.SetLineWidth(2)
     h.SetXTitle(axis_title[0])
     h.SetYTitle(axis_title[1])
     h.binning = binning
@@ -67,7 +68,7 @@ def make_effiency_plot(h_list_in, title = "", label = "", in_tags = None, ratio_
     pad1 = rt.TPad("pad1", "pad1", 0, 0.3, 1, 1.0)
     pad1.SetBottomMargin(0.03)
     pad1.SetLeftMargin(0.13)
-    # pad1.SetGridx()
+    pad1.SetGrid()
     pad1.Draw()
     pad1.cd()
 
@@ -98,7 +99,7 @@ def make_effiency_plot(h_list_in, title = "", label = "", in_tags = None, ratio_
     pad2.SetTopMargin(0.03)
     pad2.SetBottomMargin(0.27)
     pad2.SetLeftMargin(0.13)
-    # pad2.SetGrid()
+    pad2.SetGrid()
     pad2.Draw()
     pad2.cd()
 
