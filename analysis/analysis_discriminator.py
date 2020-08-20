@@ -3,6 +3,7 @@ from matplotlib.colors import LogNorm
 import numpy as np
 import ROOT as rt
 import root_numpy as rtnp
+import os
 
 import anpofah.util.plotting_util as pu
 import dadrah.analysis.root_plotting_util as ropl
@@ -27,7 +28,7 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', fig_dir=
     plt.draw()
 
 
-def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='', fig_dir=None):
+def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='', fig_dir=None, plot_name=None):
     
     h_a = ropl.create_TH1D(mjj_bg_like, name='h_acc', title='BG like', binning=binning, opt='overflow' )
     bin_edges = [h_a.GetXaxis().GetBinLowEdge(i) for i in range(1,h_a.GetNbinsX()+2)]
@@ -57,5 +58,7 @@ def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='
 
     c.Draw()
 
-    return c
+    if fig_dir is not None:
+        c.SaveAs(os.path.join(fig_dir,plot_name))
 
+    #return c
