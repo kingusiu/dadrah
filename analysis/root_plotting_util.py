@@ -3,6 +3,72 @@ import ROOT as rt
 import root_numpy as rtnp
 
 
+object_cache = []
+
+def create_random_name(prefix="", l=8):
+    """
+    Creates and returns a random name string consisting of *l* characters using uuid4 internally.
+    When *prefix* is given, the name will have the format ``<prefix>_<random_name>``.
+    """
+    name = uuid.uuid4().hex[:l]
+    if prefix:
+        name = "{}_{}".format(prefix, name)
+    return name
+
+
+def create_object(cls_name, *args, **kwargs):
+    """
+    Creates and returns a new ROOT object, constructed via ``ROOT.<cls_name>(*args, **kwargs)`` and
+    puts it in an object cache to prevent it from going out-of-scope given ROOTs memory management.
+    """
+    obj_name = create_random_name(cls_name)
+    obj = getattr(ROOT, cls_name)(obj_name, *args, **kwargs)
+    object_cache.append(obj)
+    return obj
+
+def clone_object(obj):
+    ''' clones obj and writes clone to cache '''
+    clone_name = create_random_name()
+    obj_clone = obj.Clone(clone_name)
+    object_cache.append(obj_clone)
+    return obj_clone
+
+def create_ratio_hist(h1, h2):
+    ''' creates histogram of h1 / h2 '''
+    h3 = clone_object(h1)
+    h3.Sumw2()
+    h3.SetStats(0)
+    h3.Divide(h2)
+    return h3
+
+def create_canvas_pads():
+    canv = create_object("TCanvas","canvas", 600, 600)
+    pad1 = create_object("TPad", "pad1", 0, 0.3, 1, 1.0)
+    pad1.Draw()
+    canv.cd()
+    pad2 = create_object("TPad", "pad2", 0, 0.05, 1, 0.3)
+    pad2.Draw()
+    return canv, pad1, pad2
+
+
+def make_root_plot(mjj_bg_like, mjj_sig_like):
+    # create H1 bg hist
+    h1 = create_object("TH1D")
+    h1.Fill(mjj_bg_like)
+    # create H2 sig hist
+    h2 = create_object("TH1D")
+    h2.Fill(mjj_sig_like)
+    # create H3 ratio hist
+    h3 = create_ratio_hist(h1, h2)
+    canv, pad1, pad2 = create_canvas_pads()
+    pad1.cd()
+    h1.Draw()
+    h2.Draw("Same")
+    pad2.cd()
+    h3.Draw("ep")
+    #canv.Draw()
+    
+
 def create_TH1D(x, name='h', title=None, binning=[None, None, None], weights=None, h2clone=None, axis_title = ['',''], opt=''):
     if title is None:
         title = name
