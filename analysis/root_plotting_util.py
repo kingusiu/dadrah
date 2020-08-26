@@ -6,6 +6,51 @@ import uuid
 
 object_cache = []
 
+hist_style = {
+    "LineWidth" : 2,
+    "Stats" : 0,
+    "Sumw2" : None
+}
+
+pad_style = {
+    "Grid": None,
+    "Logy": None,
+}
+
+legend_style = {
+    "BorderSize" : 0,
+    "FillStyle" : 0
+}
+
+line_style = {
+    "LineWidth" : 2,
+    "LineStyle" : 7
+}
+
+style_dict = {
+    
+    "TH1D" : hist_style,
+    "TPad" : pad_style,
+    "TCanvas": {},
+    "TLegend" : legend_style,
+    "TLine" : line_style
+}
+
+def apply_properties(obj, props):
+    for name, value in props.items():
+        # determine the setter to invoke
+        setter = getattr(obj, "Set{}".format(name), getattr(obj, name, None))
+        #print('setting {} with val {}'.format(setter.__name__, value))
+        if value is None:
+            setter()
+        else:
+            setter(value)
+
+def set_style(obj, props={}):
+    obj_type = type(obj).__name__
+    apply_properties(obj, {**style_dict[obj_type], **props})
+
+
 def create_random_name(prefix="", l=8):
     """
     Creates and returns a random name string consisting of *l* characters using uuid4 internally.
@@ -23,7 +68,12 @@ def create_object(cls_name, *args, **kwargs):
     puts it in an object cache to prevent it from going out-of-scope given ROOTs memory management.
     """
     obj_name = create_random_name(cls_name)
-    obj = getattr(rt, cls_name)(obj_name, *args, **kwargs)
+    if cls_name == "TLegend" or cls_name == "TLine": # TLegend has no name argument
+        obj = getattr(rt, cls_name)(*args, **kwargs)
+    else:    
+        obj = getattr(rt, cls_name)(obj_name, *args, **kwargs)
+    # set default style
+    set_style(obj)
     object_cache.append(obj)
     return obj
 
@@ -31,16 +81,27 @@ def clone_object(obj):
     ''' clones obj and writes clone to cache '''
     clone_name = create_random_name()
     obj_clone = obj.Clone(clone_name)
+    set_style(obj)
     object_cache.append(obj_clone)
     return obj_clone
 
-def create_ratio_hist(h1, h2):
+def create_hist(data, title, n_bins, min_bin, max_bin, props):
+    h = create_object("TH1D", title, n_bins, min_bin, max_bin)
+    rtnp.fill_hist(h, data)
+    set_style(h, props=props)
+    #h.GetXaxis().SetTitleSize(60)
+    #h.GetYaxis().SetTitleSize(60)
+    #h.GetXaxis().SetLabelSize(15)
+    #h.GetYaxis().SetLabelSize(15)
+    return h
+
+def create_ratio_hist(h1, h2, target_value=1.):
     ''' creates histogram of h1 / h2 '''
     h3 = clone_object(h1)
     h3.Sumw2()
-    h3.SetStats(0)
     h3.Divide(h2)
-    return h3
+    line = create_object("TLine", h3.GetXaxis().GetXmin(), target_value, h3.GetXaxis().GetXmax(), target_value)
+    return h3, line
 
 def create_canvas_pads():
     canv = create_object("TCanvas","canvas", 600, 600)
@@ -52,22 +113,30 @@ def create_canvas_pads():
     return canv, pad1, pad2
 
 
-def make_root_plot(mjj_bg_like, mjj_sig_like):
-    n_bins = 100
-    # create H1 bg hist
-    h1 = create_object("TH1D", "h", n_bins, 0., 1.)
-    rtnp.fill_hist(h1, mjj_bg_like)
-    # create H2 sig hist
-    h2 = create_object("TH1D", "h", n_bins, 0., 1.)
-    rtnp.fill_hist(h2, mjj_sig_like)
-    # create H3 ratio hist
-    h3 = create_ratio_hist(h1, h2)
+def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50):
+    min_bin = min(np.min(mjj_bg_like), np.min(mjj_sig_like))
+    max_bin = max(np.max(mjj_bg_like), np.max(mjj_sig_like))
+    print("min {}, max {}".format(min_bin, max_bin))
+    # create H1 BG hist
+    h1 = create_hist(mjj_bg_like, "BG like vs SIG like mjj distribution and their ratio", n_bins, min_bin, max_bin, props={"LineColor": rt.kBlue+1, "YTitle": 'num events', "XTitle": "M_{jj} [GeV]"})
+    # create H2 SIG hist
+    h2 = create_hist(mjj_sig_like, "h2", n_bins, min_bin, max_bin, props={"LineColor": rt.kRed})
+    # create H3 RATIO hist
+    h3, line = create_ratio_hist(h1, h2, target_value)
+    set_style(h3, props={"LineColor": rt.kMagenta+3, "Title": '', "XTitle": 'M_{jj} [GeV]', "YTitle": "ratio SIG / BG"})
+    set_style(line, props={"LineColor" : rt.kGreen})
     canv, pad1, pad2 = create_canvas_pads()
+    legend = create_object("TLegend", 0.6, 0.7, 0.9, 0.9)
+    set_style(legend)
+    legend.AddEntry(h1, "BG like")
+    legend.AddEntry(h2, "SIG like")
     pad1.cd()
     h1.Draw()
     h2.Draw("Same")
+    legend.Draw()
     pad2.cd()
     h3.Draw("ep")
+    line.Draw()
     canv.Draw()
     return
 
