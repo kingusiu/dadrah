@@ -113,12 +113,12 @@ def create_canvas_pads():
     return canv, pad1, pad2
 
 
-def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50):
+def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, title="ratio plot"):
     min_bin = min(np.min(mjj_bg_like), np.min(mjj_sig_like))
     max_bin = max(np.max(mjj_bg_like), np.max(mjj_sig_like))
     print("min {}, max {}".format(min_bin, max_bin))
     # create H1 BG hist
-    h1 = create_hist(mjj_bg_like, "BG like vs SIG like mjj distribution and their ratio", n_bins, min_bin, max_bin, props={"LineColor": rt.kBlue+1, "YTitle": 'num events', "XTitle": "M_{jj} [GeV]"})
+    h1 = create_hist(mjj_bg_like, title, n_bins, min_bin, max_bin, props={"LineColor": rt.kBlue+1, "YTitle": 'num events', "XTitle": "M_{jj} [GeV]"})
     # create H2 SIG hist
     h2 = create_hist(mjj_sig_like, "h2", n_bins, min_bin, max_bin, props={"LineColor": rt.kRed})
     # create H3 RATIO hist

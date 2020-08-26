@@ -57,11 +57,27 @@ class QRDiscriminator(Discriminator):
 		self.n_nodes = n_nodes
 		Discriminator.__init__(self, *args, **kwargs)
 
+	def set_mean_var_input_output(self, inp, outp):
+		self.mean_inp, self.mean_outp = np.mean(inp), np.mean(outp)
+		self.var_inp, self.var_outp = np.var(inp), np.var(outp)
+
+	def scale_input(self, inp):
+		inp_scaled = (inp - self.mean_inp) / self.var_inp
+		return np.reshape(inp_scaled, (-1,1))
+
+	def scale_output(self, outp):
+		return (outp - self.mean_outp) / self.var_outp
+
+	def unscale_output(self, outp):
+		return (outp * self.var_outp) + self.mean_outp
+
 	def fit(self, jet_sample):
 		self.model = qr.QuantileRegression(quantile=self.quantile, n_nodes=self.n_nodes).build()
+		x = jet_sample[self.mjj_key]
 		loss = self.loss_strategy(jet_sample)
-		xx = np.reshape(jet_sample[self.mjj_key], (-1,1))
-		self.model.fit(xx, loss, epochs=100, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
+		self.set_mean_var_input_output(x, loss)
+		xx, yy = self.scale_input(x), self.scale_output(loss)
+		self.model.fit(xx, yy, epochs=100, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
             callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
 
 	def save(self, path):
@@ -73,9 +89,9 @@ class QRDiscriminator(Discriminator):
 	def predict(self, data):
 		if isinstance(data, js.JetSample):
 			data = data[self.mjj_key]
-		xx = np.reshape(data, (-1,1))
-		return self.model.predict(xx).flatten()
-
+		xx = self.scale_input(data)
+		predicted = self.model.predict(xx).flatten() 
+		return self.unscale_output(predicted)
 
 	def select(self, jet_sample):
 		loss_cut = self.predict(jet_sample)
