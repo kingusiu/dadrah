@@ -1,6 +1,7 @@
 import numpy as np
 import ROOT as rt
 import root_numpy as rtnp
+import uuid
 
 
 object_cache = []
@@ -22,7 +23,7 @@ def create_object(cls_name, *args, **kwargs):
     puts it in an object cache to prevent it from going out-of-scope given ROOTs memory management.
     """
     obj_name = create_random_name(cls_name)
-    obj = getattr(ROOT, cls_name)(obj_name, *args, **kwargs)
+    obj = getattr(rt, cls_name)(obj_name, *args, **kwargs)
     object_cache.append(obj)
     return obj
 
@@ -52,12 +53,13 @@ def create_canvas_pads():
 
 
 def make_root_plot(mjj_bg_like, mjj_sig_like):
+    n_bins = 100
     # create H1 bg hist
-    h1 = create_object("TH1D")
-    h1.Fill(mjj_bg_like)
+    h1 = create_object("TH1D", "h", n_bins, 0., 1.)
+    rtnp.fill_hist(h1, mjj_bg_like)
     # create H2 sig hist
-    h2 = create_object("TH1D")
-    h2.Fill(mjj_sig_like)
+    h2 = create_object("TH1D", "h", n_bins, 0., 1.)
+    rtnp.fill_hist(h2, mjj_sig_like)
     # create H3 ratio hist
     h3 = create_ratio_hist(h1, h2)
     canv, pad1, pad2 = create_canvas_pads()
@@ -66,8 +68,9 @@ def make_root_plot(mjj_bg_like, mjj_sig_like):
     h2.Draw("Same")
     pad2.cd()
     h3.Draw("ep")
-    #canv.Draw()
-    
+    canv.Draw()
+    return
+
 
 def create_TH1D(x, name='h', title=None, binning=[None, None, None], weights=None, h2clone=None, axis_title = ['',''], opt=''):
     if title is None:
