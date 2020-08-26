@@ -95,11 +95,11 @@ def create_hist(data, title, n_bins, min_bin, max_bin, props):
     #h.GetYaxis().SetLabelSize(15)
     return h
 
-def create_ratio_hist(h1, h2, target_value=1.):
-    ''' creates histogram of h1 / h2 '''
-    h3 = clone_object(h1)
+def create_ratio_hist(h2, h1, target_value=1.):
+    ''' creates histogram of h2 / h1 '''
+    h3 = clone_object(h2)
     h3.Sumw2()
-    h3.Divide(h2)
+    h3.Divide(h1)
     line = create_object("TLine", h3.GetXaxis().GetXmin(), target_value, h3.GetXaxis().GetXmax(), target_value)
     return h3, line
 
@@ -122,7 +122,7 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     # create H2 SIG hist
     h2 = create_hist(mjj_sig_like, "h2", n_bins, min_bin, max_bin, props={"LineColor": rt.kRed})
     # create H3 RATIO hist
-    h3, line = create_ratio_hist(h1, h2, target_value)
+    h3, line = create_ratio_hist(h2, h1, target_value)
     set_style(h3, props={"LineColor": rt.kMagenta+3, "Title": '', "XTitle": 'M_{jj} [GeV]', "YTitle": "ratio SIG / BG"})
     set_style(line, props={"LineColor" : rt.kGreen})
     canv, pad1, pad2 = create_canvas_pads()
