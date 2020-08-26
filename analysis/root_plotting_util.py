@@ -47,8 +47,7 @@ def apply_properties(obj, props):
             setter(value)
 
 def set_style(obj, props={}):
-    obj_type = type(obj).__name__
-    apply_properties(obj, {**style_dict[obj_type], **props})
+    apply_properties(obj, props)
 
 
 def create_random_name(prefix="", l=8):
@@ -73,7 +72,7 @@ def create_object(cls_name, *args, **kwargs):
     else:    
         obj = getattr(rt, cls_name)(obj_name, *args, **kwargs)
     # set default style
-    set_style(obj)
+    set_style(obj, props=style_dict[cls_name])
     object_cache.append(obj)
     return obj
 
@@ -89,8 +88,8 @@ def create_hist(data, title, n_bins, min_bin, max_bin, props):
     h = create_object("TH1D", title, n_bins, min_bin, max_bin)
     rtnp.fill_hist(h, data)
     set_style(h, props=props)
-    #h.GetXaxis().SetTitleSize(60)
-    #h.GetYaxis().SetTitleSize(60)
+    h.GetXaxis().SetTitleSize(0.1)
+    h.GetYaxis().SetTitleSize(0.1)
     #h.GetXaxis().SetLabelSize(15)
     #h.GetYaxis().SetLabelSize(15)
     return h
@@ -113,7 +112,7 @@ def create_canvas_pads():
     return canv, pad1, pad2
 
 
-def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, title="ratio plot"):
+def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, title="ratio plot", fig_dir=None):
     min_bin = min(np.min(mjj_bg_like), np.min(mjj_sig_like))
     max_bin = max(np.max(mjj_bg_like), np.max(mjj_sig_like))
     print("min {}, max {}".format(min_bin, max_bin))
@@ -138,6 +137,8 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     h3.Draw("ep")
     line.Draw()
     canv.Draw()
+    if fig_dir is not None:
+        c.SaveAs(os.path.join(fig_dir,title.replace(' ','_')+'.jpg'))
     return
 
 

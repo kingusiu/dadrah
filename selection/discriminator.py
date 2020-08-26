@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import sklearn.ensemble as scikit
 import dadrah.selection.quantile_regression as qr
 import pofah.jet_sample as js
 
@@ -10,6 +11,19 @@ class Discriminator():
 		self.loss_strategy = loss_strategy
 		self.quantile = quantile
 		self.mjj_key = 'mJJ'
+
+	def set_mean_var_input_output(self, inp, outp):
+		self.mean_inp, self.mean_outp = np.mean(inp), np.mean(outp)
+		self.var_inp, self.var_outp = np.var(inp), np.var(outp)
+
+	def scale_input(self, inp):
+		return (inp - self.mean_inp) / self.var_inp
+
+	def scale_output(self, outp):
+		return (outp - self.mean_outp) / self.var_outp
+
+	def unscale_output(self, outp):
+		return (outp * self.var_outp) + self.mean_outp
 
 	def fit(self, jet_sample):
 		pass
@@ -57,19 +71,9 @@ class QRDiscriminator(Discriminator):
 		self.n_nodes = n_nodes
 		Discriminator.__init__(self, *args, **kwargs)
 
-	def set_mean_var_input_output(self, inp, outp):
-		self.mean_inp, self.mean_outp = np.mean(inp), np.mean(outp)
-		self.var_inp, self.var_outp = np.var(inp), np.var(outp)
-
 	def scale_input(self, inp):
-		inp_scaled = (inp - self.mean_inp) / self.var_inp
+		inp_scaled = Discriminator.scale_input(self, inp)
 		return np.reshape(inp_scaled, (-1,1))
-
-	def scale_output(self, outp):
-		return (outp - self.mean_outp) / self.var_outp
-
-	def unscale_output(self, outp):
-		return (outp * self.var_outp) + self.mean_outp
 
 	def fit(self, jet_sample):
 		self.model = qr.QuantileRegression(quantile=self.quantile, n_nodes=self.n_nodes).build()
@@ -100,3 +104,7 @@ class QRDiscriminator(Discriminator):
 	def __repr__(self):
 		return 'QR Cut: ' + Discriminator.__repr__(self)
 
+
+class GBRDiscriminator(Discriminator):
+
+	def fit(self, jet_sample):
