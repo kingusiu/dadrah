@@ -53,11 +53,12 @@ class FlatCutDiscriminator(Discriminator):
 
 class QRDiscriminator(Discriminator):
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, *args, n_nodes=20, **kwargs):
+		self.n_nodes = n_nodes
 		Discriminator.__init__(self, *args, **kwargs)
 
 	def fit(self, jet_sample):
-		self.model = qr.QuantileRegression(self.quantile).build()
+		self.model = qr.QuantileRegression(quantile=self.quantile, n_nodes=self.n_nodes).build()
 		loss = self.loss_strategy(jet_sample)
 		xx = np.reshape(jet_sample[self.mjj_key], (-1,1))
 		self.model.fit(xx, loss, epochs=100, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
