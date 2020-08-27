@@ -4,6 +4,7 @@ import numpy as np
 import ROOT as rt
 import root_numpy as rtnp
 import os
+from prettytable import PrettyTable
 
 import anpofah.util.plotting_util as pu
 import dadrah.analysis.root_plotting_util as ropl
@@ -26,6 +27,15 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', fig_dir=
     plt.colorbar()
     plt.legend(loc='best')
     plt.draw()
+
+
+def print_discriminator_efficiency_table(sample_dict):
+    table = PrettyTable()
+    table.field_names = ['Sample', 'Eff VAE [%]']
+    for name, sample in sample_dict.items():
+        eff = len(sample.rejected()) / float(len(sample.accepted()))
+        table.add_row([name, "{:.2f}".format(eff)])
+    print(table)
 
 
 def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='', fig_dir=None, plot_name=None):

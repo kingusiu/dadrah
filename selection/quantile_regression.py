@@ -22,6 +22,7 @@ class QuantileRegression():
 		x = tf.keras.layers.Dense(self.n_nodes_per_layer, activation='relu')(x)
 		x = tf.keras.layers.Dense(self.n_nodes_per_layer, activation='relu')(x)
 		self.output = tf.keras.layers.Dense(1)(x)
+		#self.output = tf.math.asinh(x) # output scaled to std normal distribution => last activation: arc sin hyperbolicus
 		model = tf.keras.Model(self.inputs, self.output)
 		model.compile(loss=self.quantile_loss(), optimizer='Adam') # Adam(lr=1e-4) TODO: add learning rate
 		model.summary()

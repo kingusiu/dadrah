@@ -2,9 +2,11 @@ import numpy as np
 import ROOT as rt
 import root_numpy as rtnp
 import uuid
+import os
 
 
 object_cache = []
+
 
 hist_style = {
     "LineWidth" : 2,
@@ -35,6 +37,21 @@ style_dict = {
     "TLegend" : legend_style,
     "TLine" : line_style
 }
+
+def get_bin_counts_positions_from_hist(h):
+    nx = h.GetNbinsX()
+
+    counts = np.zeros(nx)
+    pos = np.zeros(nx)
+
+    for ix in range(nx):
+        x = h.GetXaxis().GetBinCenter( ix+1 )
+        y = h.GetBinContent(ix+1)
+
+        counts[ix] = y
+        pos[ix] = x
+    return counts, pos
+
 
 def apply_properties(obj, props):
     for name, value in props.items():
@@ -88,8 +105,8 @@ def create_hist(data, title, n_bins, min_bin, max_bin, props):
     h = create_object("TH1D", title, n_bins, min_bin, max_bin)
     rtnp.fill_hist(h, data)
     set_style(h, props=props)
-    h.GetXaxis().SetTitleSize(0.1)
-    h.GetYaxis().SetTitleSize(0.1)
+    h.GetXaxis().SetTitleSize(0.02)
+    h.GetYaxis().SetTitleSize(0.02)
     #h.GetXaxis().SetLabelSize(15)
     #h.GetYaxis().SetLabelSize(15)
     return h
@@ -138,8 +155,8 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     line.Draw()
     canv.Draw()
     if fig_dir is not None:
-        c.SaveAs(os.path.join(fig_dir,title.replace(' ','_')+'.jpg'))
-    return
+        canv.SaveAs(os.path.join(fig_dir,title.replace(' ','_')+'.jpg'))
+    return h1, h2
 
 
 def create_TH1D(x, name='h', title=None, binning=[None, None, None], weights=None, h2clone=None, axis_title = ['',''], opt=''):

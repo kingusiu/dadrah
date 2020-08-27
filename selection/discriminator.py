@@ -108,3 +108,4 @@ class QRDiscriminator(Discriminator):
 class GBRDiscriminator(Discriminator):
 
 	def fit(self, jet_sample):
+		self.model = scikit.GradientBoostingRegressor(loss='quantile', alpha=1-self.quantile, learning_rate=.01, max_depth=2, verbose=2)
