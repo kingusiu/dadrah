@@ -33,8 +33,8 @@ def print_discriminator_efficiency_table(sample_dict):
     table = PrettyTable()
     table.field_names = ['Sample', 'Eff VAE [%]']
     for name, sample in sample_dict.items():
-        eff = len(sample.rejected()) / float(len(sample.accepted()))
-        table.add_row([name, "{:.2f}".format(eff)])
+        eff = len(sample.accepted()) / float(len(sample.rejected()))
+        table.add_row([name, "{:.2f}".format(eff*100)])
     print(table)
 
 
