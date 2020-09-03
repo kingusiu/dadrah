@@ -16,7 +16,6 @@ hist_style = {
 
 pad_style = {
     "Grid": None,
-    "Logy": None,
 }
 
 legend_style = {
@@ -123,6 +122,7 @@ def create_canvas_pads():
     canv = create_object("TCanvas","canvas", 600, 600)
     pad1 = create_object("TPad", "pad1", 0, 0.3, 1, 1.0)
     pad1.Draw()
+    set_style(pad1, props={'Logy':None}) # set mass hist pad to logscale 
     canv.cd()
     pad2 = create_object("TPad", "pad2", 0, 0.05, 1, 0.3)
     pad2.Draw()
