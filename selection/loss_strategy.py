@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import numpy as np
 
 '''
@@ -50,7 +51,7 @@ class LossStrategy():
         return self.fun(x)
 
 
-loss_strategies = OrderedDict({ 's1' : LossStrategy(combine_loss_l1, 'L1 > LT', 'l1_loss'),
+loss_strategy_dict = OrderedDict({ 's1' : LossStrategy(combine_loss_l1, 'L1 > LT', 'l1_loss'),
                      's2': LossStrategy(combine_loss_l2, 'L2 > LT', 'l2_loss'),
                      's3': LossStrategy(combine_loss_sum, 'L1 + L2 > LT', 'suml1l2_loss'),
                      's4': LossStrategy(combine_loss_max, 'L1 | L2 > LT', 'maxl1l2_loss'),
