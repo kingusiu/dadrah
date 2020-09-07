@@ -76,10 +76,10 @@ class QRDiscriminator(Discriminator):
 		return np.reshape(inp_scaled, (-1,1))
 
 	def fit(self, jet_sample):
-		self.model = qr.QuantileRegression(quantile=self.quantile, n_nodes=self.n_nodes).build()
 		x = jet_sample[self.mjj_key]
 		loss = self.loss_strategy(jet_sample)
 		self.set_mean_var_input_output(x, loss)
+		self.model = qr.QuantileRegression(quantile=self.quantile, n_nodes=self.n_nodes).build()
 		xx, yy = self.scale_input(x), self.scale_output(loss)
 		self.model.fit(xx, yy, epochs=100, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
             callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
