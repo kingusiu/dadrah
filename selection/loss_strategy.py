@@ -39,6 +39,20 @@ def combine_loss_kl2(x):
     ''' KL J2 '''
     return x['j2KlLoss']
 
+def combine_loss_kl_sum(x):
+    ''' KL J1 + KL J2 '''
+    return x['j1KlLoss'] + x['j2KlLoss']
+
+def combine_loss_kl_max(x):
+    ''' KL J1 | KL J2 '''
+    return np.maximum(x['j1KlLoss'], x['j2KlLoss'])
+
+def combine_loss_kl_min(x):
+    ''' KL J1 & KL J2 '''
+    return np.minimum(x['j1KlLoss'], x['j2KlLoss'])
+
+
+
 
 class LossStrategy():
 
@@ -56,6 +70,10 @@ loss_strategy_dict = OrderedDict({ 's1' : LossStrategy(combine_loss_l1, 'L1 > LT
                      's3': LossStrategy(combine_loss_sum, 'L1 + L2 > LT', 'suml1l2_loss'),
                      's4': LossStrategy(combine_loss_max, 'L1 | L2 > LT', 'maxl1l2_loss'),
                      's5': LossStrategy(combine_loss_min, 'L1 & L2 > LT', 'minl1l2_loss'),
-                     'k1': LossStrategy(combine_loss_kl1, 'KL J1 > LT', 'kl1_loss'),
-                     'k2': LossStrategy(combine_loss_kl1, 'KL J2 > LT', 'kl2_loss'),
+                     'kl1': LossStrategy(combine_loss_kl1, 'KL J1 > LT', 'kl1_loss'),
+                     'kl2': LossStrategy(combine_loss_kl1, 'KL J2 > LT', 'kl2_loss'),
+                     'kl3': LossStrategy(combine_loss_kl_sum, 'KL J1 + KL J2 > LT', 'sumKL_loss'),
+                     'kl4': LossStrategy(combine_loss_kl_max, 'KL J1 | KL J2 > LT', 'maxKL_loss'),
+                     'kl5': LossStrategy(combine_loss_kl_min, 'KL J1 & KL J2 > LT', 'minKL_loss'),
+
                  })
