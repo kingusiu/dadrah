@@ -51,6 +51,9 @@ def combine_loss_kl_min(x):
     ''' KL J1 & KL J2 '''
     return np.minimum(x['j1KlLoss'], x['j2KlLoss'])
 
+def combine_loss_reco_kl_min(x):
+    ''' (RecoLoss J1 + 10* KL J1) & (RecoLoss J2 + 10* KL J2) '''
+    return np.minimum(x['j1RecoLoss']+10.*x['j1KlLoss'], x['j2RecoLoss']+10.*x['j2KlLoss']) 
 
 
 
@@ -76,4 +79,5 @@ loss_strategy_dict = OrderedDict({
                      'kl3': LossStrategy(combine_loss_kl_sum, 'KL J1 + KL J2 > LT', 'sumKL_loss'),
                      'kl4': LossStrategy(combine_loss_kl_max, 'KL J1 | KL J2 > LT', 'maxKL_loss'),
                      'kl5': LossStrategy(combine_loss_kl_min, 'KL J1 & KL J2 > LT', 'minKL_loss'),
+                     'rk5': LossStrategy(combine_loss_reco_kl_min, '(R J1 + 10* KL J1) & (R J2 + 10* KL J2)', 'minRecoKL_loss'), 
                  })
