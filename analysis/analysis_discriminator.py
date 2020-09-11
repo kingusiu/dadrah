@@ -11,7 +11,7 @@ import dadrah.analysis.root_plotting_util as ropl
 
 
 def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_name='discr_cut', fig_dir=None):
-    plt.figure(figsize=(8, 8))
+    fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])*0.8
     x_max = np.percentile(sample[feature_key], 99.99)
     loss = discriminator.loss_strategy(sample)

@@ -11,6 +11,7 @@ import pofah.path_constants.sample_dict_file_parts_selected as sds
 import datetime
 import dadrah.analysis.root_plotting_util as rpu
 import dadrah.selection.selection_util as seu
+import dadrah.loss_strategy as lost
 from importlib import reload
 import os
 import setGPU
@@ -35,13 +36,13 @@ reco_loss_j1_key = 'j1RecoLoss'
 QR_train_share = 0.3
 
 experiment = ex.Experiment(run_n)
-paths = sf.SamplePathDirFactory(sd.path_dict).extend_base_path(experiment.run_dir)
+paths = sf.SamplePathDirFactory(sd.path_dict).update_base_path({'$run$': experiment.run_dir})
 
 data = sf.read_inputs_to_jet_sample_dict_from_dir(all_samples, paths)
 
 # define quantile and loss-strategy for discimination
-quantiles = [0.1, 0.3, 0.5, 0.7, 0.9] # 5%
-strategy = ls.combine_loss_min
+quantiles = [0.01, 0.05, 0.1, 0.3, 0.5, 0.7, 0.9] # 5%
+strategy = lost.loss_strategy_dict['s5'] # L1 & L2 > LT
 qcd_sig_sample = data[SM_sample]
 #split qcd sample into training and testing
 qcd_train, qcd_test = js.split_jet_sample_train_test(qcd_sig_sample, QR_train_share)
@@ -51,8 +52,7 @@ print(qcd_sig_sample.features())
 
 for quantile in quantiles:
 
-    experiment.analysis_dir = os.path.join(experiment.analysis_dir, 'qnt'+str(int(quantile*100)))
-    experiment.setup(analysis_dir=True)
+    experiment = ex.Experiment(run_n=run_n, param_dict={{'$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str}}).setup(analysis_dir=True)
     print('writing analysis results to ', experiment.analysis_dir)
 
     discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)
@@ -101,25 +101,14 @@ for quantile in quantiles:
         # save in counts sig like & bg like for qcd SR test set
         counting_experiment[sample_id] = seu.get_bin_counts_sig_like_bg_like(sample, bin_edges)
 
-    ### plot losses (reco vs kl) for accepted and rejected sample
-    for sample in data.values():
-        # plot BG like J1
-        pu.plot_hist_2d(sample.rejected('j1RecoLoss'),sample.rejected('j1KlLoss'), xlabel='reco loss', ylabel='kl loss', title=sample.name+' Reco vs KL J1 BG like', clip_outlier=True, fig_dir=experiment.analysis_dir_fig, plot_name=sample.plot_name()+'_RecoVsKLJ1_BGlike.png')
-        # plot SIG like J1
-        pu.plot_hist_2d(sample.accepted('j1RecoLoss'),sample.accepted('j1KlLoss'), xlabel='reco loss', ylabel='kl loss', title=sample.name+' Reco vs KL J1 SIG like', clip_outlier=True, fig_dir=experiment.analysis_dir_fig, plot_name=sample.plot_name()+'_RecoVsKLJ1_SIGlike.png')
-        # plot BG like J2
-        pu.plot_hist_2d(sample.rejected('j2RecoLoss'),sample.rejected('j2KlLoss'), xlabel='reco loss', ylabel='kl loss', title=sample.name+' Reco vs KL J2 BG like', clip_outlier=True, fig_dir=experiment.analysis_dir_fig, plot_name=sample.plot_name()+'_RecoVsKLJ2_BGlike.png')
-        # plot SIG like J1
-        pu.plot_hist_2d(sample.accepted('j2RecoLoss'),sample.accepted('j2KlLoss'), xlabel='reco loss', ylabel='kl loss', title=sample.name+' Reco vs KL J2 SIG like', clip_outlier=True, fig_dir=experiment.analysis_dir_fig, plot_name=sample.plot_name()+'_RecoVsKLJ2_SIGlike.png')
-        
-
     ### write selected samples
 
-    result_paths = sf.SamplePathDirFactory(sds.path_dict).update_base_path({'$run$': experiment.run_dir, '$quantile$': str(int(quantile*100))})
+    result_paths = sf.SamplePathDirFactory(sds.path_dict).update_base_path({'$run$': experiment.run_dir, '$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str})
 
     for sample_id, sample in data.items():
-        print('writing results for {} to {}'.format(sds.path_dict['sample_name'][sample_id], os.path.join(result_paths.sample_dir_path(sample_id), result_paths.sample_file_path(sample_id))))
-        sample.dump(os.path.join(result_paths.sample_dir_path(sample_id), result_paths.sample_file_path(sample_id)))
+        result_file_path = os.path.join(result_paths.sample_dir_path(sample_id), result_paths.sample_file_path(sample_id))
+        print('writing results for {} to {}'.format(sds.path_dict['sample_name'][sample_id], result_file_path))
+        sample.dump(result_file_path)
 
     ### write bin counts to file
     reswr.write_bin_counts_to_file(counting_experiment, bin_edges, os.path.join(experiment.analysis_dir_bin_count,'sel_bin_count_'+experiment.run_dir+'_tsz'+str(int(QR_train_share*100))+'pc_q'+str(quantile*100)+'.h5'))
