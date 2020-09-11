@@ -39,18 +39,15 @@ qcd_sig_sample = data[SM_sample]
 qcd_train, qcd_test = js.split_jet_sample_train_test(qcd_sig_sample, QR_train_share)
 # update data_dictionary
 data[SM_sample] = qcd_test
-
-
 print(qcd_sig_sample.features())
-discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)
-discriminator.fit(qcd_train)
 
+for quantile in quantiles:
 
-# In[7]:
+    discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)
+    discriminator.fit(qcd_train)
 
-
-# plot mjj qcd sig to check for flat ratio
-an.analyze_discriminator_cut(discriminator, qcd_train)
+    # plot mjj qcd sig to check for flat ratio
+    an.analyze_discriminator_cut(discriminator, qcd_train)
 
 
 # In[8]:

@@ -10,7 +10,7 @@ import anpofah.util.plotting_util as pu
 import dadrah.analysis.root_plotting_util as ropl
 
 
-def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', fig_dir=None):
+def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_name='analysis_discriminator', fig_dir=None):
     plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])*0.8
     x_max = np.percentile(sample[feature_key], 99.99)
@@ -27,6 +27,9 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', fig_dir=
     plt.colorbar()
     plt.legend(loc='best')
     plt.draw()
+    if fig_dir:
+        fig.savefig(os.path.join(fig_dir, plot_name + '.png'), bbox_inches='tight')
+    plt.close(fig)
 
 
 def print_discriminator_efficiency_table(sample_dict):
