@@ -97,7 +97,7 @@ for quantile in quantiles:
     for sample_id in BSM_samples:
         sample = data[sample_id]
         title = sample.name + ": BG like vs SIG like mjj distribution and ratio qnt {}".format(int(quantile*100))
-        rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=30, title=title, fig_dir=experiment.analysis_dir_fig)
+        rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=40, title=title, plot_name='mJJ_raio_bg_vs_sig_'+sample.name,fig_dir=experiment.analysis_dir_fig)
         # save in counts sig like & bg like for qcd SR test set
         counting_experiment[sample_id] = seu.get_bin_counts_sig_like_bg_like(sample, bin_edges)
 

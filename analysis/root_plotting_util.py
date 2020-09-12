@@ -129,7 +129,7 @@ def create_canvas_pads():
     return canv, pad1, pad2
 
 
-def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, binning=None, title="ratio plot", fig_dir=None):
+def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, binning=None, title="ratio plot", plot_name='ratio_plot', fig_dir=None):
     min_bin = min(np.min(mjj_bg_like), np.min(mjj_sig_like))
     max_bin = max(np.max(mjj_bg_like), np.max(mjj_sig_like))
     print("min {}, max {}".format(min_bin, max_bin))
@@ -155,7 +155,7 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     line.Draw()
     canv.Draw()
     if fig_dir is not None:
-        canv.SaveAs(os.path.join(fig_dir,title.replace(' ','_')+'.jpg'))
+        canv.SaveAs(os.path.join(fig_dir,plot_name+'.jpg'))
     return [h1, h2]
 
 
