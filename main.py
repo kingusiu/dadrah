@@ -11,7 +11,7 @@ import pofah.path_constants.sample_dict_file_parts_selected as sds
 import datetime
 import dadrah.analysis.root_plotting_util as rpu
 import dadrah.selection.selection_util as seu
-import dadrah.loss_strategy as lost
+import dadrah.selection.loss_strategy as lost
 from importlib import reload
 import os
 import setGPU
@@ -52,7 +52,7 @@ print(qcd_sig_sample.features())
 
 for quantile in quantiles:
 
-    experiment = ex.Experiment(run_n=run_n, param_dict={{'$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str}}).setup(analysis_dir=True)
+    experiment = ex.Experiment(run_n=run_n, param_dict={'$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str}).setup(analysis_dir=True)
     print('writing analysis results to ', experiment.analysis_dir)
 
     discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)

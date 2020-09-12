@@ -45,7 +45,7 @@ class Discriminator():
 		pass
 
 	def __repr__(self):
-		return '{}% qnt, {} strategy'.format(str(self.quantile*100), self.loss_strategy.__name__)
+		return '{}% qnt, {} strategy'.format(str(self.quantile*100), self.loss_strategy.title_str)
 
 
 class FlatCutDiscriminator(Discriminator):

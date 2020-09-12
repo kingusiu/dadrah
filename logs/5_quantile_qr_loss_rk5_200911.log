@@ -1,0 +1,57 @@
+setGPU: Setting GPU to: 4
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts
+num files in dir: 26
+168377 events passed mass cut at 1100.0
+168376 events passed mass cut at 1100.0
+168376 events passed mass cut at 1100.0
+168376 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211319 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211319 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211319 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts :  26
+
+num events read in dir  5322542
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts
+num files in dir: 2
+256253 events passed mass cut at 1100.0
+256252 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts :  2
+
+num events read in dir  512505
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts
+num files in dir: 2
+257745 events passed mass cut at 1100.0
+257744 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts :  2
+
+num events read in dir  515489
+['mJJ', 'j1Pt', 'j1Eta', 'j1Phi', 'j1M', 'j1E', 'j2Pt', 'j2M', 'j2E', 'DeltaEtaJJ', 'DeltaPhiJJ', 'j1TotalLoss', 'j2TotalLoss', 'j2RecoLoss', 'j2KlLoss', 'j1RecoLoss', 'j1KlLoss']
+Traceback (most recent call last):
+  File "main.py", line 55, in <module>
+    experiment = ex.Experiment(run_n=run_n, param_dict={'$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str}).setup(analysis_dir=True)
+TypeError: __init__() got an unexpected keyword argument 'param_dict'
