@@ -29,7 +29,7 @@ def make_qr_model_str(train_sz, quantile, date=True):
 run_n = 101
 SM_sample = 'qcdSigAllReco'
 #BSM_samples = ['GtoWW15naReco', 'GtoWW15brReco', 'GtoWW25naReco', 'GtoWW25brReco','GtoWW35naReco', 'GtoWW35brReco', 'GtoWW45naReco', 'GtoWW45brReco']
-BSM_samples = ['GtoWW25naReco', 'GtoWW35naReco']
+BSM_samples = ['GtoWW15naReco', 'GtoWW25naReco', 'GtoWW35naReco', 'GtoWW45naReco']
 all_samples = [SM_sample] + BSM_samples
 mjj_key = 'mJJ'
 reco_loss_j1_key = 'j1RecoLoss'
@@ -42,7 +42,7 @@ data = sf.read_inputs_to_jet_sample_dict_from_dir(all_samples, paths)
 
 # define quantile and loss-strategy for discimination
 quantiles = [0.01, 0.05, 0.1, 0.3, 0.5, 0.7, 0.9] # 5%
-strategy = lost.loss_strategy_dict['s5'] # L1 & L2 > LT
+strategy = lost.loss_strategy_dict['rk5'] # L1 & L2 > LT
 qcd_sig_sample = data[SM_sample]
 #split qcd sample into training and testing
 qcd_train, qcd_test = js.split_jet_sample_train_test(qcd_sig_sample, QR_train_share)
@@ -53,7 +53,7 @@ print(qcd_sig_sample.features())
 for quantile in quantiles:
 
     experiment = ex.Experiment(run_n=run_n, param_dict={'$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str}).setup(analysis_dir=True)
-    print('writing analysis results to ', experiment.analysis_dir)
+    print('writing analysis results to ', experiment.analysis_dir_fig)
 
     discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)
     discriminator.fit(qcd_train)
@@ -72,7 +72,7 @@ for quantile in quantiles:
     selection = discriminator.select(qcd_train)
     qcd_train.add_feature('sel', selection)
     title = "QCD training set: BG like vs SIG like mjj distribution and their ratio qnt {}".format(int(quantile*100))
-    h_bg_like_qcd_train, h_sig_like_qcd_train = rpu.make_bg_vs_sig_ratio_plot(qcd_train.rejected(mjj_key), qcd_train.accepted(mjj_key), target_value=quantile, n_bins=30, title=title, fig_dir=experiment.analysis_dir_fig)
+    h_bg_like_qcd_train, h_sig_like_qcd_train = rpu.make_bg_vs_sig_ratio_plot(qcd_train.rejected(mjj_key), qcd_train.accepted(mjj_key), target_value=quantile, n_bins=30, title=title, plot_name='mJJ_raio_bg_vs_sig_qcdSR_train', fig_dir=experiment.analysis_dir_fig)
 
     # ### qcd test set
     sample = data[SM_sample]
@@ -80,7 +80,7 @@ for quantile in quantiles:
     selection = discriminator.select(sample)
     sample.add_feature('sel', selection)
     title = "QCD test set: BG like vs SIG like mjj distribution and ratio qnt {}".format(int(quantile*100))
-    h_bg_like_qcd_test, h_sig_like_qcd_test = rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=30, title=title, fig_dir=experiment.analysis_dir_fig)
+    h_bg_like_qcd_test, h_sig_like_qcd_test = rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=30, title=title, plot_name='mJJ_raio_bg_vs_sig_'+sample.name, fig_dir=experiment.analysis_dir_fig)
     # save in counts sig like & bg like for qcd SR test set
     counting_experiment[SM_sample] = seu.get_bin_counts_sig_like_bg_like(sample, bin_edges)
 
@@ -97,7 +97,7 @@ for quantile in quantiles:
     for sample_id in BSM_samples:
         sample = data[sample_id]
         title = sample.name + ": BG like vs SIG like mjj distribution and ratio qnt {}".format(int(quantile*100))
-        rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=40, title=title, plot_name='mJJ_raio_bg_vs_sig_'+sample.name,fig_dir=experiment.analysis_dir_fig)
+        rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=40, title=title, plot_name='mJJ_raio_bg_vs_sig_'+sample.name, fig_dir=experiment.analysis_dir_fig)
         # save in counts sig like & bg like for qcd SR test set
         counting_experiment[sample_id] = seu.get_bin_counts_sig_like_bg_like(sample, bin_edges)
 

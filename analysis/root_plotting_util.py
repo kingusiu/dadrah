@@ -155,7 +155,7 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     line.Draw()
     canv.Draw()
     if fig_dir is not None:
-        canv.SaveAs(os.path.join(fig_dir,plot_name+'.jpg'))
+        canv.SaveAs(os.path.join(fig_dir, plot_name+'.png'))
     return [h1, h2]
 
 

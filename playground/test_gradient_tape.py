@@ -18,12 +18,15 @@ def make_model(n_nodes=20):
 	model = tf.keras.Model(inputs, output)
 	return model
 
-model = make_model()
-print(model.summary())
+if __name__ == "__main__":
 
-targets = np.arange(0.,10.)
-predictions = np.random.random(size=10)*10
-print(targets)
-print(predictions)
-print(targets-predictions)
-print(quantile_loss(targets, predictions))
+	model = make_model()
+	print(model.summary())
+
+	targets = np.arange(0.,10.)
+	predictions = np.random.random(size=10)*10
+	print(targets)
+	print(predictions)
+	print(targets-predictions)
+	print(quantile_loss(targets, predictions))
+	print(quantile_loss(targets, predictions))

@@ -1,0 +1,912 @@
+setGPU: Setting GPU to: 0
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts
+num files in dir: 26
+168377 events passed mass cut at 1100.0
+168376 events passed mass cut at 1100.0
+168376 events passed mass cut at 1100.0
+168376 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211319 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211319 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211320 events passed mass cut at 1100.0
+211319 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts :  26
+
+num events read in dir  5322542
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts
+num files in dir: 2
+224016 events passed mass cut at 1100.0
+224016 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts :  2
+
+num events read in dir  448032
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts
+num files in dir: 2
+256253 events passed mass cut at 1100.0
+256252 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts :  2
+
+num events read in dir  512505
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts
+num files in dir: 2
+257745 events passed mass cut at 1100.0
+257744 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts :  2
+
+num events read in dir  515489
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts
+reading  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts
+num files in dir: 2
+216178 events passed mass cut at 1100.0
+216178 events passed mass cut at 1100.0
+
+num files read in dir  /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts :  2
+
+num events read in dir  432356
+['mJJ', 'j1Pt', 'j1Eta', 'j1Phi', 'j1M', 'j1E', 'j2Pt', 'j2M', 'j2E', 'DeltaEtaJJ', 'DeltaPhiJJ', 'j1TotalLoss', 'j2TotalLoss', 'j2RecoLoss', 'j2KlLoss', 'j1RecoLoss', 'j1KlLoss']
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1
+WARNING: Logging before flag parsing goes to stderr.
+W0912 15:55:48.094583 139781005768512 deprecation.py:506] From /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/lib/python3.6/site-packages/tensorflow/python/ops/init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+W0912 15:55:48.209614 139781005768512 deprecation.py:323] From /eos/home-k/kiwoznia/dev/data_driven_anomaly_hunting/dadrah/selection/quantile_regression.py:14: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense (Dense)                (None, 70)                140       
+_________________________________________________________________
+dense_1 (Dense)              (None, 70)                4970      
+_________________________________________________________________
+dense_2 (Dense)              (None, 70)                4970      
+_________________________________________________________________
+dense_3 (Dense)              (None, 70)                4970      
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+2020-09-12 15:55:48.581029: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+2020-09-12 15:55:48.606553: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2200000000 Hz
+2020-09-12 15:55:48.612275: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x1a9405e0 executing computations on platform Host. Devices:
+2020-09-12 15:55:48.612324: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): <undefined>, <undefined>
+2020-09-12 15:55:48.677185: W tensorflow/compiler/jit/mark_for_compilation_pass.cc:1412] (One-time warning): Not using XLA:CPU for cluster because envvar TF_XLA_FLAGS=--tf_xla_cpu_global_jit was not set.  If you want XLA:CPU, either set that envvar, or use experimental_jit_scope to enable XLA:CPU.  To confirm that XLA is active, pass --vmodule=xla_compilation_cache=1 (as a proper command-line flag, not via TF_XLA_FLAGS) or set the envvar XLA_FLAGS=--xla_hlo_profile.
+1277409/1277409 - 45s - loss: 0.0054 - val_loss: 0.0051
+Epoch 2/100
+1277409/1277409 - 45s - loss: 0.0052 - val_loss: 0.0052
+Epoch 3/100
+1277409/1277409 - 45s - loss: 0.0051 - val_loss: 0.0052
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 46s - loss: 0.0051 - val_loss: 0.0051
+Epoch 5/100
+1277409/1277409 - 46s - loss: 0.0050 - val_loss: 0.0050
+Epoch 6/100
+1277409/1277409 - 46s - loss: 0.0050 - val_loss: 0.0050
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0051
+Epoch 8/100
+1277409/1277409 - 46s - loss: 0.0050 - val_loss: 0.0050
+Epoch 9/100
+1277409/1277409 - 46s - loss: 0.0050 - val_loss: 0.0050
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 11/100
+1277409/1277409 - 44s - loss: 0.0050 - val_loss: 0.0050
+Epoch 12/100
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 14/100
+1277409/1277409 - 44s - loss: 0.0050 - val_loss: 0.0050
+Epoch 15/100
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 17/100
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 18/100
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 20/100
+1277409/1277409 - 45s - loss: 0.0050 - val_loss: 0.0050
+Epoch 00020: early stopping
+saving model  QRmodel_train_sz30pc_qnt1_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |     1.00    |
+| GtoWW15naReco |     2.56    |
+| GtoWW25naReco |     3.37    |
+| GtoWW35naReco |     3.87    |
+| GtoWW45naReco |     5.58    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q1/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q1/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5
+Model: "model_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_2 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense_5 (Dense)              (None, 70)                140       
+_________________________________________________________________
+dense_6 (Dense)              (None, 70)                4970      
+_________________________________________________________________
+dense_7 (Dense)              (None, 70)                4970      
+_________________________________________________________________
+dense_8 (Dense)              (None, 70)                4970      
+_________________________________________________________________
+dense_9 (Dense)              (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+1277409/1277409 - 47s - loss: 0.0155 - val_loss: 0.0153
+Epoch 2/100
+1277409/1277409 - 47s - loss: 0.0153 - val_loss: 0.0151
+Epoch 3/100
+1277409/1277409 - 47s - loss: 0.0152 - val_loss: 0.0150
+Epoch 4/100
+1277409/1277409 - 47s - loss: 0.0152 - val_loss: 0.0151
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 47s - loss: 0.0152 - val_loss: 0.0152
+Epoch 6/100
+1277409/1277409 - 47s - loss: 0.0151 - val_loss: 0.0150
+Epoch 7/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0151
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 9/100
+1277409/1277409 - 47s - loss: 0.0151 - val_loss: 0.0150
+Epoch 10/100
+1277409/1277409 - 47s - loss: 0.0151 - val_loss: 0.0150
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 12/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 13/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 15/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 16/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 18/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 19/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 21/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 22/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 24/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 25/100
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+1277409/1277409 - 46s - loss: 0.0151 - val_loss: 0.0150
+Epoch 00026: early stopping
+saving model  QRmodel_train_sz30pc_qnt5_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |     4.99    |
+| GtoWW15naReco |     9.75    |
+| GtoWW25naReco |    12.09    |
+| GtoWW35naReco |    13.53    |
+| GtoWW45naReco |    13.37    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q5/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q5/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10
+Model: "model_2"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_3 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense_10 (Dense)             (None, 70)                140       
+_________________________________________________________________
+dense_11 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_12 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_13 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_14 (Dense)             (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+1277409/1277409 - 46s - loss: 0.0235 - val_loss: 0.0237
+Epoch 2/100
+1277409/1277409 - 46s - loss: 0.0233 - val_loss: 0.0233
+Epoch 3/100
+1277409/1277409 - 47s - loss: 0.0232 - val_loss: 0.0231
+Epoch 4/100
+1277409/1277409 - 45s - loss: 0.0232 - val_loss: 0.0233
+Epoch 5/100
+1277409/1277409 - 45s - loss: 0.0232 - val_loss: 0.0231
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 45s - loss: 0.0232 - val_loss: 0.0230
+Epoch 7/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 8/100
+1277409/1277409 - 46s - loss: 0.0231 - val_loss: 0.0230
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 10/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 11/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 13/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 14/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 44s - loss: 0.0231 - val_loss: 0.0230
+Epoch 16/100
+1277409/1277409 - 43s - loss: 0.0231 - val_loss: 0.0230
+Epoch 17/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 19/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 20/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 22/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 23/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 25/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 26/100
+1277409/1277409 - 45s - loss: 0.0231 - val_loss: 0.0230
+Epoch 00026: early stopping
+saving model  QRmodel_train_sz30pc_qnt10_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |     9.99    |
+| GtoWW15naReco |    16.66    |
+| GtoWW25naReco |    20.64    |
+| GtoWW35naReco |    22.60    |
+| GtoWW45naReco |    21.03    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q10/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q10/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30
+Model: "model_3"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_4 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense_15 (Dense)             (None, 70)                140       
+_________________________________________________________________
+dense_16 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_17 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_18 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_19 (Dense)             (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+1277409/1277409 - 48s - loss: 0.0384 - val_loss: 0.0384
+Epoch 2/100
+1277409/1277409 - 47s - loss: 0.0383 - val_loss: 0.0382
+Epoch 3/100
+1277409/1277409 - 47s - loss: 0.0382 - val_loss: 0.0382
+Epoch 4/100
+1277409/1277409 - 47s - loss: 0.0382 - val_loss: 0.0384
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 47s - loss: 0.0382 - val_loss: 0.0383
+Epoch 6/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 7/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0382
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0382
+Epoch 9/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 10/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 12/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 13/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 15/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 16/100
+1277409/1277409 - 46s - loss: 0.0381 - val_loss: 0.0381
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 18/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 19/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 21/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 22/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 24/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 25/100
+1277409/1277409 - 47s - loss: 0.0381 - val_loss: 0.0381
+Epoch 00025: early stopping
+saving model  QRmodel_train_sz30pc_qnt30_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |    30.00    |
+| GtoWW15naReco |    39.06    |
+| GtoWW25naReco |    43.22    |
+| GtoWW35naReco |    45.12    |
+| GtoWW45naReco |    44.86    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q30/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q30/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50
+Model: "model_4"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_5 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense_20 (Dense)             (None, 70)                140       
+_________________________________________________________________
+dense_21 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_22 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_23 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_24 (Dense)             (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+1277409/1277409 - 47s - loss: 0.0395 - val_loss: 0.0393
+Epoch 2/100
+1277409/1277409 - 48s - loss: 0.0394 - val_loss: 0.0396
+Epoch 3/100
+1277409/1277409 - 48s - loss: 0.0393 - val_loss: 0.0393
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 48s - loss: 0.0393 - val_loss: 0.0394
+Epoch 5/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 6/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 8/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 9/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 11/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 12/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 47s - loss: 0.0392 - val_loss: 0.0393
+Epoch 14/100
+1277409/1277409 - 47s - loss: 0.0392 - val_loss: 0.0393
+Epoch 15/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 17/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 18/100
+1277409/1277409 - 48s - loss: 0.0392 - val_loss: 0.0393
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1277409/1277409 - 47s - loss: 0.0392 - val_loss: 0.0393
+Epoch 20/100
+1277409/1277409 - 47s - loss: 0.0392 - val_loss: 0.0393
+Epoch 21/100
+1277409/1277409 - 47s - loss: 0.0392 - val_loss: 0.0393
+Epoch 00021: early stopping
+saving model  QRmodel_train_sz30pc_qnt50_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |    50.01    |
+| GtoWW15naReco |    59.25    |
+| GtoWW25naReco |    61.80    |
+| GtoWW35naReco |    63.01    |
+| GtoWW45naReco |    63.13    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q50/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q50/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70
+Model: "model_5"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_6 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense_25 (Dense)             (None, 70)                140       
+_________________________________________________________________
+dense_26 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_27 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_28 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_29 (Dense)             (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+1277409/1277409 - 48s - loss: 0.0311 - val_loss: 0.0313
+Epoch 2/100
+1277409/1277409 - 48s - loss: 0.0310 - val_loss: 0.0310
+Epoch 3/100
+1277409/1277409 - 48s - loss: 0.0310 - val_loss: 0.0310
+Epoch 4/100
+1277409/1277409 - 48s - loss: 0.0310 - val_loss: 0.0311
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 48s - loss: 0.0310 - val_loss: 0.0310
+Epoch 6/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 7/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0311
+Epoch 9/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 10/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 12/100
+1277409/1277409 - 47s - loss: 0.0309 - val_loss: 0.0310
+Epoch 13/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 15/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 16/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 18/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 19/100
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1277409/1277409 - 48s - loss: 0.0309 - val_loss: 0.0310
+Epoch 00020: early stopping
+saving model  QRmodel_train_sz30pc_qnt70_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |    70.01    |
+| GtoWW15naReco |    78.43    |
+| GtoWW25naReco |    78.88    |
+| GtoWW35naReco |    79.64    |
+| GtoWW45naReco |    79.48    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q70/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q70/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+writing analysis results to  /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90
+Model: "model_6"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_7 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense_30 (Dense)             (None, 70)                140       
+_________________________________________________________________
+dense_31 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_32 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_33 (Dense)             (None, 70)                4970      
+_________________________________________________________________
+dense_34 (Dense)             (None, 1)                 71        
+=================================================================
+Total params: 15,121
+Trainable params: 15,121
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1277409 samples, validate on 319353 samples
+Epoch 1/100
+1277409/1277409 - 47s - loss: 0.0138 - val_loss: 0.0137
+Epoch 2/100
+1277409/1277409 - 48s - loss: 0.0137 - val_loss: 0.0138
+Epoch 3/100
+1277409/1277409 - 49s - loss: 0.0137 - val_loss: 0.0137
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1277409/1277409 - 49s - loss: 0.0137 - val_loss: 0.0137
+Epoch 5/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 6/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0137
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 8/100
+1277409/1277409 - 48s - loss: 0.0136 - val_loss: 0.0136
+Epoch 9/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 11/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 12/100
+1277409/1277409 - 47s - loss: 0.0136 - val_loss: 0.0136
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 14/100
+1277409/1277409 - 48s - loss: 0.0136 - val_loss: 0.0136
+Epoch 15/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 17/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 18/100
+1277409/1277409 - 49s - loss: 0.0136 - val_loss: 0.0136
+Epoch 00018: early stopping
+saving model  QRmodel_train_sz30pc_qnt90_20200912
+min 1100.0001220703125, max 7338.603515625
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90/mJJ_raio_bg_vs_sig_qcdSR_train.jpg has been created
+min 1100.00048828125, max 6713.01171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90/mJJ_raio_bg_vs_sig_qcdSigAllRecoTest.jpg has been created
++---------------+-------------+
+|     Sample    | Eff VAE [%] |
++---------------+-------------+
+| qcdSigAllReco |    89.96    |
+| GtoWW15naReco |    94.74    |
+| GtoWW25naReco |    94.47    |
+| GtoWW35naReco |    94.43    |
+| GtoWW45naReco |    92.73    |
++---------------+-------------+
+min 1100.00244140625, max 6349.1357421875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90/mJJ_raio_bg_vs_sig_GtoWW15naReco.jpg has been created
+min 1100.037841796875, max 6329.51171875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90/mJJ_raio_bg_vs_sig_GtoWW25naReco.jpg has been created
+min 1100.159423828125, max 6971.1318359375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90/mJJ_raio_bg_vs_sig_GtoWW35naReco.jpg has been created
+min 1100.0926513671875, max 7676.17919921875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: jpg file /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/fig/minl1l2_loss/q90/mJJ_raio_bg_vs_sig_GtoWW45naReco.jpg has been created
+writing results for QCD signalregion all samples reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/qcd_sqrtshatTeV_13TeV_PU40_ALL_parts/qcd_sqrtshatTeV_13TeV_PU40_ALL_reco.h5
+writing results for $G(1.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+writing results for $G(2.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+writing results for $G(3.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+writing results for $G(4.5 TeV)\to WW$ narrow reco to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
+written data sample to /eos/home-k/kiwoznia/data/VAE_results/bump_hunt_results/run_101/selections/minl1l2_loss/q90/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_parts/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
