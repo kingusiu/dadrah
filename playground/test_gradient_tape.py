@@ -23,26 +23,36 @@ class FeatureNormalization(tf.keras.layers.Layer):
 		return (x - self.mean_x) / self.var_x
 
 
-def make_quantile_loss(mean_target, var_target):
 
-	@tf.function
-	def quantile_loss(targets, predictions):
-		targets = (targets - mean_target) / var_target # scale targets to normal dist
-		alpha = 1.-0.1
-		err = targets - predictions
-		return tf.where(err>=0, alpha*err, (alpha-1)*err)
-	
-	return quantile_loss
 
-def make_model(x_mean_var=(0.,1.), n_nodes=20):
-	inputs = tf.keras.Input(shape=(1,))
-	x = FeatureNormalization(*x_mean_var)(inputs)
-	x = tf.keras.layers.Dense(n_nodes, activation='relu')(x)
-	x = tf.keras.layers.Dense(n_nodes, activation='relu')(x)
-	x = tf.keras.layers.Dense(n_nodes, activation='relu')(x)
-	output = tf.keras.layers.Dense(1)(x)
-	model = tf.keras.Model(inputs, output)
-	return model
+class QuantileRegressionTest():
+
+	def __init__(self):
+		pass
+
+	def make_model(self, x_mean_var=(0.,1.), n_nodes=20):
+		inputs = tf.keras.Input(shape=(1,))
+		x = FeatureNormalization(*x_mean_var)(inputs)
+		x = tf.keras.layers.Dense(n_nodes, activation='relu')(x)
+		x = tf.keras.layers.Dense(n_nodes, activation='relu')(x)
+		x = tf.keras.layers.Dense(n_nodes, activation='relu')(x)
+		output = tf.keras.layers.Dense(1)(x)
+		model = tf.keras.Model(inputs, output)
+		return model
+
+
+	def make_quantile_loss(self, mean_target, var_target):
+
+		@tf.function
+		def quantile_loss(targets, predictions):
+			targets = (targets - mean_target) / var_target # scale targets to normal dist
+			alpha = 1.-0.1
+			err = targets - predictions
+			return tf.where(err>=0, alpha*err, (alpha-1)*err)
+		
+		return quantile_loss
+
+
 
 if __name__ == "__main__":
 
@@ -58,7 +68,7 @@ if __name__ == "__main__":
 	print(quantile_loss(targets, predictions))
 
 	x = tf.random.uniform((100,))
-	
+
 	model = make_model(x_mean_var=(np.mean(x), np.var(x)))
 	print(model.summary())
 

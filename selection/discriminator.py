@@ -12,13 +12,6 @@ class Discriminator():
 		self.quantile = quantile
 		self.mjj_key = 'mJJ'
 
-	def set_mean_var_input_output(self, inp, outp):
-		self.mean_inp, self.mean_outp = np.mean(inp), np.mean(outp)
-		self.var_inp, self.var_outp = np.var(inp), np.var(outp)
-
-	def scale_input(self, inp):
-		return (inp - self.mean_inp) / self.var_inp
-
 	def scale_output(self, outp):
 		return (outp - self.mean_outp) / self.var_outp
 
@@ -34,11 +27,8 @@ class Discriminator():
 	def load(self, path):
 		pass 
 
-	'''
-		predict cut for each example in data
-		data ... jet_sample instance or raw numpy array
-	'''
 	def predict(self, data):
+		'''predict cut for each example in data'''
 		pass
 
 	def select(self, jet_sample):
@@ -67,33 +57,56 @@ class FlatCutDiscriminator(Discriminator):
 
 class QRDiscriminator(Discriminator):
 
-	def __init__(self, *args, n_nodes=20, **kwargs):
-		self.n_nodes = n_nodes
-		Discriminator.__init__(self, *args, **kwargs)
+	def __init__(self, quantile, loss_strategy, batch_sz=128, epochs=100, **model_params):
+		Discriminator.__init__(self, quantile, loss_strategy)
+		self.batch_sz = batch_sz
+		self.epochs = epochs
+		self.model_params = model_params
 
-	def scale_input(self, inp):
-		inp_scaled = Discriminator.scale_input(self, inp)
-		return np.reshape(inp_scaled, (-1,1))
+	def training_step(self, step, x_batch, y_batch):
+		# Open a GradientTape to record the operations run in forward pass
+		with tf.GradientTape() as tape:
+			predictions = self.model(x_batch, training=True)
+			loss_value = self.loss_function(y_batch, predictions)
 
-	def fit(self, jet_sample):
-		x = jet_sample[self.mjj_key]
-		loss = self.loss_strategy(jet_sample)
-		self.set_mean_var_input_output(x, loss)
-		self.model = qr.QuantileRegression(quantile=self.quantile, n_nodes=self.n_nodes).build()
-		xx, yy = self.scale_input(x), self.scale_output(loss)
-		self.model.fit(xx, yy, epochs=100, batch_size=128, verbose=2, validation_split=0.2, shuffle=True, \
-            callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
+		grads = tape.gradient(loss_value, self.model.trainable_weights)
+		self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+		if step % 2 == 0:
+			print("Training loss (for one batch) at step {}: {}".format(step, np.sum(loss_value)))
+
+
+	def fit(self, x, loss):
+
+		# process the input
+		#x = jet_sample[self.mjj_key]
+		#loss = self.loss_strategy(jet_sample)
+		train_dataset = tf.data.Dataset.from_tensor_slices((x, loss)).batch(self.batch_sz)
+
+		# build the regressor
+		self.regressor = qr.QuantileRegressionV2(**self.model_params)
+		self.model = self.regressor.make_model(x_mean_var=(np.mean(x), np.var(x)))
+		
+		# build the loss and optimizer
+		self.loss_function = self.regressor.make_quantile_loss(quantile=self.quantile, y_mean_var=(np.mean(loss), np.var(loss)))
+		self.optimizer = tf.keras.optimizers.Adam(0.005)
+
+		# run training
+		for epoch in range(self.epochs):
+			print("\nStart of epoch %d" % (epoch))
+			# Iterate over the batches of the dataset.
+			for step, (x_batch, y_batch) in enumerate(train_dataset):
+				self.training_step(step, x_batch, y_batch)
+
 
 	def save(self, path):
 		self.model.save(path)
-	
+
 	def load(self, path):
 		self.model = tf.keras.models.load_model(path)
 
 	def predict(self, data):
 		if isinstance(data, js.JetSample):
 			data = data[self.mjj_key]
-		xx = self.scale_input(data)
 		predicted = self.model.predict(xx).flatten() 
 		return self.unscale_output(predicted)
 
