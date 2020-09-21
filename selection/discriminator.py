@@ -1,36 +1,36 @@
 import numpy as np
+from abc import ABCMeta, abstractmethod
 import tensorflow as tf
 import sklearn.ensemble as scikit
 import dadrah.selection.quantile_regression as qr
 import pofah.jet_sample as js
 
 
-class Discriminator():
+class Discriminator(metaclass=ABCMeta):
 
 	def __init__(self, quantile, loss_strategy):
 		self.loss_strategy = loss_strategy
 		self.quantile = quantile
 		self.mjj_key = 'mJJ'
 
-	def scale_output(self, outp):
-		return (outp - self.mean_outp) / self.var_outp
-
-	def unscale_output(self, outp):
-		return (outp * self.var_outp) + self.mean_outp
-
+	@abstractmethod
 	def fit(self, jet_sample):
 		pass
 
+	@abstractmethod
 	def save(self, path):
 		pass
 
+	@abstractmethod
 	def load(self, path):
 		pass 
 
+	@abstractmethod
 	def predict(self, data):
 		'''predict cut for each example in data'''
 		pass
 
+	@abstractmethod
 	def select(self, jet_sample):
 		pass
 
@@ -74,7 +74,6 @@ class QRDiscriminator(Discriminator):
 		if step % 2 == 0:
 			print("Training loss (for one batch) at step {}: {}".format(step, np.sum(loss_value)))
 
-
 	def fit(self, x, loss):
 
 		# process the input
@@ -84,10 +83,10 @@ class QRDiscriminator(Discriminator):
 
 		# build the regressor
 		self.regressor = qr.QuantileRegressionV2(**self.model_params)
-		self.model = self.regressor.make_model(x_mean_var=(np.mean(x), np.var(x)))
+		self.model = self.regressor.make_model(x_mean_var=(np.mean(x), np.var(x)), y_mean_var=(np.mean(loss), np.var(loss)))
 		
 		# build the loss and optimizer
-		self.loss_function = self.regressor.make_quantile_loss(quantile=self.quantile, y_mean_var=(np.mean(loss), np.var(loss)))
+		self.loss_function = self.regressor.make_quantile_loss(quantile=self.quantile)
 		self.optimizer = tf.keras.optimizers.Adam(0.005)
 
 		# run training
@@ -97,18 +96,17 @@ class QRDiscriminator(Discriminator):
 			for step, (x_batch, y_batch) in enumerate(train_dataset):
 				self.training_step(step, x_batch, y_batch)
 
-
 	def save(self, path):
 		self.model.save(path)
 
 	def load(self, path):
-		self.model = tf.keras.models.load_model(path)
+		self.model = tf.keras.models.load_model(path, custom_objects={'FeatureNormalization': dadrah.quantile_regression.FeatureNormalization, 'FeatureUnNormalization': dadrah.quantile_regression.FeatureUnNormalization})
+		print('loaded model ', self.model)
 
 	def predict(self, data):
 		if isinstance(data, js.JetSample):
 			data = data[self.mjj_key]
-		predicted = self.model.predict(xx).flatten() 
-		return self.unscale_output(predicted)
+		return self.model.predict(data) #.flatten()
 
 	def select(self, jet_sample):
 		loss_cut = self.predict(jet_sample)

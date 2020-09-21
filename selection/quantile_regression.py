@@ -72,7 +72,7 @@ class QuantileRegressionV2():
 		model = tf.keras.Model(inputs, outputs)
 		return model
 
-	def make_quantile_loss(self, quantile, y_mean_var):
+	def make_quantile_loss(self, quantile):
 
 		@tf.function
 		def quantile_loss(targets, predictions):
