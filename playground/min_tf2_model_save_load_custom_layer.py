@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-import setGPU
+#import setGPU
 
 print('tensorflow version: ', tf.__version__)
 

@@ -14,7 +14,7 @@ import dadrah.selection.selection_util as seu
 import dadrah.selection.loss_strategy as lost
 from importlib import reload
 import os
-import setGPU
+#import setGPU
 
 
 def make_qr_model_str(train_sz, quantile, date=True):

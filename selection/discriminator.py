@@ -100,7 +100,7 @@ class QRDiscriminator(Discriminator):
 		self.model.save(path)
 
 	def load(self, path):
-		self.model = tf.keras.models.load_model(path, custom_objects={'FeatureNormalization': dadrah.quantile_regression.FeatureNormalization, 'FeatureUnNormalization': dadrah.quantile_regression.FeatureUnNormalization})
+		self.model = tf.keras.models.load_model(path, custom_objects={'FeatureNormalization': qr.FeatureNormalization, 'FeatureUnNormalization': qr.FeatureUnNormalization})
 		print('loaded model ', self.model)
 
 	def predict(self, data):
