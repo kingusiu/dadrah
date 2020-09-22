@@ -71,14 +71,14 @@ class QRDiscriminator(Discriminator):
 
 		grads = tape.gradient(loss_value, self.model.trainable_weights)
 		self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
-		if step % 2 == 0:
+		if step % 100 == 0:
 			print("Training loss (for one batch) at step {}: {}".format(step, np.sum(loss_value)))
 
-	def fit(self, x, loss):
+	def fit(self, jet_sample):
 
 		# process the input
-		#x = jet_sample[self.mjj_key]
-		#loss = self.loss_strategy(jet_sample)
+		x = jet_sample[self.mjj_key]
+		loss = self.loss_strategy(jet_sample)
 		train_dataset = tf.data.Dataset.from_tensor_slices((x, loss)).batch(self.batch_sz)
 
 		# build the regressor
