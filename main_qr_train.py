@@ -3,7 +3,6 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 import tensorflow as tf
-import numpy as np
 from collections import namedtuple
 
 import pofah.jet_sample as js
@@ -12,7 +11,6 @@ import pofah.util.experiment as ex
 import pofah.path_constants.sample_dict_file_parts_reco as sdfr
 import dadrah.selection.loss_strategy as ls
 import dadrah.selection.discriminator as disc
-import dadrah.selection.quantile_regression as qure
 import dadrah.selection.loss_strategy as lost
 
 print(tf.__version__)
@@ -21,7 +19,7 @@ print(tf.__version__)
 #			set runtime params
 #****************************************#
 Parameters = namedtuple('Parameters','run_n, sm_sample_id, quantile, strategy, qr_train_share')
-params = Parameters(run_n=101, sm_sample_id='qcdSigBisReco', quantile=0.1, strategy=lost.loss_strategy_dict['s5'], qr_train_share=0.25 )
+params = Parameters(run_n=101, sm_sample_id='qcdSigBisReco', quantile=0.1, strategy=lost.loss_strategy_dict['s5'])
 
 #****************************************#
 #			read in data

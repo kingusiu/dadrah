@@ -106,7 +106,7 @@ class QRDiscriminator(Discriminator):
 	def predict(self, data):
 		if isinstance(data, js.JetSample):
 			data = data[self.mjj_key]
-		return self.model.predict(data) #.flatten()
+		return self.model.predict(data).flatten()
 
 	def select(self, jet_sample):
 		loss_cut = self.predict(jet_sample)
