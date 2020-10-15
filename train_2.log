@@ -1,0 +1,180 @@
+2.2.0
+reading /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_BIS_parts
+673505 events read in 4 files in dir /eos/home-k/kiwoznia/dev/autoencoder_for_anomaly/convolutional_VAE/results/run_101/qcd_sqrtshatTeV_13TeV_PU40_BIS_parts
+2020-09-22 17:20:52.200472: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2020-09-22 17:20:56.354511: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:3b:00.0 name: Tesla T4 computeCapability: 7.5
+coreClock: 1.59GHz coreCount: 40 deviceMemorySize: 14.73GiB deviceMemoryBandwidth: 298.08GiB/s
+2020-09-22 17:20:56.355519: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-09-22 17:20:56.385556: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-09-22 17:20:56.392237: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-09-22 17:20:56.393272: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-09-22 17:20:56.400942: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-09-22 17:20:56.404372: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10
+2020-09-22 17:20:56.418472: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2020-09-22 17:20:56.423747: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1703] Adding visible gpu devices: 0
+2020-09-22 17:20:56.425975: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+2020-09-22 17:20:56.452097: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 2200000000 Hz
+2020-09-22 17:20:56.456218: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5ad7df0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-09-22 17:20:56.456269: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-09-22 17:20:56.645765: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x56d5d90 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2020-09-22 17:20:56.645879: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Tesla T4, Compute Capability 7.5
+2020-09-22 17:20:56.648684: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:3b:00.0 name: Tesla T4 computeCapability: 7.5
+coreClock: 1.59GHz coreCount: 40 deviceMemorySize: 14.73GiB deviceMemoryBandwidth: 298.08GiB/s
+2020-09-22 17:20:56.648777: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-09-22 17:20:56.648809: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-09-22 17:20:56.648836: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-09-22 17:20:56.648864: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-09-22 17:20:56.648890: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-09-22 17:20:56.648916: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10
+2020-09-22 17:20:56.648943: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2020-09-22 17:20:56.652696: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1703] Adding visible gpu devices: 0
+2020-09-22 17:20:56.652763: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-09-22 17:20:56.656476: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-09-22 17:20:56.656505: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      0 
+2020-09-22 17:20:56.656524: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] 0:   N 
+2020-09-22 17:20:56.660451: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1247] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14071 MB memory) -> physical GPU (device: 0, name: Tesla T4, pci bus id: 0000:3b:00.0, compute capability: 7.5)
+
+Start of epoch 0
+2020-09-22 17:20:58.236175: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+Training loss (for one batch) at step 0: 43567.3203125
+Training loss (for one batch) at step 100: 21129.0859375
+Training loss (for one batch) at step 200: 31222.275390625
+Training loss (for one batch) at step 300: 19377.767578125
+Training loss (for one batch) at step 400: 21335.369140625
+Training loss (for one batch) at step 500: 25098.73046875
+Training loss (for one batch) at step 600: 28955.48046875
+Training loss (for one batch) at step 700: 26426.40625
+Training loss (for one batch) at step 800: 25884.97265625
+Training loss (for one batch) at step 900: 32105.55078125
+Training loss (for one batch) at step 1000: 21053.58203125
+Training loss (for one batch) at step 1100: 24439.3671875
+Training loss (for one batch) at step 1200: 22478.8125
+Training loss (for one batch) at step 1300: 18723.41015625
+Training loss (for one batch) at step 1400: 32742.203125
+Training loss (for one batch) at step 1500: 24285.14453125
+Training loss (for one batch) at step 1600: 24455.51953125
+Training loss (for one batch) at step 1700: 17952.78125
+Training loss (for one batch) at step 1800: 25582.736328125
+Training loss (for one batch) at step 1900: 28608.35546875
+Training loss (for one batch) at step 2000: 22442.33203125
+Training loss (for one batch) at step 2100: 27727.22265625
+Training loss (for one batch) at step 2200: 20714.140625
+Training loss (for one batch) at step 2300: 23232.14453125
+Training loss (for one batch) at step 2400: 28068.8671875
+Training loss (for one batch) at step 2500: 22378.2890625
+Training loss (for one batch) at step 2600: 16833.48828125
+Training loss (for one batch) at step 2700: 20930.36328125
+Training loss (for one batch) at step 2800: 22142.98046875
+Training loss (for one batch) at step 2900: 18376.84375
+Training loss (for one batch) at step 3000: 26587.6640625
+Training loss (for one batch) at step 3100: 22878.23046875
+Training loss (for one batch) at step 3200: 19133.39453125
+Training loss (for one batch) at step 3300: 34011.953125
+Training loss (for one batch) at step 3400: 21421.30078125
+Training loss (for one batch) at step 3500: 23715.7265625
+Training loss (for one batch) at step 3600: 28165.80859375
+Training loss (for one batch) at step 3700: 24122.82421875
+Training loss (for one batch) at step 3800: 24301.654296875
+Training loss (for one batch) at step 3900: 28434.392578125
+Training loss (for one batch) at step 4000: 23978.62890625
+Training loss (for one batch) at step 4100: 24003.68359375
+Training loss (for one batch) at step 4200: 19570.412109375
+Training loss (for one batch) at step 4300: 22314.650390625
+Training loss (for one batch) at step 4400: 18635.451171875
+Training loss (for one batch) at step 4500: 21252.71484375
+Training loss (for one batch) at step 4600: 28405.716796875
+Training loss (for one batch) at step 4700: 19824.029296875
+Training loss (for one batch) at step 4800: 22532.66015625
+Training loss (for one batch) at step 4900: 22685.02734375
+Training loss (for one batch) at step 5000: 30439.875
+Training loss (for one batch) at step 5100: 29150.55859375
+Training loss (for one batch) at step 5200: 23130.9296875
+
+Start of epoch 1
+Training loss (for one batch) at step 0: 32839.515625
+Training loss (for one batch) at step 100: 21136.822265625
+Training loss (for one batch) at step 200: 30631.232421875
+Training loss (for one batch) at step 300: 19234.52734375
+Training loss (for one batch) at step 400: 21340.51953125
+Training loss (for one batch) at step 500: 25130.333984375
+Training loss (for one batch) at step 600: 28949.84765625
+Training loss (for one batch) at step 700: 25988.08984375
+Training loss (for one batch) at step 800: 25945.39453125
+Training loss (for one batch) at step 900: 32350.62109375
+Training loss (for one batch) at step 1000: 21046.712890625
+Training loss (for one batch) at step 1100: 24442.51171875
+Training loss (for one batch) at step 1200: 22394.642578125
+Training loss (for one batch) at step 1300: 18648.07421875
+Training loss (for one batch) at step 1400: 32679.875
+Training loss (for one batch) at step 1500: 24153.57421875
+Training loss (for one batch) at step 1600: 24432.6796875
+Training loss (for one batch) at step 1700: 17956.12109375
+Training loss (for one batch) at step 1800: 25302.5
+Training loss (for one batch) at step 1900: 28876.65625
+Training loss (for one batch) at step 2000: 22616.9296875
+Training loss (for one batch) at step 2100: 27696.369140625
+Training loss (for one batch) at step 2200: 20670.486328125
+Training loss (for one batch) at step 2300: 23230.912109375
+Training loss (for one batch) at step 2400: 28073.98046875
+Training loss (for one batch) at step 2500: 22350.638671875
+Training loss (for one batch) at step 2600: 16853.2578125
+Training loss (for one batch) at step 2700: 20982.5390625
+Training loss (for one batch) at step 2800: 22155.14453125
+Training loss (for one batch) at step 2900: 18397.453125
+Training loss (for one batch) at step 3000: 26585.412109375
+Training loss (for one batch) at step 3100: 22896.111328125
+Training loss (for one batch) at step 3200: 19139.2578125
+Training loss (for one batch) at step 3300: 34013.4296875
+Training loss (for one batch) at step 3400: 21419.720703125
+Training loss (for one batch) at step 3500: 23727.736328125
+Training loss (for one batch) at step 3600: 28186.44921875
+Training loss (for one batch) at step 3700: 24125.224609375
+Training loss (for one batch) at step 3800: 24303.98046875
+Training loss (for one batch) at step 3900: 28451.6171875
+Training loss (for one batch) at step 4000: 23975.271484375
+Training loss (for one batch) at step 4100: 24002.0859375
+Training loss (for one batch) at step 4200: 19571.7109375
+Training loss (for one batch) at step 4300: 22314.806640625
+Training loss (for one batch) at step 4400: 18624.349609375
+Training loss (for one batch) at step 4500: 21253.90625
+Training loss (for one batch) at step 4600: 28406.5078125
+Training loss (for one batch) at step 4700: 19816.35546875
+Training loss (for one batch) at step 4800: 22526.806640625
+Training loss (for one batch) at step 4900: 22683.3671875
+Training loss (for one batch) at step 5000: 30439.4296875
+Training loss (for one batch) at step 5100: 29141.521484375
+Training loss (for one batch) at step 5200: 23132.51953125
+
+Start of epoch 2
+Training loss (for one batch) at step 0: 32843.1953125
+Training loss (for one batch) at step 100: 21136.53515625
+Training loss (for one batch) at step 200: 30624.90625
+Training loss (for one batch) at step 300: 19244.11328125
+Training loss (for one batch) at step 400: 21340.87109375
+Training loss (for one batch) at step 500: 25129.724609375
+Training loss (for one batch) at step 600: 28954.40625
+Training loss (for one batch) at step 700: 26006.529296875
+Training loss (for one batch) at step 800: 25942.236328125
+Training loss (for one batch) at step 900: 32384.728515625
+Training loss (for one batch) at step 1000: 21039.76171875
+Training loss (for one batch) at step 1100: 24442.96875
+Training loss (for one batch) at step 1200: 22395.0
+Training loss (for one batch) at step 1300: 18655.4453125
+Training loss (for one batch) at step 1400: 32702.861328125
+Training loss (for one batch) at step 1500: 24153.96875
+Training loss (for one batch) at step 1600: 24426.1015625
+Training loss (for one batch) at step 1700: 17954.3125
+Training loss (for one batch) at step 1800: 25347.134765625
+Training loss (for one batch) at step 1900: 28861.22265625
+Training loss (for one batch) at step 2000: 22624.61328125
+Training loss (for one batch) at step 2100: 27700.75390625
+Training loss (for one batch) at step 2200: 20663.80859375
+Training loss (for one batch) at step 2300: 23234.177734375
+Training loss (for one batch) at step 2400: 28073.98046875
+Training loss (for one batch) at step 2500: 22352.595703125
+Training loss (for one batch) at step 2600: 16876.62109375
+Training loss (for one batch) at step 2700: 20935.3203125
+Training loss (for one batch) at step 2800: 22140.865234375
+Training loss (for one batch) at step 2900: 18389.814453125

@@ -72,10 +72,9 @@ class QRDiscriminator(Discriminator):
 		grads = tape.gradient(loss_value, self.model.trainable_weights)
 		self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
 		if step % 100 == 0:
-			print("Training loss (for one batch) at step {}: {}".format(step, np.sum(loss_value)))
+			print("Step {}: lr {}, loss {}".format(step, self.optimizer.learning_rate(self.optimizer.iterations), np.sum(loss_value)))
 
 	def fit(self, jet_sample):
-
 		# process the input
 		x = jet_sample[self.mjj_key]
 		loss = self.loss_strategy(jet_sample)
@@ -85,9 +84,10 @@ class QRDiscriminator(Discriminator):
 		self.regressor = qr.QuantileRegressionV2(**self.model_params)
 		self.model = self.regressor.make_model(x_mean_var=(np.mean(x), np.var(x)), y_mean_var=(np.mean(loss), np.var(loss)))
 		
-		# build the loss and optimizer
+		# build the loss and optimizer and learning rate schedule
 		self.loss_function = self.regressor.make_quantile_loss(quantile=self.quantile)
-		self.optimizer = tf.keras.optimizers.Adam(0.005)
+		lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(0.005, decay_steps=100000, decay_rate=0.5)
+		self.optimizer = tf.keras.optimizers.Adam(lr_schedule)
 
 		# run training
 		for epoch in range(self.epochs):
