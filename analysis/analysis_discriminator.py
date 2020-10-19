@@ -1,13 +1,34 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 import numpy as np
-import ROOT as rt
-import root_numpy as rtnp
+#import ROOT as rt
+#import root_numpy as rtnp
 import os
 from prettytable import PrettyTable
 
 import anpofah.util.plotting_util as pu
-import dadrah.analysis.root_plotting_util as ropl
+#import dadrah.analysis.root_plotting_util as ropl
+
+
+def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature_key='mJJ', plot_name='multi_discr_cut', fig_dir=None):
+    fig = plt.figure(figsize=(8, 8))
+    x_min = np.min(sample[feature_key])
+    x_max = np.percentile(sample[feature_key], 1e2*(1-1e-4))
+    loss = discriminator_list[0].loss_strategy(sample)
+    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-4)))), norm=LogNorm(), bins=200)
+    xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
+    for discriminator in discriminator_list:
+        plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='cut Q'+str(discriminator.quantile*100))
+    plt.ylabel('L1 & L2 > LT')
+    plt.xlabel('$M_{jj}$ [GeV]')
+    plt.title(str(sample) + ' cut q10, q30, q50, q70, q90')
+    plt.colorbar()
+    plt.legend(loc='best')
+    plt.draw()
+    if fig_dir:
+        fig.savefig(os.path.join(fig_dir, plot_name + '.pdf'), bbox_inches='tight')
+    plt.close(fig)
+
 
 
 def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_name='discr_cut', fig_dir=None):
@@ -49,8 +70,7 @@ def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='
     h_a.SetStats(0)
     h_a.Sumw2()
     
-    h_r = ropl.create_TH1D(mjj_sig_like, name='h_rej', title='SIG like', axis_title=['M_{jj} [GeV]', 'Events'], binning=binning,
-                      opt='overflow' )
+    h_r = ropl.create_TH1D(mjj_sig_like, name='h_rej', title='SIG like', axis_title=['M_{jj} [GeV]', 'Events'], binning=binning, opt='overflow' )
     bin_edges = [h_a.GetXaxis().GetBinLowEdge(i) for i in range(1,h_a.GetNbinsX()+2)]
 
     h_r.GetYaxis().SetRangeUser(0.5, 1.2*h_r.GetMaximum())

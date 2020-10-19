@@ -88,7 +88,7 @@ class QRDiscriminator(Discriminator):
 		self.model.save(path)
 	
 	def load(self, path):
-		self.model = tf.keras.models.load_model(path)
+		self.model = tf.keras.models.load_model(path, compile=False)
 
 	def predict(self, data):
 		if isinstance(data, js.JetSample):
