@@ -63,6 +63,7 @@ class QRDiscriminator(Discriminator):
 		self.epochs = epochs
 		self.model_params = model_params
 
+	@tf.function
 	def training_step(self, step, x_batch, y_batch):
 		# Open a GradientTape to record the operations run in forward pass
 		with tf.GradientTape() as tape:
