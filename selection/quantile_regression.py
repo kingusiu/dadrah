@@ -64,7 +64,7 @@ class QuantileRegressionV2():
 	def make_model(self, x_mean_var=(0.,1.), y_mean_var=(0.,1.)):
 		inputs = tf.keras.Input(shape=(1,))
 		x = FeatureNormalization(*x_mean_var)(inputs)
-		for _ in range(n_layers):
+		for _ in range(self.n_layers):
 			x = tf.keras.layers.Dense(self.n_nodes, activation='relu')(x)
 		outputs_normalized = tf.keras.layers.Dense(1)(x)
 		outputs = FeatureUnNormalization(*y_mean_var)(outputs_normalized)
