@@ -72,7 +72,7 @@ def training_epoch(train_dataset):
 # *** validation
 
 @tf.function
-def validation_step(step, x_batch, y_batch):
+def validation_step(x_batch, y_batch):
 	predictions = QR_model(x_batch)
 	loss_value = loss_fun(y_batch, predictions)
 	return loss_value
@@ -81,7 +81,7 @@ def validation_epoch(valid_dataset):
 	# run training step for each batch
 	loss_per_epoch = 0
 	for step, (x_batch, y_batch) in enumerate(valid_dataset):
-		loss_value = validation_step(step, x_batch, y_batch)
+		loss_value = validation_step(x_batch, y_batch)
 		loss_per_epoch += float(tf.math.reduce_sum(loss_value))
 	return loss_per_epoch / step
 

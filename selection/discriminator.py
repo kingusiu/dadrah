@@ -1,123 +1,203 @@
 import numpy as np
+import time
 from abc import ABCMeta, abstractmethod
 import tensorflow as tf
 import sklearn.ensemble as scikit
 import dadrah.selection.quantile_regression as qr
 import pofah.jet_sample as js
+import vande.training as train
 
 
 class Discriminator(metaclass=ABCMeta):
 
-	def __init__(self, quantile, loss_strategy):
-		self.loss_strategy = loss_strategy
-		self.quantile = quantile
-		self.mjj_key = 'mJJ'
+    def __init__(self, quantile, loss_strategy):
+        self.loss_strategy = loss_strategy
+        self.quantile = quantile
+        self.mjj_key = 'mJJ'
 
-	@abstractmethod
-	def fit(self, jet_sample):
-		pass
+    @abstractmethod
+    def fit(self, jet_sample):
+        pass
 
-	@abstractmethod
-	def save(self, path):
-		pass
+    @abstractmethod
+    def save(self, path):
+        pass
 
-	@abstractmethod
-	def load(self, path):
-		pass 
+    @abstractmethod
+    def load(self, path):
+        pass 
 
-	@abstractmethod
-	def predict(self, data):
-		'''predict cut for each example in data'''
-		pass
+    @abstractmethod
+    def predict(self, data):
+        '''predict cut for each example in data'''
+        pass
 
-	@abstractmethod
-	def select(self, jet_sample):
-		pass
+    @abstractmethod
+    def select(self, jet_sample):
+        pass
 
-	def __repr__(self):
-		return '{}% qnt, {} strategy'.format(str(self.quantile*100), self.loss_strategy.title_str)
+    def __repr__(self):
+        return '{}% qnt, {} strategy'.format(str(self.quantile*100), self.loss_strategy.title_str)
 
 
 class FlatCutDiscriminator(Discriminator):
 
-	def fit(self, jet_sample):
-		loss = self.loss_strategy(jet_sample)
-		self.cut = np.percentile( loss, (1.-self.quantile)*100 )
-		
-	def predict(self, jet_sample):
-		return np.asarray([self.cut]*len(jet_sample))
+    def fit(self, jet_sample):
+        loss = self.loss_strategy(jet_sample)
+        self.cut = np.percentile( loss, (1.-self.quantile)*100 )
+        
+    def predict(self, jet_sample):
+        return np.asarray([self.cut]*len(jet_sample))
 
-	def select(self, jet_sample):
-		loss = self.loss_strategy(jet_sample)
-		return loss > self.cut
+    def select(self, jet_sample):
+        loss = self.loss_strategy(jet_sample)
+        return loss > self.cut
 
-	def __repr__(self):
-		return 'Flat Cut: ' + Discriminator.__repr__(self)
+    def __repr__(self):
+        return 'Flat Cut: ' + Discriminator.__repr__(self)
 
 
 class QRDiscriminator(Discriminator):
 
-	def __init__(self, quantile, loss_strategy, batch_sz=128, epochs=100, **model_params):
-		Discriminator.__init__(self, quantile, loss_strategy)
-		self.batch_sz = batch_sz
-		self.epochs = epochs
-		self.model_params = model_params
+    def __init__(self, quantile, loss_strategy, batch_sz=128, epochs=100, learning_rate=0.001, optimizer=tf.keras.optimizers.Adam, **model_params):
+        Discriminator.__init__(self, quantile, loss_strategy)
+        self.batch_sz = batch_sz
+        self.epochs = epochs
+        self.learning_rate = learning_rate
+        self.optimizer = optimizer() #optimizer(learning_rate)
+        self.model_params = model_params
 
-	@tf.function
-	def training_step(self, step, x_batch, y_batch):
-		# Open a GradientTape to record the operations run in forward pass
-		with tf.GradientTape() as tape:
-			predictions = self.model(x_batch, training=True)
-			loss_value = self.loss_function(y_batch, predictions)
+    # @tf.function
+    def training_step(self, x_batch, y_batch):
+        # Open a GradientTape to record the operations run in forward pass
+        # import ipdb; ipdb.set_trace()
+        with tf.GradientTape() as tape:
+            predictions = self.model(x_batch, training=True)
+            loss_value = tf.math.reduce_mean(qr.quantile_loss(y_batch, predictions, self.quantile))
 
-		grads = tape.gradient(loss_value, self.model.trainable_weights)
-		self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
-		if step % 100 == 0:
-			print("Step {}: lr {}, loss {}".format(step, self.optimizer.learning_rate(self.optimizer.iterations), np.sum(loss_value)))
+        grads = tape.gradient(loss_value, self.model.trainable_weights)
+        self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+        return loss_value
 
-	def fit(self, jet_sample):
-		# process the input
-		x = jet_sample[self.mjj_key]
-		loss = self.loss_strategy(jet_sample)
-		train_dataset = tf.data.Dataset.from_tensor_slices((x, loss)).batch(self.batch_sz)
+    def training_epoch(self, train_dataset):
+        # Iterate over the batches of the dataset.
+        train_loss = 0.
+        for step, (x_batch, y_batch) in enumerate(train_dataset):
+            loss_value = self.training_step(x_batch, y_batch)
+            train_loss += loss_value
+            if step % 10000 == 0:
+                print("Step {}: lr {:.3e}, loss {:.4f}".format(step, self.optimizer.learning_rate.numpy(), loss_value))
+        return train_loss / (step + 1)
 
-		# build the regressor
-		self.regressor = qr.QuantileRegressionV2(**self.model_params)
-		self.model = self.regressor.make_model(x_mean_var=(np.mean(x), np.var(x)), y_mean_var=(np.mean(loss), np.var(loss)))
-		
-		# build the loss and optimizer and learning rate schedule
-		self.loss_function = self.regressor.make_quantile_loss(quantile=self.quantile)
-		lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(0.005, decay_steps=100000, decay_rate=0.5)
-		self.optimizer = tf.keras.optimizers.Adam(lr_schedule)
+    def valid_epoch(self, valid_dataset):
+        # Iterate over the batches of the dataset.
+        valid_loss = 0.
+        for step, (x_batch, y_batch) in enumerate(valid_dataset):
+            predictions = self.model(x_batch, training=False)
+            valid_loss += tf.math.reduce_mean(qr.quantile_loss(y_batch, predictions, self.quantile))
+        return valid_loss / (step + 1)
 
-		# run training
-		for epoch in range(self.epochs):
-			print("\nStart of epoch %d" % (epoch))
-			# Iterate over the batches of the dataset.
-			for step, (x_batch, y_batch) in enumerate(train_dataset):
-				self.training_step(step, x_batch, y_batch)
 
-	def save(self, path):
-		self.model.save(path)
+    def fit(self, train_sample, valid_sample):
+        # process the input
+        x_train = train_sample[self.mjj_key]
+        y_train = self.loss_strategy(train_sample)
+        x_valid = valid_sample[self.mjj_key]
+        y_valid = self.loss_strategy(valid_sample)
+        train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(self.batch_sz)#.shuffle(self.batch_sz*10)
+        valid_dataset = tf.data.Dataset.from_tensor_slices((x_valid, y_valid)).batch(self.batch_sz)
 
-	def load(self, path):
-		self.model = tf.keras.models.load_model(path, custom_objects={'FeatureNormalization': qr.FeatureNormalization, 'FeatureUnNormalization': qr.FeatureUnNormalization}, compile=False)
-		print('loaded model ', self.model)
+        # build the regressor
+        self.regressor = qr.QuantileRegressionV2(**self.model_params)
+        # self.model = self.regressor.make_model(x_mean_std=(np.mean(x_train), np.std(x_train)), y_mean_std=(np.mean(y_train), np.std(y_train)))
+        self.model = self.regressor.make_model(x_min_max=(np.min(x_train), np.max(x_train)), y_min_max=(np.min(y_train), np.max(y_train)))
+        
+        # build loss arrays and callbacks
+        losses_train = []
+        losses_valid = []
+        train_stop = train.Stopper(optimizer=self.optimizer)
 
-	def predict(self, data):
-		if isinstance(data, js.JetSample):
-			data = data[self.mjj_key]
-		return self.model.predict(data).flatten()
+        # run training
+        for epoch in range(self.epochs):
+            start_time = time.time()
+            losses_train.append(self.training_epoch(train_dataset))
+            losses_valid.append(self.valid_epoch(valid_dataset))
+            # print epoch results
+            print('### [Epoch {} - {:.2f} sec]: train loss {:.3f}, val loss {:.3f} (mean / batch) ###'.format(epoch, time.time()-start_time, losses_train[-1], losses_valid[-1]))
+            if train_stop.check_stop_training(losses_valid):
+                print('!!! stopping training !!!')
+                break
 
-	def select(self, jet_sample):
-		loss_cut = self.predict(jet_sample)
-		return self.loss_strategy(jet_sample) > loss_cut
+        return losses_train, losses_valid
 
-	def __repr__(self):
-		return 'QR Cut: ' + Discriminator.__repr__(self)
 
+    def save(self, path):
+        self.model.save(path)
+
+    def load(self, path):
+        self.model = tf.keras.models.load_model(path, custom_objects={'MinMaxNormalization': qr.MinMaxNormalization, 'MinMaxUnnormalization': qr.MinMaxUnnormalization}, compile=False)
+        print('loaded model ', self.model)
+
+    def predict(self, data):
+        if isinstance(data, js.JetSample):
+            data = data[self.mjj_key]
+        return self.model(data)
+
+    def select(self, jet_sample):
+        loss_cut = self.predict(jet_sample)
+        return self.loss_strategy(jet_sample) > loss_cut
+
+    def __repr__(self):
+        return 'QR Cut: ' + Discriminator.__repr__(self)
+
+
+class QRDiscriminator_KerasAPI(QRDiscriminator):
+    """docstring for QRDiscriminator_KerasAPI"""
+    def __init__(self, **kwargs):
+        super(QRDiscriminator_KerasAPI, self).__init__(**kwargs)
+
+    def set_mean_std_input_output(self, inp, outp):
+        self.mean_inp, self.mean_outp = np.mean(inp), np.mean(outp)
+        self.std_inp, self.std_outp = np.std(inp), np.std(outp)
+
+    def scale_input(self, inp):
+        inp_scaled = (inp - self.mean_inp) / self.std_inp
+        return np.reshape(inp_scaled, (-1,1))
+
+    def scale_output(self, outp):
+        return (outp - self.mean_outp) / self.std_outp
+
+    def unscale_output(self, outp):
+        return (outp * self.std_outp) + self.mean_outp
+
+    def fit(self, train_sample, valid_sample):
+        # prepare training set
+        x_train = train_sample[self.mjj_key]
+        y_train = self.loss_strategy(train_sample)
+        #self.set_mean_std_input_output(x_train, y_train)
+        #x_train, y_train = self.scale_input(x_train), self.scale_output(y_train)
+        # prepare validation set
+        x_valid = valid_sample[self.mjj_key]
+        y_valid = self.loss_strategy(valid_sample)
+        #x_valid, y_valid = self.scale_input(x_valid), self.scale_output(y_valid)
+
+        self.model = qr.QuantileRegression(quantile=self.quantile, **self.model_params).build()
+        # import ipdb; ipdb.set_trace()
+        self.history = self.model.fit(x_train, y_train, epochs=self.epochs, batch_size=self.batch_sz, verbose=2, validation_data=(x_valid, y_valid)) #, shuffle=True, \
+            # callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
+       
+        return self.history.history['loss'], self.history.history['val_loss']
+
+    def predict(self, data):
+        if isinstance(data, js.JetSample):
+            data = data[self.mjj_key]
+        xx = data #self.scale_input(data)
+        predicted = self.model.predict(xx).flatten() 
+        # return self.unscale_output(predicted)
+        return predicted
+        
 
 class GBRDiscriminator(Discriminator):
 
-	def fit(self, jet_sample):
-		self.model = scikit.GradientBoostingRegressor(loss='quantile', alpha=1-self.quantile, learning_rate=.01, max_depth=2, verbose=2)
+    def fit(self, jet_sample):
+        self.model = scikit.GradientBoostingRegressor(loss='quantile', alpha=1-self.quantile, learning_rate=.01, max_depth=2, verbose=2)

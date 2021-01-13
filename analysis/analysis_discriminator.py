@@ -14,7 +14,7 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_nam
            norm=LogNorm(), bins=100, label='signal data')
 
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
-    plt.plot(xs, discriminator.predict( xs ) , '-', color='m', lw=2.5, label='selection cut')
+    plt.plot(xs, discriminator.predict(xs) , '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 & L2 > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.title(str(sample) + ' ' + str(discriminator) )
