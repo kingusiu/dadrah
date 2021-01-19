@@ -98,12 +98,16 @@ class QRDiscriminator(Discriminator):
         return valid_loss / (step + 1)
 
 
-    def fit(self, train_sample, valid_sample):
-        # process the input
+    def make_training_datasets(self, train_sample, valid_sample):
         x_train = train_sample[self.mjj_key]
         y_train = self.loss_strategy(train_sample)
         x_valid = valid_sample[self.mjj_key]
         y_valid = self.loss_strategy(valid_sample)
+        return (x_train, y_train), (x_valid, y_valid)
+
+    def fit(self, train_sample, valid_sample):
+        # process the input
+        (x_train, y_train), (x_valid, y_valid) = self.make_training_datasets(train_sample, valid_sample)
         train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(self.batch_sz)#.shuffle(self.batch_sz*10)
         valid_dataset = tf.data.Dataset.from_tensor_slices((x_valid, y_valid)).batch(self.batch_sz)
 
@@ -172,14 +176,8 @@ class QRDiscriminator_KerasAPI(QRDiscriminator):
 
     def fit(self, train_sample, valid_sample):
         # prepare training set
-        x_train = train_sample[self.mjj_key]
-        y_train = self.loss_strategy(train_sample)
+        (x_train, y_train), (x_valid, y_valid) = self.make_training_datasets(train_sample, valid_sample)
         #self.set_mean_std_input_output(x_train, y_train)
-        #x_train, y_train = self.scale_input(x_train), self.scale_output(y_train)
-        # prepare validation set
-        x_valid = valid_sample[self.mjj_key]
-        y_valid = self.loss_strategy(valid_sample)
-        #x_valid, y_valid = self.scale_input(x_valid), self.scale_output(y_valid)
 
         self.model = qr.QuantileRegression(quantile=self.quantile, **self.model_params).build()
         # import ipdb; ipdb.set_trace()

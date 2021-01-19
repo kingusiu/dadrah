@@ -20,14 +20,14 @@ print('tf version: ' + tf.__version__)
 #           set runtime params
 #****************************************#
 Parameters = namedtuple('Parameters','run_n, sm_sample_id, quantile, strategy')
-params = Parameters(run_n=106, sm_sample_id='qcdSigReco', quantile=0.1, strategy=lost.loss_strategy_dict['s5'])
+params = Parameters(run_n=106, sm_sample_id='qcdSigReco', quantile=0.9, strategy=lost.loss_strategy_dict['s5'])
 
 #****************************************#
 #           read in data
 #****************************************#
 experiment = ex.Experiment(params.run_n)
 paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': experiment.run_dir})
-qcd_sig_sample = js.JetSample.from_input_dir(params.sm_sample_id, paths.sample_dir_path(params.sm_sample_id))
+qcd_sig_sample = js.JetSample.from_input_dir(params.sm_sample_id, paths.sample_dir_path(params.sm_sample_id), read_n=int(1e5)) # can train on max 4M events (20% of qcd SR)
 qcd_train, qcd_valid = js.split_jet_sample_train_test(qcd_sig_sample, 0.8)
 print('training on {} events, validating on {}'.format(len(qcd_train), len(qcd_valid)))
 
