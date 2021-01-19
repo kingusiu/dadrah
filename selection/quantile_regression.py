@@ -55,20 +55,24 @@ class MinMaxUnnormalization(MinMaxNormalization):
 		return x * (self.max_x - self.min_x) + self.min_x
 
 
+# ******************************************** #
+#			quantile regression loss 		   #
+# ******************************************** #
+
+def quantile_loss(quantile):
+	@tf.function
+    def loss(target, pred):
+        err = target - pred
+        return tf.where(err>=0, quantile*err, (quantile-1)*err)
+    return loss
+
+
 class QuantileRegression():
 
 	def __init__(self, quantile, n_layers=5, n_nodes=20):
 		self.quantile = quantile
 		self.n_layers = n_layers
 		self.n_nodes = n_nodes
-
-	def quantile_loss( self ):
-		def loss( target, pred ):
-			alpha = 1 - self.quantile
-			err = target - pred
-			return tf.where(err>=0, alpha*err, (alpha-1)*err)
-		return loss
-
 
 	def build(self):
 		self.inputs = tf.keras.Input(shape=(1,))
@@ -78,7 +82,7 @@ class QuantileRegression():
 		self.output = tf.keras.layers.Dense(1)(x)
 		#self.output = tf.math.asinh(x) # output scaled to std normal distribution => last activation: arc sin hyperbolicus
 		model = tf.keras.Model(self.inputs, self.output)
-		model.compile(loss=self.quantile_loss(), optimizer='Adam') # Adam(lr=1e-3) TODO: add learning rate
+		model.compile(loss=quantile_loss(self.quantile), optimizer='adam') # Adam(lr=1e-3) TODO: add learning rate
 		model.summary()
 		return model
 
@@ -100,14 +104,3 @@ class QuantileRegressionV2():
 		model = tf.keras.Model(inputs, outputs)
 		return model
 
-# ******************************************** #
-#			quantile regression loss 		   #
-# ******************************************** #
-
-
-def quantile_loss(quantile):
-	@tf.function
-    def loss(target, pred):
-        err = target - pred
-        return tf.where(err>=0, quantile*err, (quantile-1)*err)
-    return loss
