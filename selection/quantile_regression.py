@@ -104,10 +104,10 @@ class QuantileRegressionV2():
 #			quantile regression loss 		   #
 # ******************************************** #
 
-# @tf.function
-def quantile_loss(targets, predictions, quantile):
-	alpha = 1 - quantile
-	err = targets - predictions
-	return tf.where(err>=0, alpha*err, (alpha-1)*err)
 
-
+def quantile_loss(quantile):
+	@tf.function
+    def loss(target, pred):
+        err = target - pred
+        return tf.where(err>=0, quantile*err, (quantile-1)*err)
+    return loss
