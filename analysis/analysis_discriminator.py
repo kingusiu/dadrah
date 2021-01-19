@@ -30,7 +30,6 @@ def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature
     plt.close(fig)
 
 
-
 def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_name='discr_cut', fig_dir=None):
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])*0.8
@@ -41,7 +40,7 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_nam
            norm=LogNorm(), bins=100, label='signal data')
 
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
-    plt.plot(xs, discriminator.predict( xs ) , '-', color='m', lw=2.5, label='selection cut')
+    plt.plot(xs, discriminator.predict(xs) , '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 & L2 > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.title(str(sample) + ' ' + str(discriminator) )
@@ -95,4 +94,3 @@ def plot_mass_spectrum_ratio(mjj_bg_like, mjj_sig_like, binning, SM_eff, title='
         c.SaveAs(os.path.join(fig_dir,plot_name))
 
     #return c
-

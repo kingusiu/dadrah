@@ -12,9 +12,8 @@ import datetime
 import dadrah.analysis.root_plotting_util as rpu
 import dadrah.selection.selection_util as seu
 import dadrah.selection.loss_strategy as lost
-from importlib import reload
 import os
-import setGPU
+#import setGPU
 
 
 def make_qr_model_str(train_sz, quantile, date=True):
@@ -55,6 +54,10 @@ for quantile in quantiles:
     experiment = ex.Experiment(run_n=run_n, param_dict={'$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str}).setup(analysis_dir=True)
     print('writing analysis results to ', experiment.analysis_dir_fig)
 
+    # ********************************************** #
+    #          train QR for quantile                 #
+    # ********************************************** #
+
     discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)
     discriminator.fit(qcd_train)
 
@@ -67,6 +70,10 @@ for quantile in quantiles:
 
     counting_experiment = {}
     bin_edges = [0,1126,1181,1246,1313,1383,1455,1530,1607,1687,1770,1856,1945,2037,2132,2231,2332,2438,2546,2659,2775,2895,3019,3147,3279,3416,3558,3704,3854,4010,4171,4337,4509,4686,4869,5058,5253,5500,5663,5877,6099,6328,6564,6808,1e6]
+
+    # ********************************************** #
+    #          make QCD selection                    #
+    # ********************************************** #
 
     # ### qcd training set
     selection = discriminator.select(qcd_train)
@@ -83,6 +90,10 @@ for quantile in quantiles:
     h_bg_like_qcd_test, h_sig_like_qcd_test = rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=30, title=title, plot_name='mJJ_raio_bg_vs_sig_'+sample.name, fig_dir=experiment.analysis_dir_fig)
     # save in counts sig like & bg like for qcd SR test set
     counting_experiment[SM_sample] = seu.get_bin_counts_sig_like_bg_like(sample, bin_edges)
+
+    # ********************************************** #
+    #          make SIGNAL selection                 #
+    # ********************************************** #
 
     # apply cuts to signal samples
     for sample_id in BSM_samples:
@@ -101,7 +112,9 @@ for quantile in quantiles:
         # save in counts sig like & bg like for qcd SR test set
         counting_experiment[sample_id] = seu.get_bin_counts_sig_like_bg_like(sample, bin_edges)
 
-    ### write selected samples
+    # ********************************************** #
+    #      write samples with selection to file      #
+    # ********************************************** #
 
     result_paths = sf.SamplePathDirFactory(sds.path_dict).update_base_path({'$run$': experiment.run_dir, '$quantile$': 'q'+str(int(quantile*100)), '$strategy$': strategy.file_str})
 

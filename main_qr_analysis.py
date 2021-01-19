@@ -15,12 +15,11 @@ import analysis.analysis_discriminator as andi
 single_discriminator_analysis = False
 multi_discriminator_analysis = True
 
-
 #****************************************#
 #			set runtime params
 #****************************************#
 Parameters = namedtuple('Parameters','run_n, sm_sample_id, quantile, strategy')
-params = Parameters(run_n=101, sm_sample_id='qcdSigAllReco', quantile=0.1, strategy=lost.loss_strategy_dict['rk5'])
+params = Parameters(run_n=101, sm_sample_id='qcdSigBisReco', quantile=0.9, strategy=lost.loss_strategy_dict['s5'])
 
 #****************************************#
 #			read in data
