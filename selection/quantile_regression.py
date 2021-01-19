@@ -74,7 +74,7 @@ class QuantileRegression():
 		self.inputs = tf.keras.Input(shape=(1,))
 		x = self.inputs
 		for _ in range(self.n_layers):
-			x = tf.keras.layers.Dense(self.n_nodes, kernel_initializer='lecun_normal', activation='selu')(x)
+			x = tf.keras.layers.Dense(self.n_nodes, activation='relu')(x)
 		self.output = tf.keras.layers.Dense(1)(x)
 		#self.output = tf.math.asinh(x) # output scaled to std normal distribution => last activation: arc sin hyperbolicus
 		model = tf.keras.Model(self.inputs, self.output)

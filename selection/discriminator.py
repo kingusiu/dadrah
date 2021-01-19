@@ -67,7 +67,7 @@ class QRDiscriminator(Discriminator):
         self.optimizer = optimizer() #optimizer(learning_rate)
         self.model_params = model_params
 
-    # @tf.function
+    @tf.function
     def training_step(self, x_batch, y_batch):
         # Open a GradientTape to record the operations run in forward pass
         # import ipdb; ipdb.set_trace()
@@ -75,8 +75,8 @@ class QRDiscriminator(Discriminator):
             predictions = self.model(x_batch, training=True)
             loss_value = tf.math.reduce_mean(qr.quantile_loss(y_batch, predictions, self.quantile))
 
-        grads = tape.gradient(loss_value, self.model.trainable_weights)
-        self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+        grads = tape.gradient(loss_value, self.model.trainable_variables)
+        self.optimizer.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss_value
 
     def training_epoch(self, train_dataset):
@@ -141,7 +141,7 @@ class QRDiscriminator(Discriminator):
     def predict(self, data):
         if isinstance(data, js.JetSample):
             data = data[self.mjj_key]
-        return self.model(data)
+        return self.model(data, training=False)
 
     def select(self, jet_sample):
         loss_cut = self.predict(jet_sample)

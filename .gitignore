@@ -11,3 +11,4 @@ tensorboard/
 .git-old/
 *.pyc
 .ipynb*
+*.h5

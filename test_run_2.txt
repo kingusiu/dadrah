@@ -1,0 +1,76 @@
+[DataReader] read_jet_features_from_dir(): reading 1000000 events from /eos/user/k/kiwoznia/data/VAE_results/events/run_106/qcd_sqrtshatTeV_13TeV_PU40_NEW_signalregion_parts
+1000000 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_106/qcd_sqrtshatTeV_13TeV_PU40_NEW_signalregion_parts
+training on 1000000 events
+2021-01-19 10:54:53.656243: E tensorflow/stream_executor/cuda/cuda_driver.cc:314] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+Model: "custom__train__step__model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense (Dense)                (None, 20)                40        
+_________________________________________________________________
+dense_1 (Dense)              (None, 20)                420       
+_________________________________________________________________
+dense_2 (Dense)              (None, 20)                420       
+_________________________________________________________________
+dense_3 (Dense)              (None, 20)                420       
+_________________________________________________________________
+dense_4 (Dense)              (None, 20)                420       
+_________________________________________________________________
+dense_5 (Dense)              (None, 1)                 21        
+=================================================================
+Total params: 1,741
+Trainable params: 1,741
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/25
+1954/1954 - 26s - loss: 0.0174
+Epoch 2/25
+1954/1954 - 26s - loss: 0.0292
+Epoch 3/25
+1954/1954 - 27s - loss: 0.0240
+Epoch 4/25
+1954/1954 - 25s - loss: 0.0221
+Epoch 5/25
+1954/1954 - 25s - loss: 0.0230
+Epoch 6/25
+1954/1954 - 24s - loss: 0.0210
+Epoch 7/25
+1954/1954 - 23s - loss: 0.0214
+Epoch 8/25
+1954/1954 - 25s - loss: 0.0214
+Epoch 9/25
+1954/1954 - 24s - loss: 0.0215
+Epoch 10/25
+1954/1954 - 24s - loss: 0.0205
+Epoch 11/25
+1954/1954 - 27s - loss: 0.0211
+Epoch 12/25
+1954/1954 - 25s - loss: 0.0203
+Epoch 13/25
+1954/1954 - 25s - loss: 0.0220
+Epoch 14/25
+1954/1954 - 24s - loss: 0.0225
+Epoch 15/25
+1954/1954 - 25s - loss: 0.0221
+Epoch 16/25
+1954/1954 - 23s - loss: 0.0222
+Epoch 17/25
+1954/1954 - 23s - loss: 0.0214
+Epoch 18/25
+1954/1954 - 23s - loss: 0.0223
+Epoch 19/25
+1954/1954 - 23s - loss: 0.0213
+Epoch 20/25
+1954/1954 - 23s - loss: 0.0216
+Epoch 21/25
+1954/1954 - 23s - loss: 0.0227
+Epoch 22/25
+1954/1954 - 23s - loss: 0.0219
+Epoch 23/25
+1954/1954 - 22s - loss: 0.0213
+Epoch 24/25
+1954/1954 - 22s - loss: 0.0230
+Epoch 25/25
+1954/1954 - 22s - loss: 0.0205

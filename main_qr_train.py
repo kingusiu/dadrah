@@ -35,7 +35,7 @@ print('training on {} events, validating on {}'.format(len(qcd_train), len(qcd_v
 #       train quantile regression
 #****************************************#
 
-discriminator = disc.QRDiscriminator(quantile=params.quantile, loss_strategy=params.strategy, batch_sz=256, epochs=20,  n_layers=5, n_nodes=50)
+discriminator = disc.QRDiscriminator_KerasAPI(quantile=params.quantile, loss_strategy=params.strategy, batch_sz=256, epochs=30,  n_layers=5, n_nodes=50)
 losses_train, losses_valid = discriminator.fit(qcd_train, qcd_valid)
 print(discriminator.model.summary())
 train.plot_training_results(losses_train, losses_valid, 'fig')
