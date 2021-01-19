@@ -160,20 +160,6 @@ class QRDiscriminator_KerasAPI(QRDiscriminator):
     def __init__(self, **kwargs):
         super(QRDiscriminator_KerasAPI, self).__init__(**kwargs)
 
-    def set_mean_std_input_output(self, inp, outp):
-        self.mean_inp, self.mean_outp = np.mean(inp), np.mean(outp)
-        self.std_inp, self.std_outp = np.std(inp), np.std(outp)
-
-    def scale_input(self, inp):
-        inp_scaled = (inp - self.mean_inp) / self.std_inp
-        return np.reshape(inp_scaled, (-1,1))
-
-    def scale_output(self, outp):
-        return (outp - self.mean_outp) / self.std_outp
-
-    def unscale_output(self, outp):
-        return (outp * self.std_outp) + self.mean_outp
-
     def fit(self, train_sample, valid_sample):
         # prepare training set
         (x_train, y_train), (x_valid, y_valid) = self.make_training_datasets(train_sample, valid_sample)
