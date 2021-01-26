@@ -13,9 +13,9 @@ import anpofah.util.plotting_util as pu
 def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature_key='mJJ', plot_name='multi_discr_cut', fig_dir=None):
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])
-    x_max = np.percentile(sample[feature_key], 1e2*(1-1e-4))
+    x_max = np.percentile(sample[feature_key], 1e2*(1-1e-3))
     loss = discriminator_list[0].loss_strategy(sample)
-    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-4)))), norm=LogNorm(), bins=200)
+    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-3)))), norm=LogNorm(), bins=200)
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
     for discriminator in discriminator_list:
         plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='cut Q'+str(discriminator.quantile*100))

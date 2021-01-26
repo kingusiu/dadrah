@@ -6,6 +6,7 @@ import sklearn.ensemble as scikit
 import dadrah.selection.quantile_regression as qr
 import pofah.jet_sample as js
 import vande.training as train
+import vande.vae.layers as layers
 
 
 class Discriminator(metaclass=ABCMeta):
@@ -139,7 +140,7 @@ class QRDiscriminator(Discriminator):
         self.model.save(path)
 
     def load(self, path):
-        self.model = tf.keras.models.load_model(path, custom_objects={'MinMaxNormalization': qr.MinMaxNormalization, 'MinMaxUnnormalization': qr.MinMaxUnnormalization}, compile=False)
+        self.model = tf.keras.models.load_model(path, custom_objects={'StdNormalization': layers.StdNormalization, 'StdUnnormalization': layers.StdUnnormalization}, compile=False)
         print('loaded model ', self.model)
 
     def predict(self, data):
@@ -163,11 +164,9 @@ class QRDiscriminator_KerasAPI(QRDiscriminator):
     def fit(self, train_sample, valid_sample):
         # prepare training set
         (x_train, y_train), (x_valid, y_valid) = self.make_training_datasets(train_sample, valid_sample)
-        #self.set_mean_std_input_output(x_train, y_train)
 
-        self.model = qr.QuantileRegression(quantile=self.quantile, **self.model_params).build()
-        # import ipdb; ipdb.set_trace()
-        self.history = self.model.fit(x_train, y_train, epochs=self.epochs, batch_size=self.batch_sz, verbose=2, validation_data=(x_valid, y_valid)) #, shuffle=True, \
+        self.model = qr.QuantileRegression(quantile=self.quantile, x_mu_std=(np.mean(x_train), np.std(x_train)), **self.model_params).build()
+        self.history = self.model.fit(x_train, y_train, epochs=self.epochs, batch_size=self.batch_sz, verbose=2, validation_data=(x_valid, y_valid), shuffle=True) #, \
             # callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
        
         return self.history.history['loss'], self.history.history['val_loss']
