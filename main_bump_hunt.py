@@ -95,8 +95,8 @@ for quantile in quantiles:
 
 # write results for all quantiles
 print('writing selections to ', result_dir)
-qcd_test.dump(os.path.join(result_dir, 'qcd_sr_selections.h5'))
-sig_sample.dump(os.path.join(result_dir, sig_sample_id+'_selections.h5'))
+qcd_test.dump(os.path.join(result_dir, paths.sample_file_path(params.qcd_sample_id)))
+sig_sample.dump(os.path.join(result_dir, paths.sample_file_path(sig_sample_id)))
 
 # plot results
 discriminator_list = []
