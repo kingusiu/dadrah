@@ -32,11 +32,11 @@ sig_sample_id = 'GtoWW35naReco'
 # for a fixed xsec 10
 xsec = 10.
 sig_in_training_num = 150
-quantiles = [0.1, 0.5, 0.9]
+quantiles = [0.1, 0.5, 0.9, 0.99]
 result_dir = os.path.join('/eos/project/d/dshep/TOPCLASS/DijetAnomaly/VAE_results/', 'run_'+str(run))
 
 Parameters = namedtuple('Parameters','run_n, qcd_sample_id, strategy')
-params = Parameters(run_n=109, qcd_sample_id='qcdSigReco', strategy=lost.loss_strategy_dict['s5'])
+params = Parameters(run_n=run, qcd_sample_id='qcdSigReco', strategy=lost.loss_strategy_dict['s5'])
 
 #****************************************#
 #           read in data
@@ -67,7 +67,7 @@ do_bump_hunt = False
 model_paths = []
 qcd_sel_paths = []
 sig_sel_paths = []
-# for quantiles 0.1 0.5 0.9
+# for quantiles 0.1 0.5 0.9, 0.99
 for quantile in quantiles:
     
     # train QR on x_train and y_train and quantile q
@@ -83,17 +83,20 @@ for quantile in quantiles:
     print('saving model ', model_str)
 
     # prediction
-    print('running prediction and writing selections to ', result_dir)
+    print('running prediction')
 
     # predict qcd_test
     selection = discriminator.select(qcd_test)
-    qcd_test.add_feature('sel', selection)
-    qcd_test.dump(os.path.join(result_dir, 'qcd_sr_sel_q'+str(int(quantile*100))+'.h5'))
+    qcd_test.add_feature('sel_q{:02}'.format(int(round((1.-quantile),2)*100)), selection)
 
     # predict signal test
     selection = discriminator.select(sig_sample)
-    sig_sample.add_feature('sel', selection)
-    sig_sample.dump(os.path.join(result_dir, sig_sample_id+'_sel_q'+str(int(quantile*100))+'.h5'))
+    sig_sample.add_feature('sel_q{:02}'.format(int(round((1.-quantile),2)*100)), selection)
+
+# write results for all quantiles
+print('writing selections to ', result_dir)
+qcd_test.dump(os.path.join(result_dir, 'qcd_sr_selections.h5'))
+sig_sample.dump(os.path.join(result_dir, sig_sample_id+'_selections.h5'))
 
 # plot results
 discriminator_list = []
