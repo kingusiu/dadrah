@@ -21,7 +21,7 @@ def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature
         plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='cut Q'+str(discriminator.quantile*100))
     plt.ylabel('L1 & L2 > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
-    plt.title(str(sample) + ' cut q10, q30, q50, q70, q90')
+    plt.title(str(sample) + ' cut q01 q10, q30, q50, q70, q90')
     plt.colorbar()
     plt.legend(loc='best')
     plt.draw()

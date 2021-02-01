@@ -61,7 +61,7 @@ for quantile in quantiles:
     discriminator = dis.QRDiscriminator(quantile=quantile, loss_strategy=strategy, n_nodes=70)
     discriminator.fit(qcd_train)
 
-    # plot mjj qcd sig to check for flat ratio
+    # plot discriminator cut
     an.analyze_discriminator_cut(discriminator, qcd_train, plot_name='discr_cut_qnt'+str(int(quantile*100)), fig_dir=experiment.analysis_dir_fig)
 
     model_str = make_qr_model_str(QR_train_share, quantile)
