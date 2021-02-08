@@ -603,3 +603,61 @@ Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
 7492/7492 - 14s - loss: 9.2697e-04 - val_loss: 9.2824e-04
 Epoch 20/300
 7492/7492 - 17s - loss: 9.2685e-04 - val_loss: 9.2820e-04
+Epoch 21/300
+7492/7492 - 15s - loss: 9.2685e-04 - val_loss: 9.2820e-04
+Epoch 22/300
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7492/7492 - 15s - loss: 9.2685e-04 - val_loss: 9.2819e-04
+Epoch 23/300
+7492/7492 - 15s - loss: 9.2683e-04 - val_loss: 9.2818e-04
+Epoch 24/300
+7492/7492 - 18s - loss: 9.2683e-04 - val_loss: 9.2819e-04
+Epoch 25/300
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7492/7492 - 18s - loss: 9.2683e-04 - val_loss: 9.2818e-04
+Epoch 26/300
+7492/7492 - 14s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 27/300
+7492/7492 - 14s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 28/300
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7492/7492 - 17s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 29/300
+7492/7492 - 15s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 30/300
+7492/7492 - 14s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 31/300
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7492/7492 - 13s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 32/300
+7492/7492 - 13s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 33/300
+7492/7492 - 14s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 34/300
+
+Epoch 00034: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7492/7492 - 15s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 35/300
+7492/7492 - 16s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 36/300
+7492/7492 - 14s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 37/300
+
+Epoch 00037: ReduceLROnPlateau reducing learning rate to 2.0480002416167767e-11.
+7492/7492 - 14s - loss: 9.2682e-04 - val_loss: 9.2818e-04
+Epoch 00037: early stopping
+saving model  QRmodel_run_112_qnt_99_sigx_100_20210208.h5
+predicting qcdSigReco_and_qcdSigExtRecoTest
+predicting GtoWW35naReco
+Traceback (most recent call last):
+  File "main_bump_hunt.py", line 135, in <module>
+    # write results for all quantiles
+  File "/eos/home-k/kiwoznia/dev/physics_objects_for_anomaly_hunting/pofah/util/sample_factory.py", line 18, in update_base_path
+    self.base_dir = utfu.multi_replace(self.base_dir, repl_dict)
+  File "/eos/home-k/kiwoznia/dev/physics_objects_for_anomaly_hunting/pofah/util/utility_fun.py", line 23, in multi_replace
+    return regex.sub(lambda word: repl_dict[word.string[word.start():word.end()]], text)
+TypeError: sequence item 1: expected str instance, int found

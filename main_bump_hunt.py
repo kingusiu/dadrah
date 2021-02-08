@@ -43,12 +43,12 @@ def train_QR(quantile, strategy, mixed_train_sample, mixed_valid_sample, plot_lo
     return discriminator
 
 
-def save_QR(run_n, quantile, xsec):
+def save_QR(experiment, quantile, xsec):
     # save the model   
-    model_str = make_qr_model_str(run_n, quantile, xsec)
-    model_path = 'models/{}'.format(model_str)
+    model_str = make_qr_model_str(experiment.run_n, quantile, xsec)
+    model_path = os.path.join(experiment.model_dir_qr, model_str)
     discriminator.save(model_path)
-    print('saving model ', model_str)
+    print('saving model {} to {}'.format(model_str, experiment.model_dir_qr))
     return model_path
 
 
@@ -84,7 +84,7 @@ train_qr = True
 #****************************************#
 #           read in data
 #****************************************#
-experiment = ex.Experiment(params.run_n)
+experiment = ex.Experiment(params.run_n).setup(model_dir_qr=True)
 paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': experiment.run_dir})
 
 # if datasets not yet prepared, prepare them, dump and return
@@ -121,7 +121,7 @@ for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
             # train and save QR model
             discriminator = train_QR(quantile, params.strategy, mixed_train_sample, mixed_valid_sample)
-            discriminator_path = save_QR(params.run_n, quantile, xsec)
+            discriminator_path = save_QR(experiment, quantile, xsec)
             model_paths.append(discriminator_path)
 
         else: # else load discriminators
