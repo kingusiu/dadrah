@@ -1,8 +1,11 @@
 import numpy as np
 import ROOT as rt
-import root_numpy as rtnp
 import uuid
 import os
+import matplotlib.pyplot as plt
+import root_numpy as rtnp
+import mplhep as hep
+plt.style.use(hep.style.ROOT)
 
 
 object_cache = []
@@ -104,9 +107,6 @@ def create_hist(data, title, n_bins, min_bin, max_bin, props):
     h = create_object("TH1D", title, n_bins, min_bin, max_bin)
     rtnp.fill_hist(h, data)
     set_style(h, props=props)
-    h.GetXaxis().SetTitleSize(0.02)
-    h.GetYaxis().SetTitleSize(0.02)
-    #h.GetXaxis().SetLabelSize(15)
     #h.GetYaxis().SetLabelSize(15)
     return h
 
@@ -119,28 +119,40 @@ def create_ratio_hist(h2, h1, target_value=1.):
     return h3, line
 
 def create_canvas_pads():
-    canv = create_object("TCanvas","canvas", 600, 600)
+    canv = create_object("TCanvas","canvas", 600, 700)
     pad1 = create_object("TPad", "pad1", 0, 0.3, 1, 1.0)
     pad1.Draw()
-    set_style(pad1, props={'Logy':None}) # set mass hist pad to logscale 
+    set_style(pad1, props={'Logy': None}) # set mass hist pad to logscale 
     canv.cd()
-    pad2 = create_object("TPad", "pad2", 0, 0.05, 1, 0.3)
+    pad2 = create_object("TPad", "pad2", 0, 0.0, 1, 0.3)
+    pad2.SetTopMargin(0.05)
+    pad2.SetBottomMargin(0.27)
     pad2.Draw()
     return canv, pad1, pad2
 
 
-def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, binning=None, title="ratio plot", plot_name='ratio_plot', fig_dir=None):
+def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50, binning=None, title="ratio plot", plot_name='ratio_plot', fig_dir=None, fig_format='.png'):
     min_bin = min(np.min(mjj_bg_like), np.min(mjj_sig_like))
     max_bin = max(np.max(mjj_bg_like), np.max(mjj_sig_like))
+    max_y = max(len(mjj_bg_like), len(mjj_sig_like))
     print("min {}, max {}".format(min_bin, max_bin))
     # create H1 BG hist
-    h1 = create_hist(mjj_bg_like, title, n_bins, min_bin, max_bin, props={"LineColor": rt.kBlue+1, "YTitle": 'num events', "XTitle": "M_{jj} [GeV]"})
+    h1 = create_hist(mjj_bg_like, title, n_bins, min_bin, max_bin, props={"Maximum": max_y, "LineColor": rt.kBlue+1, "YTitle": 'num events', "XTitle": "M_{jj} [GeV]"})
+    h1.SetTitleFont(43)
+    h1.SetTitleSize(100)
     # create H2 SIG hist
     h2 = create_hist(mjj_sig_like, "h2", n_bins, min_bin, max_bin, props={"LineColor": rt.kRed})
     # create H3 RATIO hist
     h3, line = create_ratio_hist(h2, h1, target_value)
     set_style(h3, props={"LineColor": rt.kMagenta+3, "Title": '', "XTitle": 'M_{jj} [GeV]', "YTitle": "ratio SIG / BG"})
-    set_style(line, props={"LineColor" : rt.kGreen})
+    set_style(line, props={"LineColor" : rt.kGreen-2})
+    h3.GetYaxis().SetTitleSize(0.11)
+    h3.GetXaxis().SetTitleSize(0.11)
+    h3.GetYaxis().SetLabelSize(0.11)
+    h3.GetXaxis().SetLabelSize(0.11)
+    h3.GetYaxis().SetTitleOffset(0.3)
+    h3.GetXaxis().SetTitleOffset(0.7)
+    h3.GetYaxis().SetNdivisions(506)
     canv, pad1, pad2 = create_canvas_pads()
     legend = create_object("TLegend", 0.6, 0.7, 0.9, 0.9)
     set_style(legend)
@@ -155,7 +167,7 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     line.Draw()
     canv.Draw()
     if fig_dir is not None:
-        canv.SaveAs(os.path.join(fig_dir, plot_name+'.png'))
+        canv.SaveAs(os.path.join(fig_dir, plot_name + fig_format))
     return [h1, h2]
 
 

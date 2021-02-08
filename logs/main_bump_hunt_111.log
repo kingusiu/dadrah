@@ -9,7 +9,7 @@ training on 1917872 events, validating on 479469
 
 training QR for quantile 0.1
 WARNING: Logging before flag parsing goes to stderr.
-W0201 17:19:19.521909 139630528583488 deprecation.py:323] From /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/lib/python3.6/site-packages/tensorflow/python/autograph/impl/api.py:255: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+W0201 22:03:10.666966 139747382667072 deprecation.py:323] From /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/lib/python3.6/site-packages/tensorflow/python/autograph/impl/api.py:255: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
 Instructions for updating:
 Use tf.where in 2.0, which has the same broadcast rule as np.where
 Model: "model"
@@ -38,77 +38,640 @@ Non-trainable params: 0
 _________________________________________________________________
 Train on 1917872 samples, validate on 479469 samples
 Epoch 1/300
-1917872/1917872 - 21s - loss: 0.0057 - val_loss: 0.0035
+1917872/1917872 - 19s - loss: 0.0050 - val_loss: 0.0035
 Epoch 2/300
-1917872/1917872 - 20s - loss: 0.0037 - val_loss: 0.0035
+1917872/1917872 - 19s - loss: 0.0036 - val_loss: 0.0035
 Epoch 3/300
-1917872/1917872 - 19s - loss: 0.0035 - val_loss: 0.0034
+1917872/1917872 - 18s - loss: 0.0035 - val_loss: 0.0034
 Epoch 4/300
 
 Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0035
 Epoch 5/300
-1917872/1917872 - 19s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
 Epoch 6/300
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 19s - loss: 0.0034 - val_loss: 0.0034
 Epoch 7/300
-
-Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
 1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
 Epoch 8/300
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
 1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
 Epoch 9/300
 1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
 Epoch 10/300
-
-Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 19s - loss: 0.0034 - val_loss: 0.0034
 Epoch 11/300
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
 1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
 Epoch 12/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 13/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 14/300
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 15/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 16/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 17/300
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1917872/1917872 - 18s - loss: 0.0034 - val_loss: 0.0034
+Epoch 18/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 19/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 20/300
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 21/300
 1917872/1917872 - 19s - loss: 0.0034 - val_loss: 0.0034
+Epoch 22/300
+1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+Epoch 23/300
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1917872/1917872 - 19s - loss: 0.0034 - val_loss: 0.0034
+Epoch 24/300
+1917872/1917872 - 19s - loss: 0.0034 - val_loss: 0.0034
+Epoch 00024: early stopping
+saving model  QRmodel_run_111_qnt_10_sigx_100_20210201.h5
+running prediction
+min 1200.0001220703125, max 7285.58154296875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_10_sigx_100_20210201/mJJ_raio_bg_vs_sig_qcdSigReco_and_qcdSigExtRecoTest.png has been created
+min 1200.2132568359375, max 7541.58984375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_10_sigx_100_20210201/mJJ_raio_bg_vs_sig_GtoWW35naReco.png has been created
+
+training QR for quantile 0.3
+Model: "model_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_2 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_6 (Dense)              (None, 60)                120       
+_________________________________________________________________
+dense_7 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_8 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_9 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_10 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_11 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1917872 samples, validate on 479469 samples
+Epoch 1/300
+1917872/1917872 - 20s - loss: 0.0096 - val_loss: 0.0076
+Epoch 2/300
+1917872/1917872 - 20s - loss: 0.0076 - val_loss: 0.0083
+Epoch 3/300
+1917872/1917872 - 20s - loss: 0.0075 - val_loss: 0.0077
+Epoch 4/300
+1917872/1917872 - 20s - loss: 0.0075 - val_loss: 0.0074
+Epoch 5/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0075
+Epoch 6/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 7/300
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 8/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 9/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 10/300
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 11/300
+1917872/1917872 - 19s - loss: 0.0074 - val_loss: 0.0074
+Epoch 12/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 13/300
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1917872/1917872 - 19s - loss: 0.0074 - val_loss: 0.0074
+Epoch 14/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 15/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 16/300
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 17/300
+1917872/1917872 - 19s - loss: 0.0074 - val_loss: 0.0074
+Epoch 18/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 19/300
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 20/300
+1917872/1917872 - 19s - loss: 0.0074 - val_loss: 0.0074
+Epoch 21/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 22/300
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 23/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 24/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 25/300
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 26/300
+1917872/1917872 - 19s - loss: 0.0074 - val_loss: 0.0074
+Epoch 27/300
+1917872/1917872 - 19s - loss: 0.0074 - val_loss: 0.0074
+Epoch 28/300
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 29/300
+1917872/1917872 - 21s - loss: 0.0074 - val_loss: 0.0074
+Epoch 30/300
+1917872/1917872 - 20s - loss: 0.0074 - val_loss: 0.0074
+Epoch 00030: early stopping
+saving model  QRmodel_run_111_qnt_30_sigx_100_20210201.h5
+running prediction
+min 1200.0001220703125, max 7285.58154296875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_30_sigx_100_20210201/mJJ_raio_bg_vs_sig_qcdSigReco_and_qcdSigExtRecoTest.png has been created
+min 1200.2132568359375, max 7541.58984375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_30_sigx_100_20210201/mJJ_raio_bg_vs_sig_GtoWW35naReco.png has been created
+
+training QR for quantile 0.5
+Model: "model_2"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_3 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_12 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_13 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_14 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_15 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_16 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_17 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1917872 samples, validate on 479469 samples
+Epoch 1/300
+1917872/1917872 - 19s - loss: 0.0111 - val_loss: 0.0095
+Epoch 2/300
+1917872/1917872 - 19s - loss: 0.0093 - val_loss: 0.0093
+Epoch 3/300
+1917872/1917872 - 19s - loss: 0.0092 - val_loss: 0.0091
+Epoch 4/300
+1917872/1917872 - 20s - loss: 0.0092 - val_loss: 0.0091
+Epoch 5/300
+1917872/1917872 - 20s - loss: 0.0092 - val_loss: 0.0091
+Epoch 6/300
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1917872/1917872 - 20s - loss: 0.0092 - val_loss: 0.0092
+Epoch 7/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 8/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 9/300
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 10/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 11/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 12/300
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 13/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 14/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 15/300
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 16/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 17/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 18/300
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 19/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 20/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 21/300
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 22/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 23/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 24/300
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 25/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 26/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 27/300
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 28/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 29/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 30/300
+
+Epoch 00030: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 31/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 32/300
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 33/300
+
+Epoch 00033: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+1917872/1917872 - 19s - loss: 0.0091 - val_loss: 0.0091
+Epoch 34/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 35/300
+1917872/1917872 - 20s - loss: 0.0091 - val_loss: 0.0091
+Epoch 00035: early stopping
+saving model  QRmodel_run_111_qnt_50_sigx_100_20210201.h5
+running prediction
+min 1200.0001220703125, max 7285.58154296875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_50_sigx_100_20210201/mJJ_raio_bg_vs_sig_qcdSigReco_and_qcdSigExtRecoTest.png has been created
+min 1200.2132568359375, max 7541.58984375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_50_sigx_100_20210201/mJJ_raio_bg_vs_sig_GtoWW35naReco.png has been created
+
+training QR for quantile 0.7
+Model: "model_3"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_4 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_18 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_19 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_20 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_21 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_22 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_23 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1917872 samples, validate on 479469 samples
+Epoch 1/300
+1917872/1917872 - 21s - loss: 0.0111 - val_loss: 0.0087
+Epoch 2/300
+1917872/1917872 - 19s - loss: 0.0088 - val_loss: 0.0088
+Epoch 3/300
+1917872/1917872 - 20s - loss: 0.0087 - val_loss: 0.0091
+Epoch 4/300
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1917872/1917872 - 20s - loss: 0.0087 - val_loss: 0.0087
+Epoch 5/300
+1917872/1917872 - 19s - loss: 0.0086 - val_loss: 0.0087
+Epoch 6/300
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 7/300
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 8/300
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 9/300
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
+Epoch 10/300
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 11/300
+1917872/1917872 - 19s - loss: 0.0086 - val_loss: 0.0086
+Epoch 12/300
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 13/300
 
 Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
 Epoch 14/300
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 15/300
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
 Epoch 16/300
 
 Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 17/300
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 18/300
-1917872/1917872 - 22s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 19/300
 
 Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 20/300
-1917872/1917872 - 21s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
 Epoch 21/300
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
 Epoch 22/300
 
 Epoch 00022: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
 Epoch 23/300
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
 Epoch 24/300
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
 Epoch 25/300
 
 Epoch 00025: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
-1917872/1917872 - 20s - loss: 0.0034 - val_loss: 0.0034
-Epoch 00025: early stopping
-saving model  QRmodel_run_111_qnt_10_sigx_100.0_20210201.h5
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 26/300
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 27/300
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 28/300
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+1917872/1917872 - 21s - loss: 0.0086 - val_loss: 0.0086
+Epoch 29/300
+1917872/1917872 - 20s - loss: 0.0086 - val_loss: 0.0086
+Epoch 00029: early stopping
+saving model  QRmodel_run_111_qnt_70_sigx_100_20210201.h5
 running prediction
+min 1200.0001220703125, max 7285.58154296875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_70_sigx_100_20210201/mJJ_raio_bg_vs_sig_qcdSigReco_and_qcdSigExtRecoTest.png has been created
+min 1200.2132568359375, max 7541.58984375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_70_sigx_100_20210201/mJJ_raio_bg_vs_sig_GtoWW35naReco.png has been created
+
+training QR for quantile 0.9
+Model: "model_4"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_5 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_24 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_25 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_26 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_27 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_28 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_29 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1917872 samples, validate on 479469 samples
+Epoch 1/300
+1917872/1917872 - 21s - loss: 0.0066 - val_loss: 0.0052
+Epoch 2/300
+1917872/1917872 - 21s - loss: 0.0053 - val_loss: 0.0052
+Epoch 3/300
+1917872/1917872 - 21s - loss: 0.0051 - val_loss: 0.0051
+Epoch 4/300
+1917872/1917872 - 20s - loss: 0.0050 - val_loss: 0.0050
+Epoch 5/300
+1917872/1917872 - 22s - loss: 0.0050 - val_loss: 0.0050
+Epoch 6/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 7/300
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 8/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 9/300
+1917872/1917872 - 22s - loss: 0.0050 - val_loss: 0.0050
+Epoch 10/300
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 11/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 12/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 13/300
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1917872/1917872 - 20s - loss: 0.0050 - val_loss: 0.0050
+Epoch 14/300
+1917872/1917872 - 20s - loss: 0.0050 - val_loss: 0.0050
+Epoch 15/300
+1917872/1917872 - 20s - loss: 0.0050 - val_loss: 0.0050
+Epoch 16/300
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 17/300
+1917872/1917872 - 20s - loss: 0.0050 - val_loss: 0.0050
+Epoch 18/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 19/300
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 20/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 21/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 22/300
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 23/300
+1917872/1917872 - 21s - loss: 0.0050 - val_loss: 0.0050
+Epoch 00023: early stopping
+saving model  QRmodel_run_111_qnt_90_sigx_100_20210201.h5
+running prediction
+min 1200.0001220703125, max 7285.58154296875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_90_sigx_100_20210201/mJJ_raio_bg_vs_sig_qcdSigReco_and_qcdSigExtRecoTest.png has been created
+min 1200.2132568359375, max 7541.58984375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_90_sigx_100_20210201/mJJ_raio_bg_vs_sig_GtoWW35naReco.png has been created
+
+training QR for quantile 0.99
+Model: "model_5"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_6 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_30 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_31 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_32 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_33 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_34 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_35 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Train on 1917872 samples, validate on 479469 samples
+Epoch 1/300
+1917872/1917872 - 22s - loss: 0.0025 - val_loss: 0.0011
+Epoch 2/300
+1917872/1917872 - 21s - loss: 0.0010 - val_loss: 0.0010
+Epoch 3/300
+1917872/1917872 - 20s - loss: 9.7904e-04 - val_loss: 9.4544e-04
+Epoch 4/300
+1917872/1917872 - 21s - loss: 9.6176e-04 - val_loss: 9.6804e-04
+Epoch 5/300
+1917872/1917872 - 21s - loss: 9.4025e-04 - val_loss: 9.4105e-04
+Epoch 6/300
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+1917872/1917872 - 21s - loss: 9.3652e-04 - val_loss: 9.3267e-04
+Epoch 7/300
+1917872/1917872 - 21s - loss: 9.2343e-04 - val_loss: 9.2387e-04
+Epoch 8/300
+1917872/1917872 - 21s - loss: 9.2337e-04 - val_loss: 9.2296e-04
+Epoch 9/300
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+1917872/1917872 - 21s - loss: 9.2329e-04 - val_loss: 9.2303e-04
+Epoch 10/300
+1917872/1917872 - 20s - loss: 9.2141e-04 - val_loss: 9.2134e-04
+Epoch 11/300
+1917872/1917872 - 21s - loss: 9.2144e-04 - val_loss: 9.2182e-04
+Epoch 12/300
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+1917872/1917872 - 21s - loss: 9.2132e-04 - val_loss: 9.2131e-04
+Epoch 13/300
+1917872/1917872 - 21s - loss: 9.2098e-04 - val_loss: 9.2131e-04
+Epoch 14/300
+1917872/1917872 - 21s - loss: 9.2097e-04 - val_loss: 9.2128e-04
+Epoch 15/300
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+1917872/1917872 - 21s - loss: 9.2097e-04 - val_loss: 9.2130e-04
+Epoch 16/300
+1917872/1917872 - 21s - loss: 9.2085e-04 - val_loss: 9.2129e-04
+Epoch 17/300
+1917872/1917872 - 21s - loss: 9.2084e-04 - val_loss: 9.2130e-04
+Epoch 18/300
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+1917872/1917872 - 22s - loss: 9.2086e-04 - val_loss: 9.2129e-04
+Epoch 19/300
+1917872/1917872 - 21s - loss: 9.2083e-04 - val_loss: 9.2129e-04
+Epoch 20/300
+1917872/1917872 - 21s - loss: 9.2083e-04 - val_loss: 9.2129e-04
+Epoch 21/300
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+1917872/1917872 - 21s - loss: 9.2083e-04 - val_loss: 9.2129e-04
+Epoch 22/300
+1917872/1917872 - 21s - loss: 9.2082e-04 - val_loss: 9.2129e-04
+Epoch 23/300
+1917872/1917872 - 20s - loss: 9.2082e-04 - val_loss: 9.2129e-04
+Epoch 24/300
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+1917872/1917872 - 20s - loss: 9.2082e-04 - val_loss: 9.2129e-04
+Epoch 00024: early stopping
+saving model  QRmodel_run_111_qnt_99_sigx_100_20210201.h5
+running prediction
+min 1200.0001220703125, max 7285.58154296875
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_99_sigx_100_20210201/mJJ_raio_bg_vs_sig_qcdSigReco_and_qcdSigExtRecoTest.png has been created
+min 1200.2132568359375, max 7541.58984375
+TH1D::Sumw2:0: RuntimeWarning: Sum of squares of weights structure already created
+Info in <TCanvas::Print>: png file fig/QRmodel_run_111_qnt_99_sigx_100_20210201/mJJ_raio_bg_vs_sig_GtoWW35naReco.png has been created
+writing selections to  /eos/project/d/dshep/TOPCLASS/DijetAnomaly/VAE_results/run_111
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/VAE_results/run_111/qcd_sqrtshatTeV_13TeV_PU40_reco.h5
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/VAE_results/run_111/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+W0201 23:14:17.263833 139747382667072 deprecation.py:506] From /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/lib/python3.6/site-packages/tensorflow/python/ops/init_ops.py:97: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+W0201 23:14:17.264572 139747382667072 deprecation.py:506] From /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/lib/python3.6/site-packages/tensorflow/python/ops/init_ops.py:97: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+loaded model  <tensorflow.python.keras.engine.training.Model object at 0x7f183851e320>
+loaded model  <tensorflow.python.keras.engine.training.Model object at 0x7f183833c470>
+loaded model  <tensorflow.python.keras.engine.training.Model object at 0x7f183833c630>
+loaded model  <tensorflow.python.keras.engine.training.Model object at 0x7f1838236320>
+loaded model  <tensorflow.python.keras.engine.training.Model object at 0x7f18380442e8>
+loaded model  <tensorflow.python.keras.engine.training.Model object at 0x7f183070c2b0>
+running  python run_dijetfit.py --run 1 -i /eos/project/d/dshep/TOPCLASS/DijetAnomaly/VAE_results/run_111 -M 3500 --sig RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5 --sigxsec 100.0 --qcd qcd_sqrtshatTeV_13TeV_PU40_reco.h5
+/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit
+/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit
+ImportError: No module named site
 Traceback (most recent call last):
-  File "main_bump_hunt.py", line 119, in <module>
-    rpu.make_bg_vs_sig_ratio_plot(sample.rejected(mjj_key), sample.accepted(mjj_key), target_value=quantile, n_bins=60, title=title, plot_name='mJJ_raio_bg_vs_sig_'+sample.name, fig_dir=plot_dir_mjj)
-  File "/eos/home-k/kiwoznia/dev/physics_objects_for_anomaly_hunting/pofah/jet_sample.py", line 109, in rejected
-    q_key = 'sel_q{:02}'.format(int(quantile*100)) 
-ValueError: invalid literal for int() with base 10: 'mJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJmJJm
+  File "main_bump_hunt.py", line 145, in <module>
+    subprocess.check_call('pwd && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")  
+  File "/cvmfs/sft.cern.ch/lcg/releases/Python/3.6.5-f74f0/x86_64-centos7-gcc9-opt/lib/python3.6/subprocess.py", line 291, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command 'pwd && source setupenv.sh && python run_dijetfit.py --run 1 -i /eos/project/d/dshep/TOPCLASS/DijetAnomaly/VAE_results/run_111 -M 3500 --sig RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5 --sigxsec 100.0 --qcd qcd_sqrtshatTeV_13TeV_PU40_reco.h5' returned non-zero exit status 1.
