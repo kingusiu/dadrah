@@ -6,6 +6,7 @@ import tensorflow as tf
 from collections import namedtuple
 import datetime
 import pathlib
+import copy
 
 import pofah.jet_sample as js
 import pofah.util.sample_factory as sf
@@ -28,12 +29,12 @@ def make_qr_model_str(run, quantile, sig_xsec, date=True):
     return 'QRmodel_run_{}_qnt_{}_sigx_{}_{}.h5'.format(run, str(int(quantile*100)), int(sig_xsec), date_str)
 
 
-def train_QR(quantile, strategy, mixed_train_sample, mixed_valid_sample, plot_loss=False):
+def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False):
 
     # train QR on qcd-signal-injected sample and quantile q
     
     print('\ntraining QR for quantile {}'.format(quantile))    
-    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=params.strategy, batch_sz=256, epochs=300,  n_layers=5, n_nodes=60)
+    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=params.strategy, batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
     losses_train, losses_valid = discriminator.fit(mixed_train_sample, mixed_valid_sample)
 
     if plot_loss:
@@ -63,23 +64,26 @@ def predict_QR(discriminator, sample, inv_quant):
 #           set runtime params
 #****************************************#
 # for a fixed signal G_RS na 3.5TeV
-run = 112
-# for a fixed xsec 10
-xsecs = [100., 10., 1.]
+# xsecs = [100., 10., 1.]
+xsecs = [100., 10.]
 sig_in_training_nums = [150, 15, 2]
-quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
+# quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
+quantiles = [0.1, 0.99]
 
-Parameters = namedtuple('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy')
-params = Parameters(run_n=run, 
+Parameters = namedtuple('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy, epochs, read_n')
+params = Parameters(run_n=112, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
                     qcd_test_sample_id='qcdSigAllTestReco',
                     sig_sample_id='GtoWW35naReco', 
-                    strategy=lost.loss_strategy_dict['s5'])
+                    strategy=lost.loss_strategy_dict['s5'],
+                    epochs=5,
+                    read_n=int(1e4))
 
-make_qcd_train_test_datasample = True
+make_qcd_train_test_datasample = False
 train_qr = True
+do_bump_hunt = False
 
 #****************************************#
 #           read in data
@@ -92,16 +96,23 @@ if make_qcd_train_test_datasample:
     qcd_train_sample, qcd_test_sample = dapr.make_qcd_train_test_datasets(params, paths, **cuts.signalregion_cuts)
 # else read from file
 else:
-    qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id)) 
-    qcd_test_sample = js.JetSample.from_input_dir(params.qcd_test_sample_id, paths.sample_dir_path(params.qcd_test_sample_id))
-sig_sample = js.JetSample.from_input_dir(params.sig_sample_id, paths.sample_dir_path(params.sig_sample_id), **cuts.signalregion_cuts)
+    qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id), read_n=params.read_n) 
+    qcd_test_sample_ini = js.JetSample.from_input_dir(params.qcd_test_sample_id, paths.sample_dir_path(params.qcd_test_sample_id), read_n=params.read_n)
+sig_sample_ini = js.JetSample.from_input_dir(params.sig_sample_id, paths.sample_dir_path(params.sig_sample_id), **cuts.signalregion_cuts)
+
+#generate training datasets
 
 # for each true signal cross-section
 for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
+    if train_qr:
+        mixed_train_sample, mixed_valid_sample = dapr.inject_signal(qcd_train_sample, sig_sample_ini, sig_in_training_num)
+    
     # ********************************************
     #               train and/or predict
     # ********************************************
+
+    # TODO: when to "reset" samples for new quantile cut results?
 
     model_paths = []
 
@@ -113,41 +124,43 @@ for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
         if train_qr:
 
             # ********************************************
-            #               generate datasets
+            #               train
             # ********************************************
 
-            mixed_train_sample, mixed_valid_sample = dapr.inject_signal(qcd_train_sample, sig_sample, sig_in_training_num)
             print('training on {} events, validating on {}'.format(len(mixed_train_sample), len(mixed_valid_sample)))
 
             # train and save QR model
-            discriminator = train_QR(quantile, params.strategy, mixed_train_sample, mixed_valid_sample)
+            discriminator = train_QR(quantile, mixed_train_sample, mixed_valid_sample, params)
             discriminator_path = save_QR(experiment, quantile, xsec)
             model_paths.append(discriminator_path)
 
         else: # else load discriminators
             discriminator = ...
         
-        # prediction
-        qcd_test_sample = predict_QR(discriminator, qcd_test_sample, inv_quant)
-        sig_sample = predict_QR(discriminator, sig_sample, inv_quant)
+        
+        # ********************************************
+        #               predict
+        # ********************************************
+        qcd_test_sample = predict_QR(discriminator, copy.deepcopy(qcd_test_sample_ini), inv_quant)
+        sig_sample = predict_QR(discriminator, copy.deepcopy(sig_sample_ini), inv_quant)
 
 
     # write results for all quantiles
-    result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': run, '$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec))}) # in selection paths new format with run_x, sig_x, ...
+    result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), '$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec))}) # in selection paths new format with run_x, sig_x, ...
     print('writing selections to ', result_paths.base_dir)
     qcd_test_sample.dump(result_paths.sample_file_path(params.qcd_test_sample_id, mkdir=True))
     sig_sample.dump(result_paths.sample_file_path(params.sig_sample_id))
 
     # plot results
     discriminator_list = []
-    for q, model_path in zip(quantiles,model_paths):
+    for q, model_path in zip(quantiles, model_paths):
         discriminator = disc.QRDiscriminator_KerasAPI(quantile=q, loss_strategy=params.strategy)
         discriminator.load(model_path)
         discriminator_list.append(discriminator)
 
     andi.analyze_multi_quantile_discriminator_cut(discriminator_list, mixed_valid_sample, plot_name='multi_discr_cut_x'+str(int(xsec)), fig_dir='fig')
 
-    # do bump hunt
+    # run dijet fit
     if do_bump_hunt:
         dijet_dir = '/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit'
         cmd = "python run_dijetfit.py --run 1 -i {} -M 3500 --sig {}.h5 --sigxsec {} --qcd {}.h5".format(result_paths.base_dir, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id])
