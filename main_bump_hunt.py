@@ -67,23 +67,23 @@ def predict_QR(discriminator, sample, inv_quant):
 # xsecs = [100., 10., 1.]
 xsecs = [100., 10.]
 sig_in_training_nums = [150, 15, 2]
-# quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
-quantiles = [0.1, 0.99]
+quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
+# quantiles = [0.1, 0.99]
 
 Parameters = namedtuple('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy, epochs, read_n')
-params = Parameters(run_n=112, 
+params = Parameters(run_n=113, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
                     qcd_test_sample_id='qcdSigAllTestReco',
                     sig_sample_id='GtoWW35naReco', 
-                    strategy=lost.loss_strategy_dict['s5'],
-                    epochs=5,
-                    read_n=int(1e4))
+                    strategy=lost.loss_strategy_dict['rk5'],
+                    epochs=100,
+                    read_n=None)
 
 make_qcd_train_test_datasample = False
 train_qr = True
-do_bump_hunt = False
+do_bump_hunt = True
 
 #****************************************#
 #           read in data
@@ -93,29 +93,28 @@ paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': exper
 
 # if datasets not yet prepared, prepare them, dump and return
 if make_qcd_train_test_datasample:
-    qcd_train_sample, qcd_test_sample = dapr.make_qcd_train_test_datasets(params, paths, **cuts.signalregion_cuts)
+    qcd_train_sample, qcd_test_sample_ini = dapr.make_qcd_train_test_datasets(params, paths, **cuts.signalregion_cuts)
 # else read from file
 else:
     qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id), read_n=params.read_n) 
     qcd_test_sample_ini = js.JetSample.from_input_dir(params.qcd_test_sample_id, paths.sample_dir_path(params.qcd_test_sample_id), read_n=params.read_n)
 sig_sample_ini = js.JetSample.from_input_dir(params.sig_sample_id, paths.sample_dir_path(params.sig_sample_id), **cuts.signalregion_cuts)
 
-#generate training datasets
 
-# for each true signal cross-section
+# ************************************************************
+#      run train and/or predict + dijet fit for each xsec
+# ************************************************************
+
 for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
+    # "reset" samples for new xsec quantile cut results
+
+    model_paths = []
+    qcd_test_sample = copy.deepcopy(qcd_test_sample_ini)
+    sig_sample = copy.deepcopy(sig_sample_ini)
     if train_qr:
         mixed_train_sample, mixed_valid_sample = dapr.inject_signal(qcd_train_sample, sig_sample_ini, sig_in_training_num)
     
-    # ********************************************
-    #               train and/or predict
-    # ********************************************
-
-    # TODO: when to "reset" samples for new quantile cut results?
-
-    model_paths = []
-
     for quantile in quantiles:
 
         # using inverted quantile because of dijet fit code
@@ -141,8 +140,8 @@ for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
         # ********************************************
         #               predict
         # ********************************************
-        qcd_test_sample = predict_QR(discriminator, copy.deepcopy(qcd_test_sample_ini), inv_quant)
-        sig_sample = predict_QR(discriminator, copy.deepcopy(sig_sample_ini), inv_quant)
+        qcd_test_sample = predict_QR(discriminator, qcd_test_sample, inv_quant)
+        sig_sample = predict_QR(discriminator, sig_sample, inv_quant)
 
 
     # write results for all quantiles
@@ -160,10 +159,12 @@ for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
     andi.analyze_multi_quantile_discriminator_cut(discriminator_list, mixed_valid_sample, plot_name='multi_discr_cut_x'+str(int(xsec)), fig_dir='fig')
 
-    # run dijet fit
+    # ********************************************
+    #               dijet fit
+    # ********************************************
     if do_bump_hunt:
         dijet_dir = '/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit'
-        cmd = "python run_dijetfit.py --run 1 -i {} -M 3500 --sig {}.h5 --sigxsec {} --qcd {}.h5".format(result_paths.base_dir, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id])
+        cmd = "python run_dijetfit.py --run -n {} -i {} -M 3500 --sig {}.h5 --sigxsec {} --qcd {}.h5".format(params.run_n, result_paths.base_dir, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id])
         print("running ", cmd)
         subprocess.check_call('pwd && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")  
         print('finished')
