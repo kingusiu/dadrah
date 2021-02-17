@@ -65,8 +65,9 @@ def predict_QR(discriminator, sample, inv_quant):
 #****************************************#
 # for a fixed signal G_RS na 3.5TeV
 # xsecs = [100., 10., 1.]
-xsecs = [100., 10.]
-sig_in_training_nums = [150, 15, 2]
+xsecs = [0.]
+# sig_in_training_nums = [1130, 113, 11, 0]
+sig_in_training_nums = [0]
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
 
@@ -88,7 +89,7 @@ do_bump_hunt = True
 #****************************************#
 #           read in data
 #****************************************#
-experiment = ex.Experiment(params.run_n).setup(model_dir_qr=True)
+experiment = ex.Experiment(params.run_n).setup(model_dir_qr=True, analysis_dir_qr=True)
 paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': experiment.run_dir})
 
 # if datasets not yet prepared, prepare them, dump and return
@@ -157,7 +158,8 @@ for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
         discriminator.load(model_path)
         discriminator_list.append(discriminator)
 
-    andi.analyze_multi_quantile_discriminator_cut(discriminator_list, mixed_valid_sample, plot_name='multi_discr_cut_x'+str(int(xsec)), fig_dir='fig')
+    title_suffix = ' trained qcd SR + '+params.sig_sample_id.replace('Reco','')+' at xsec '+str(int(xsec)) + 'fb'
+    andi.analyze_multi_quantile_discriminator_cut(discriminator_list, mixed_valid_sample, title_suffix=title_suffix, plot_name='multi_discr_cut_x'+str(int(xsec)), fig_dir=experiment.analysis_dir_qr_cuts)
 
     # ********************************************
     #               dijet fit

@@ -78,7 +78,7 @@ loss_strategy_dict = OrderedDict({
                      's3': LossStrategy(combine_loss_sum, 'L1 + L2 > LT', 'suml1l2_loss'),
                      's4': LossStrategy(combine_loss_max, 'L1 | L2 > LT', 'maxl1l2_loss'),
                      's5': LossStrategy(combine_loss_min, 'L1 & L2 > LT', 'minl1l2_loss'),
-                     'r5': LossStrategy(combine_loss_reco_min, 'R1 & R2 > LT', 'min_reco1reco2_loss')
+                     'r5': LossStrategy(combine_loss_reco_min, 'R1 & R2 > LT', 'min_reco1reco2_loss'),
                      'kl1': LossStrategy(combine_loss_kl1, 'KL J1 > LT', 'kl1_loss'),
                      'kl2': LossStrategy(combine_loss_kl2, 'KL J2 > LT', 'kl2_loss'),
                      'kl3': LossStrategy(combine_loss_kl_sum, 'KL J1 + KL J2 > LT', 'sumKL_loss'),
