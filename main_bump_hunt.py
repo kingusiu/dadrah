@@ -21,12 +21,12 @@ import dadrah.util.data_processing as dapr
 import pofah.phase_space.cut_constants as cuts
 
 
-def make_qr_model_str(run, quantile, sig_xsec, date=True):
+def make_qr_model_str(run, quantile, sig_id, sig_xsec, date=None):
     date_str = ''
-    if date:
+    if date is None:
         date = datetime.date.today()
-        date_str = '{}{:02d}{:02d}'.format(date.year, date.month, date.day)
-    return 'QRmodel_run_{}_qnt_{}_sigx_{}_{}.h5'.format(run, str(int(quantile*100)), int(sig_xsec), date_str)
+        date = '{}{:02d}{:02d}'.format(date.year, date.month, date.day)
+    return 'QRmodel_run_{}_qnt_{}_{}_sigx_{}_{}.h5'.format(run, str(int(quantile*100)), sig_id, int(sig_xsec), date)
 
 
 def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False):
@@ -44,13 +44,21 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
     return discriminator
 
 
-def save_QR(experiment, quantile, xsec):
+def save_QR(params, experiment, quantile, xsec):
     # save the model   
-    model_str = make_qr_model_str(experiment.run_n, quantile, xsec)
+    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, xsec)
     model_path = os.path.join(experiment.model_dir_qr, model_str)
     discriminator.save(model_path)
     print('saving model {} to {}'.format(model_str, experiment.model_dir_qr))
     return model_path
+
+
+def load_QR(params, experiment, quantile, xsec, date):
+    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, sig_xsec=xsec, date=date)
+    model_path = os.path.join(experiment.model_dir_qr, model_str)
+    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=params.strategy, batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
+    discriminator.load(model_path)
+    return discriminator
 
 
 def predict_QR(discriminator, sample, inv_quant):
@@ -64,10 +72,10 @@ def predict_QR(discriminator, sample, inv_quant):
 #           set runtime params
 #****************************************#
 # for a fixed signal G_RS na 3.5TeV
-# xsecs = [100., 10., 1.]
-xsecs = [0.]
-# sig_in_training_nums = [1130, 113, 11, 0]
-sig_in_training_nums = [0]
+xsecs = [100., 10., 1., 0.]
+# xsecs = [0.]
+sig_in_training_nums = [1130, 113, 11, 0]
+# sig_in_training_nums = [0]
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
 
@@ -84,7 +92,8 @@ params = Parameters(run_n=113,
 
 make_qcd_train_test_datasample = False
 train_qr = True
-do_bump_hunt = True
+do_bump_hunt = False
+model_path_date = '20210217'
 
 #****************************************#
 #           read in data
@@ -121,21 +130,21 @@ for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
         # using inverted quantile because of dijet fit code
         inv_quant = round((1.-quantile),2)
 
-        if train_qr:
+        # ********************************************
+        #               train or load
+        # ********************************************
 
-            # ********************************************
-            #               train
-            # ********************************************
+        if train_qr:
 
             print('training on {} events, validating on {}'.format(len(mixed_train_sample), len(mixed_valid_sample)))
 
             # train and save QR model
             discriminator = train_QR(quantile, mixed_train_sample, mixed_valid_sample, params)
-            discriminator_path = save_QR(experiment, quantile, xsec)
+            discriminator_path = save_QR(params, experiment, quantile, xsec)
             model_paths.append(discriminator_path)
 
         else: # else load discriminators
-            discriminator = ...
+            discriminator = load_QR(params, experiment, quantile, xsec, model_path_date)
         
         
         # ********************************************
