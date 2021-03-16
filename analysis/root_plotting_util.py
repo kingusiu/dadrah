@@ -143,7 +143,7 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     # create H2 SIG hist
     h2 = create_hist(mjj_sig_like, "h2", n_bins, min_bin, max_bin, props={"LineColor": rt.kRed})
     # create H3 RATIO hist
-    h3, line = create_ratio_hist(h2, h1, target_value)
+    h3, line = create_ratio_hist(h2, h1, target_value/(1.-target_value))
     set_style(h3, props={"LineColor": rt.kMagenta+3, "Title": '', "XTitle": 'M_{jj} [GeV]', "YTitle": "ratio SIG / BG"})
     set_style(line, props={"LineColor" : rt.kGreen-2})
     h3.GetYaxis().SetTitleSize(0.11)
