@@ -3,7 +3,7 @@ import subprocess
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import setGPU
 import tensorflow as tf
-from collections import namedtuple
+from recordtype import recordtype
 import datetime
 import pathlib
 import copy
@@ -74,59 +74,69 @@ def predict_QR(discriminator, sample, inv_quant):
 
 # signals
 resonance = 'br'
-signals = ['GtoWW25'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
+signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
+# signals = ['GtoWW45'+resonance+'Reco']
+masses = [1500, 2500, 3500, 4500]
+# masses = [4500]
 # xsecs = [100., 10., 1., 0.]
 xsecs = [100.]
-sig_in_training_nums_arr = [[1094], [1124]] # number of signal contamination; len(sig_in_training_nums) == len(signals)
-# sig_in_training_nums = [1123, 112,  11, 0]
-# sig_in_training_nums = [0]
+sig_in_training_nums_arr = [[1065], [1094], [1113], [1125]] # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
+# sig_in_training_nums_arr = [[1061], [1100], [1123], [1140]] # narrow signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
 
 # to run
-make_qcd_train_test_datasample = True
+make_qcd_train_test_datasample = False
 do_qr = True
 train_qr = True
 do_bump_hunt = True
 model_path_date = '20210315'
 
-for signal, sig_in_training_nums in zip(signals, sig_in_training_nums_arr):
+Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy, epochs, read_n')
+params = Parameters(run_n=113, 
+                    qcd_sample_id='qcdSigReco', 
+                    qcd_ext_sample_id='qcdSigExtReco',
+                    qcd_train_sample_id='qcdSigAllTrainReco', 
+                    qcd_test_sample_id='qcdSigAllTestReco',
+                    sig_sample_id=None, # set sig id later in loop
+                    strategy=lost.loss_strategy_dict['rk5'],
+                    epochs=100,
+                    read_n=None)
 
-    Parameters = namedtuple('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy, epochs, read_n')
-    params = Parameters(run_n=113, 
-                        qcd_sample_id='qcdSigReco', 
-                        qcd_ext_sample_id='qcdSigExtReco',
-                        qcd_train_sample_id='qcdSigAllTrainReco', 
-                        qcd_test_sample_id='qcdSigAllTestReco',
-                        sig_sample_id=signal, 
-                        strategy=lost.loss_strategy_dict['rk5'],
-                        epochs=100,
-                        read_n=None)
 
-    param_dict = {'$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec))}
+#****************************************#
+#           read in qcd data
+#****************************************#
+paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.run_n)})
 
-    #****************************************#
-    #           read in data
-    #****************************************#
-    experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
-    paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': experiment.run_dir})
+if do_qr:
+    # if datasets not yet prepared, prepare them, dump and return (same qcd train and testsample for all signals and all xsecs)
+    if make_qcd_train_test_datasample:
+        qcd_train_sample, qcd_test_sample_ini = dapr.make_qcd_train_test_datasets(params, paths, **cuts.signalregion_cuts)
+    # else read from file
+    else:
+        qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id), read_n=params.read_n) 
+        qcd_test_sample_ini = js.JetSample.from_input_dir(params.qcd_test_sample_id, paths.sample_dir_path(params.qcd_test_sample_id), read_n=params.read_n)
+
+
+#****************************************#
+#      for each signal: QR & dijet fit
+#****************************************#
+
+for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nums_arr, masses):
+
+    params.sig_sample_id = sig_sample_id
 
     if do_qr:
-        # if datasets not yet prepared, prepare them, dump and return
-        if make_qcd_train_test_datasample:
-            qcd_train_sample, qcd_test_sample_ini = dapr.make_qcd_train_test_datasets(params, paths, **cuts.signalregion_cuts)
-        # else read from file
-        else:
-            qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id), read_n=params.read_n) 
-            qcd_test_sample_ini = js.JetSample.from_input_dir(params.qcd_test_sample_id, paths.sample_dir_path(params.qcd_test_sample_id), read_n=params.read_n)
         sig_sample_ini = js.JetSample.from_input_dir(params.sig_sample_id, paths.sample_dir_path(params.sig_sample_id), **cuts.signalregion_cuts)
 
-
     # ************************************************************
-    #     for each xsec: QR & dijet fit
+    #     for each signal xsec: train and apply QR, do bump hunt 
     # ************************************************************
     for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
+        param_dict = {'$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec))}
+        experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
         result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
         
         # ************************************************************
@@ -134,13 +144,14 @@ for signal, sig_in_training_nums in zip(signals, sig_in_training_nums_arr):
         # ************************************************************
         if do_qr:
 
-            # "reset" samples for new xsec quantile cut results
+            # create new test samples for new xsec QR (quantile cut results)
 
-            model_paths = []
             qcd_test_sample = copy.deepcopy(qcd_test_sample_ini)
             sig_sample = copy.deepcopy(sig_sample_ini)
             if train_qr:
                 mixed_train_sample, mixed_valid_sample = dapr.inject_signal(qcd_train_sample, sig_sample_ini, sig_in_training_num)
+            
+            model_paths = []
             
             for quantile in quantiles:
 
@@ -192,8 +203,8 @@ for signal, sig_in_training_nums in zip(signals, sig_in_training_nums_arr):
         # ********************************************
         if do_bump_hunt:
             dijet_dir = '/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit'
-            runstr = "python run_dijetfit.py --run -n {} -i {} -M 3500 --sig {}.h5 --sigxsec {} --qcd {}.h5 --res {}"
-            cmd = runstr.format(params.run_n, result_paths.base_dir, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id], resonance)  
+            runstr = "python run_dijetfit.py --run -n {} -i {} -M {} --sig {}.h5 --sigxsec {} --qcd {}.h5 --res {}"
+            cmd = runstr.format(params.run_n, result_paths.base_dir, mass, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id], resonance)  
             print("running ", cmd)
-            subprocess.check_call('pwd && rm {*.txt,*.pdf,*.root,*.C} && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")  
+            subprocess.check_call('pwd && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")  
             print('finished')
