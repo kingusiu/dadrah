@@ -21,12 +21,12 @@ import dadrah.util.data_processing as dapr
 import pofah.phase_space.cut_constants as cuts
 
 
-def make_qr_model_str(run, quantile, sig_id, sig_xsec, date=None):
+def make_qr_model_str(run, quantile, sig_id, sig_xsec, strategy_id, date=None):
     date_str = ''
     if date is None:
         date = datetime.date.today()
         date = '{}{:02d}{:02d}'.format(date.year, date.month, date.day)
-    return 'QRmodel_run_{}_qnt_{}_{}_sigx_{}_{}.h5'.format(run, str(int(quantile*100)), sig_id, int(sig_xsec), date)
+    return 'QRmodel_run_{}_qnt_{}_{}_sigx_{}_strat{}_{}.h5'.format(run, str(int(quantile*100)), sig_id, int(sig_xsec), strategy_id, date)
 
 
 def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False):
@@ -34,11 +34,11 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
     # train QR on qcd-signal-injected sample and quantile q
     
     print('\ntraining QR for quantile {}'.format(quantile))    
-    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=params.strategy, batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
+    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
     losses_train, losses_valid = discriminator.fit(mixed_train_sample, mixed_valid_sample)
 
     if plot_loss:
-        plot_str = make_qr_model_str(params.run_n, params.sig_sample_id, quantile, xsec)
+        plot_str = make_qr_model_str(params.run_n, params.sig_sample_id, quantile, xsec, params.strategy_id)
         train.plot_training_results(losses_train, losses_valid, plot_suffix=plot_str[:-3], fig_dir='fig')
 
     return discriminator
@@ -46,7 +46,7 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
 
 def save_QR(params, experiment, quantile, xsec):
     # save the model   
-    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, xsec)
+    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, xsec, params.strategy_id)
     model_path = os.path.join(experiment.model_dir_qr, model_str)
     discriminator.save(model_path)
     print('saving model {} to {}'.format(model_str, experiment.model_dir_qr))
@@ -54,9 +54,9 @@ def save_QR(params, experiment, quantile, xsec):
 
 
 def load_QR(params, experiment, quantile, xsec, date):
-    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, sig_xsec=xsec, date=date)
+    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, sig_xsec=xsec, strategy_id=params.strategy_id, date=date)
     model_path = os.path.join(experiment.model_dir_qr, model_str)
-    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=params.strategy, batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
+    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
     discriminator.load(model_path)
     return discriminator
 
@@ -92,14 +92,14 @@ train_qr = True
 do_bump_hunt = True
 model_path_date = '20210315'
 
-Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy, epochs, read_n')
+Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n')
 params = Parameters(run_n=113, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
                     qcd_test_sample_id='qcdSigAllTestReco',
                     sig_sample_id=None, # set sig id later in loop
-                    strategy=lost.loss_strategy_dict['rk5'],
+                    strategy_id='rk5_05',
                     epochs=100,
                     read_n=None)
 
@@ -135,7 +135,7 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
     # ************************************************************
     for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
-        param_dict = {'$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec))}
+        param_dict = {'$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
         experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
         result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
         
@@ -190,7 +190,7 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
             # plot results
             discriminator_list = []
             for q, model_path in zip(quantiles, model_paths):
-                discriminator = disc.QRDiscriminator_KerasAPI(quantile=q, loss_strategy=params.strategy)
+                discriminator = disc.QRDiscriminator_KerasAPI(quantile=q, loss_strategy=lost.loss_strategy_dict[params.strategy_id])
                 discriminator.load(model_path)
                 discriminator_list.append(discriminator)
 
