@@ -4,7 +4,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import setGPU
 import tensorflow as tf
 from recordtype import recordtype
-import datetime
 import pathlib
 import copy
 
@@ -18,15 +17,8 @@ import dadrah.selection.loss_strategy as lost
 import analysis.analysis_discriminator as andi
 import vande.training as train
 import dadrah.util.data_processing as dapr
+import dadrah.util.string_constants_util as stco
 import pofah.phase_space.cut_constants as cuts
-
-
-def make_qr_model_str(run, quantile, sig_id, sig_xsec, strategy_id, date=None):
-    date_str = ''
-    if date is None:
-        date = datetime.date.today()
-        date = '{}{:02d}{:02d}'.format(date.year, date.month, date.day)
-    return 'QRmodel_run_{}_qnt_{}_{}_sigx_{}_strat{}_{}.h5'.format(run, str(int(quantile*100)), sig_id, int(sig_xsec), strategy_id, date)
 
 
 def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False):
@@ -38,7 +30,7 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
     losses_train, losses_valid = discriminator.fit(mixed_train_sample, mixed_valid_sample)
 
     if plot_loss:
-        plot_str = make_qr_model_str(params.run_n, params.sig_sample_id, quantile, xsec, params.strategy_id)
+        plot_str = stco.make_qr_model_str(params.run_n, params.sig_sample_id, quantile, xsec, params.strategy_id)
         train.plot_training_results(losses_train, losses_valid, plot_suffix=plot_str[:-3], fig_dir='fig')
 
     return discriminator
@@ -46,7 +38,7 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
 
 def save_QR(params, experiment, quantile, xsec):
     # save the model   
-    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, xsec, params.strategy_id)
+    model_str = stco.make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, xsec, params.strategy_id)
     model_path = os.path.join(experiment.model_dir_qr, model_str)
     discriminator.save(model_path)
     print('saving model {} to {}'.format(model_str, experiment.model_dir_qr))
@@ -54,7 +46,7 @@ def save_QR(params, experiment, quantile, xsec):
 
 
 def load_QR(params, experiment, quantile, xsec, date):
-    model_str = make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, sig_xsec=xsec, strategy_id=params.strategy_id, date=date)
+    model_str = stco.make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, sig_xsec=xsec, strategy_id=params.strategy_id, date=date)
     model_path = os.path.join(experiment.model_dir_qr, model_str)
     discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
     discriminator.load(model_path)
@@ -72,16 +64,21 @@ def predict_QR(discriminator, sample, inv_quant):
 #           set runtime params
 #****************************************#
 
+signal_contamin = { ('na', 0): [[0]]*4,
+                    ('na', 100): [[1061], [1100], [1123], [1140]], # narrow signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
+                    ('br', 0): [[0]]*4,
+                    ('br', 100): [[1065], [1094], [1113], [1125]], # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
+                }
+
 # signals
-resonance = 'br'
+resonance = 'na'
 signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
-# signals = ['GtoWW45'+resonance+'Reco']
+# signals = ['GtoWW35'+resonance+'Reco']
 masses = [1500, 2500, 3500, 4500]
-# masses = [4500]
+# masses = [3500]
 # xsecs = [100., 10., 1., 0.]
-xsecs = [100.]
-sig_in_training_nums_arr = [[1065], [1094], [1113], [1125]] # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
-# sig_in_training_nums_arr = [[1061], [1100], [1123], [1140]] # narrow signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
+xsecs = [0.]
+sig_in_training_nums_arr = signal_contaminations[(resonance, xsecs[0])] # TODO: adapt to multiple xsecs
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
 
@@ -89,8 +86,8 @@ quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 make_qcd_train_test_datasample = False
 do_qr = True
 train_qr = True
-do_bump_hunt = True
-model_path_date = '20210315'
+do_bump_hunt = False
+model_path_date = '20210423'
 
 Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n')
 params = Parameters(run_n=113, 
@@ -203,8 +200,8 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
         # ********************************************
         if do_bump_hunt:
             dijet_dir = '/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit'
-            runstr = "python run_dijetfit.py --run -n {} -i {} -M {} --sig {}.h5 --sigxsec {} --qcd {}.h5 --res {}"
-            cmd = runstr.format(params.run_n, result_paths.base_dir, mass, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id], resonance)  
+            runstr = "python run_dijetfit.py --run -n {} -i {} -M {} --sig {}.h5 --sigxsec {} --qcd {}.h5 --res {} --loss {}"
+            cmd = runstr.format(params.run_n, result_paths.base_dir, mass, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id], resonance, params.strategy_id)  
             print("running ", cmd)
-            subprocess.check_call('pwd && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")  
+            subprocess.check_call('pwd && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")
             print('finished')

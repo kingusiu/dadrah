@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+import matplotlib.cm as cm
 import numpy as np
 #import ROOT as rt
 #import root_numpy as rtnp
@@ -7,23 +8,35 @@ import os
 from prettytable import PrettyTable
 
 import anpofah.util.plotting_util as pu
+import mplhep as hep
+
 #import dadrah.analysis.root_plotting_util as ropl
 
 
-def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature_key='mJJ', title_suffix='', plot_name='multi_discr_cut', fig_dir=None):
-    fig = plt.figure(figsize=(8, 8))
+def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature_key='mJJ', title_suffix='', plot_name='multi_discr_cut', fig_dir=None, cut_xmax=True):
+
+    # Load CMS style sheet
+    plt.style.use(hep.style.CMS)
+    jet= plt.get_cmap('gnuplot')
+    colors = iter(jet(np.linspace(0,1,6)))
+
+    fig = plt.figure()
     x_min = np.min(sample[feature_key])
-    x_max = np.percentile(sample[feature_key], 1e2*(1-1e-2))
+    if cut_xmax:
+        x_max = np.percentile(sample[feature_key], 1e2*(1-1e-4))
+    else:
+        x_max = np.max(sample[feature_key])
     loss = discriminator_list[0].loss_strategy(sample)
-    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-3)))), norm=LogNorm(), bins=200)
+    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-3)))), \
+                norm=LogNorm(), bins=200, cmap=cm.get_cmap('Blues'), cmin=0.01)
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
     for discriminator in discriminator_list:
-        plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='cut Q'+str(discriminator.quantile*100))
-    plt.ylabel('L1 & L2 > LT')
+        plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='Q '+str(discriminator.quantile*100)+'%', color=next(colors))
+    plt.ylabel('min(L1,L2)')
     plt.xlabel('$M_{jj}$ [GeV]')
-    plt.title('quantile cuts' + title_suffix)
+    #plt.title('quantile cuts' + title_suffix)
     plt.colorbar()
-    plt.legend(loc='best')
+    plt.legend(loc='best', title='quantile cuts')
     plt.draw()
     if fig_dir:
         fig.savefig(os.path.join(fig_dir, plot_name + '.pdf'), bbox_inches='tight')
