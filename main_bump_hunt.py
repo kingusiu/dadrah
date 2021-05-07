@@ -78,7 +78,7 @@ masses = [1500, 2500, 3500, 4500]
 # masses = [3500]
 # xsecs = [100., 10., 1., 0.]
 xsecs = [0.]
-sig_in_training_nums_arr = signal_contaminations[(resonance, xsecs[0])] # TODO: adapt to multiple xsecs
+sig_in_training_nums_arr = signal_contamin[(resonance, xsecs[0])] # TODO: adapt to multiple xsecs
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
 
