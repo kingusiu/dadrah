@@ -3,8 +3,8 @@ import pofah.jet_sample as js
 
 def merge_qcd_base_and_ext_datasets(params, paths, **cuts):
     # read qcd & qcd ext
-    qcd_sr_sample = js.JetSample.from_input_dir(params.qcd_sample_id, paths.sample_dir_path(params.qcd_sample_id), **cuts) 
-    qcd_sr_ext_sample = js.JetSample.from_input_dir(params.qcd_ext_sample_id, paths.sample_dir_path(params.qcd_ext_sample_id), **cuts)
+    qcd_sr_sample = js.JetSample.from_input_dir(params.qcd_sample_id, paths.sample_dir_path(params.qcd_sample_id), read_n=params.read_n, **cuts) 
+    qcd_sr_ext_sample = js.JetSample.from_input_dir(params.qcd_ext_sample_id, paths.sample_dir_path(params.qcd_ext_sample_id), read_n=params.read_n, **cuts)
     # merge to combined jet sample and split into training and test parts
     return qcd_sr_sample.merge(qcd_sr_ext_sample) 
 
