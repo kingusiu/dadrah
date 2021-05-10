@@ -22,7 +22,7 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
     return discriminator
 
 
-def save_QR(params, experiment, quantile, xsec, model_str=None):
+def save_QR(discriminator, params, experiment, quantile, xsec, model_str=None):
     # save the model   
     model_str = model_str or stco.make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, xsec, params.strategy_id)
     model_path = os.path.join(experiment.model_dir_qr, model_str)

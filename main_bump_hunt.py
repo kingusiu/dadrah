@@ -14,6 +14,7 @@ import pofah.path_constants.sample_dict_file_parts_reco as sdfr
 import pofah.path_constants.sample_dict_file_parts_selected as sdfs
 import dadrah.selection.discriminator as disc
 import dadrah.selection.loss_strategy as lost
+import dadrah.selection.qr_workflow as qrwf
 import analysis.analysis_discriminator as andi
 import dadrah.util.data_processing as dapr
 import pofah.phase_space.cut_constants as cuts
@@ -123,19 +124,19 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
                     print('training on {} events, validating on {}'.format(len(mixed_train_sample), len(mixed_valid_sample)))
 
                     # train and save QR model
-                    discriminator = train_QR(quantile, mixed_train_sample, mixed_valid_sample, params)
-                    discriminator_path = save_QR(params, experiment, quantile, xsec)
+                    discriminator = qrwf.train_QR(quantile, mixed_train_sample, mixed_valid_sample, params)
+                    discriminator_path = qrwf.save_QR(discriminator, params, experiment, quantile, xsec)
                     model_paths.append(discriminator_path)
 
                 else: # else load discriminators
-                    discriminator = load_QR(params, experiment, quantile, xsec, model_path_date)
+                    discriminator = qrwf.load_QR(params, experiment, quantile, xsec, model_path_date)
                 
                 
                 # ********************************************
                 #               predict
                 # ********************************************
-                qcd_test_sample = predict_QR(discriminator, qcd_test_sample, inv_quant)
-                sig_sample = predict_QR(discriminator, sig_sample, inv_quant)
+                qcd_test_sample = qrwf.predict_QR(discriminator, qcd_test_sample, inv_quant)
+                sig_sample = qrwf.predict_QR(discriminator, sig_sample, inv_quant)
 
 
             # write results for all quantiles
