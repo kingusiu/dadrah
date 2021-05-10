@@ -5,6 +5,7 @@ import tensorflow as tf
 from recordtype import recordtype
 import numpy as np
 import pathlib
+import json
 
 import dadrah.util.data_processing as dapr
 import pofah.util.sample_factory as sf
@@ -41,13 +42,15 @@ params = Parameters(run_n=113,
                     qcd_train_sample_id='qcdSigAllTrainReco', 
                     qcd_test_sample_id='qcdSigAllTestReco',
                     strategy_id='rk5_05',
-                    epochs=10,
-                    read_n=int(5e5))
+                    epochs=100,
+                    read_n=None)
 
 # set directories for saving and loading with extra envelope subdir for qr models
 experiment = ex.Experiment(run_n=params.run_n).setup(model_dir_qr=True, analysis_dir_qr=True)
 experiment.model_dir_qr = os.path.join(experiment.model_dir_qr, 'envelope')
-pathlib.Path(experiment.model_dir_qr).mkdir(parents=True, exist_ok=True)            
+pathlib.Path(experiment.model_dir_qr).mkdir(parents=True, exist_ok=True)
+result_dir = '/eos/user/k/kiwoznia/data/QR_results/analysis/run_' + str(params.run_n) + '/envelope'
+pathlib.Path(result_dir).mkdir(parents=True, exist_ok=True)            
 
 #****************************************#
 #           read in qcd data
@@ -61,11 +64,17 @@ data_qcd_parts = slice_datasample_n_parts(data_qcd_all, parts_n)
 
 cut_results = {}
 
-# for each quantile
+#****************************************#
+#           for each quantile
+#****************************************#
 for quantile in quantiles:
 
     models = []
     cuts = np.empty([0, len(bin_centers)])
+
+    #****************************************#
+    #      train, save, predict 5 models
+    #****************************************#
 
     # for each qcd data part
     for dat_train, dat_valid, model_n in zip(data_qcd_parts, data_qcd_parts[1:] + [data_qcd_parts[0]], list('ABCDE')):
@@ -83,12 +92,16 @@ for quantile in quantiles:
         cuts_part = discriminator.predict(bin_centers)
         cuts = np.append(cuts, cuts_part[np.newaxis,:], axis=0)
 
+    #****************************************#
+    #      compute, save and plot envelope
+    #****************************************#
+
     # compute mean, RMS, min, max per bin center over 5 trained models
     mu = np.mean(cuts, axis=0)
     mi = np.min(cuts, axis=0)
     ma = np.max(cuts, axis=0)
-    rms = np.sqrt(np.mean(np.square(cuts), axis=0))
-    cuts_for_quantile = np.vstack([bin_centers, mu, rms, mi, ma])
+    rmse = np.sqrt(np.mean(np.square(cuts-mu), axis=0))
+    cuts_for_quantile = np.stack([bin_centers, mu, rmse, mi, ma], axis=1)
     print('cuts for quantile ' + str(quantile) + ': ')
     print(cuts_for_quantile)
     # store cut values to csv file
@@ -97,10 +110,8 @@ for quantile in quantiles:
     # plot quantile cut bands
     title_suffix = ' 5 models trained qcd SR no signal q ' + 'q{:02}'.format(int(quantile*100))
     plot_name = 'multi_discr_cut_no_signal_5models_' + 'q{:02}'.format(int(quantile*100))
-    fig_dir = '/eos/user/k/kiwoznia/data/QR_results/analysis/run_' + str(params.run_n) + '/envelope'
-    pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
-    andi.analyze_multi_quantile_discriminator_cut(models, dat_valid, title_suffix=title_suffix, plot_name=plot_name, fig_dir=fig_dir)
-
+    andi.analyze_multi_quantile_discriminator_cut(models, dat_valid, title_suffix=title_suffix, plot_name=plot_name, fig_dir=result_dir)
 
 # write cut result json file
-
+with open(os.path.join(result_dir, 'cut_stats.json'), 'w') as ff:
+    json.dump(cut_results, ff)
