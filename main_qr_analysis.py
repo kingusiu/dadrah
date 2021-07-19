@@ -22,7 +22,7 @@ multi_discriminator_analysis = True
 strategy_id = 'rk5_05'
 Parameters = namedtuple('Parameters','run_n, sm_sample_id, quantile, strategy, sig_sample_id, sig_xsec')
 params = Parameters(run_n=113, sm_sample_id='qcdSigExtReco', quantile=0.9, strategy=lost.loss_strategy_dict[strategy_id], \
-					sig_sample_id='GtoWW35naReco', sig_xsec=0)
+					sig_sample_id='GtoWW35naReco', sig_xsec=100)
 
 #****************************************#
 #			read in data
@@ -43,7 +43,7 @@ if single_discriminator_analysis:
 	discriminator.load('./my_new_model.h5')
 
 	#****************************************#
-	#		load quantile regression
+	#		analyze quantile regression
 	#****************************************#
 	andi.analyze_discriminator_cut(discriminator, qcd_sig_sample, plot_name='discr_cut_qnt'+str(int(params.quantile*100)), fig_dir='.')
 
@@ -53,7 +53,7 @@ if multi_discriminator_analysis:
 	discriminator_list = []
 
 	quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
-	date = '20210426'
+	date = '20210425'
 	models = [os.path.join(experiment.model_dir_qr, stco.make_qr_model_str(params.run_n, q, params.sig_sample_id, params.sig_xsec, strategy_id, date)) \
 				for q in quantiles]
 

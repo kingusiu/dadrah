@@ -104,7 +104,7 @@ for quantile in quantiles:
     cuts_for_quantile = np.stack([bin_centers, mu, rmse, mi, ma], axis=1)
     print('cuts for quantile ' + str(quantile) + ': ')
     print(cuts_for_quantile)
-    # store cut values to csv file
+    # store cut values in dict
     cut_results.update({inv_quantile_str(quantile): cuts_for_quantile.tolist()})
 
     # plot quantile cut bands

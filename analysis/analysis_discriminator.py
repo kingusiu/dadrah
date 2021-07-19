@@ -28,7 +28,7 @@ def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature
         x_max = np.max(sample[feature_key])
     loss = discriminator_list[0].loss_strategy(sample)
     plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-3)))), \
-                norm=LogNorm(), bins=200, cmap=cm.get_cmap('Blues'), cmin=0.01)
+                norm=LogNorm(), bins=200, cmap=cm.get_cmap('Greens'), cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
     for discriminator in discriminator_list:
         plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='Q '+str(discriminator.quantile*100)+'%', color=next(colors))
