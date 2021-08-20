@@ -16,12 +16,16 @@ import pofah.phase_space.cut_constants as cuts
 #       fitted polynomial selections
 #****************************************#
 
+# 3-param fit
+
 cut_polys_par3 = {
     
     0.99 : np.poly1d([-7.03032980e-11, 1.06542864e-06, -2.17139299e-03, 3.31447885e+00]),
     0.9 : np.poly1d([-4.60568395e-11, 7.63471757e-07, -1.55537204e-03, 2.81116723e+00]),
     0.1 : np.poly1d([-1.57031061e-11, 3.01628110e-07, -5.03564141e-04, 1.83966064e+00])
 }
+
+# 5-param-fit
 
 cut_polys_par5 = {
     
@@ -78,6 +82,7 @@ for sample_id in [params.qcd_test_sample_id] + signals:
     param_dict = {'$sig_name$': sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
     experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
     result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
+    result_paths = result_paths.extend_base_path('fitted_cut', 'param5')
 
     for quantile in quantiles:
 
