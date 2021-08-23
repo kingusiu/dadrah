@@ -54,6 +54,7 @@ signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+res
 masses = [1500, 2500, 3500, 4500]
 xsec = 0.
 quantiles = [0.1, 0.9, 0.99]
+params_n = 5
 
 
 
@@ -82,7 +83,7 @@ for sample_id in [params.qcd_test_sample_id] + signals:
     param_dict = {'$sig_name$': sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
     experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
     result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
-    result_paths = result_paths.extend_base_path('fitted_cut', 'param5')
+    result_paths = result_paths.extend_base_path('fitted_cut', 'param'+str(params_n))
 
     for quantile in quantiles:
 
@@ -90,12 +91,12 @@ for sample_id in [params.qcd_test_sample_id] + signals:
         inv_quant = round((1.-quantile),2)
 
         #print('predicting {}'.format(sample.name))
-        selection = fitted_selection(sample, params.strategy_id, quantile)
+        selection = fitted_selection(sample, params.strategy_id, quantile, params_n)
         sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
 
-        # write results for all quantiles
-        print('writing selections to ', result_paths.base_dir)
-        qcd_test_sample.dump(result_paths.sample_file_path(params.qcd_test_sample_id, mkdir=True))
-        sig_sample.dump(result_paths.sample_file_path(params.sig_sample_id))
+    # write results for all quantiles
+    print('writing selections to ', result_paths.sample_file_path(sample_id))
+    sample.dump(result_paths.sample_file_path(sample_id, mkdir=True))
+
 
     
