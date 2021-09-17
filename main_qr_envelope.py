@@ -27,7 +27,8 @@ def inv_quantile_str(quantile):
 
 
 # setup runtime params and csv file
-quantiles = [0.1, 0.9, 0.99]
+#quantiles = [0.1, 0.9, 0.99]
+quantiles = [0.3, 0.5, 0.7]
 parts_n = 5
 bin_edges = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
                         2305, 2406, 2512, 2620, 2733, 2849, 2969, 3093, 3221, 3353, 3490, 3632, 3778, 3928, 
@@ -113,5 +114,5 @@ for quantile in quantiles:
     andi.analyze_multi_quantile_discriminator_cut(models, dat_valid, title_suffix=title_suffix, plot_name=plot_name, fig_dir=result_dir)
 
 # write cut result json file
-with open(os.path.join(result_dir, 'cut_stats.json'), 'w') as ff:
+with open(os.path.join(result_dir, 'cut_stats_q357.json'), 'w') as ff:
     json.dump(cut_results, ff)

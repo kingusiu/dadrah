@@ -1,5 +1,6 @@
 import numpy as np
 from recordtype import recordtype
+import os
 
 import pofah.jet_sample as js
 import pofah.util.sample_factory as sf
@@ -29,9 +30,9 @@ cut_polys_par3 = {
 
 cut_polys_par5 = {
     
-    0.99 : np.poly1d([6.39477740e-18, -1.32096520e-13, 9.60377076e-10, -2.68629790e-06, 4.11271170e-03, -5.10765776e-01]),
-    0.9 : np.poly1d([4.53587326e-18, -9.43590874e-14, 6.95373175e-10, -1.95383392e-06, 3.02479614e-03, 8.16766148e-03]),
-    0.1 : np.poly1d([1.43916815e-18, -3.34572370e-14, 2.74613208e-10, -8.59156457e-07, 1.60246515e-03, 4.73345295e-01])
+    0.99 : np.poly1d([-4.16600751e-18,  4.49261774e-14, -1.60506482e-10,  6.43707025e-07, -5.03695064e-04,  1.87157225e+00]),
+    0.9 : np.poly1d([-3.27587188e-18, 3.57458088e-14, -1.17939773e-10,  4.22470378e-07, -2.11205166e-04,  1.65011401e+00]),
+    0.1 : np.poly1d([-8.34423542e-19, -2.39966921e-16, 8.92683714e-11, -3.67360323e-07, 9.83976050e-04, 7.67849195e-01])
 }
 
 def fitted_selection(sample, strategy_id, quantile, params_n=5):
@@ -39,8 +40,6 @@ def fitted_selection(sample, strategy_id, quantile, params_n=5):
     loss = loss_strategy(sample)
     loss_cut = cut_polys_par5[quantile] if params_n == 5 else cut_polys_par3[quantile]
     return loss > loss_cut(sample['mJJ'])
-
-
 
 
 
@@ -80,10 +79,12 @@ for sample_id in [params.qcd_test_sample_id] + signals:
 
     sample = js.JetSample.from_input_dir(sample_id, paths.sample_dir_path(sample_id), **cuts.signalregion_cuts)
 
-    param_dict = {'$sig_name$': sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
-    experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
-    result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
-    result_paths = result_paths.extend_base_path('fitted_cut', 'param'+str(params_n))
+    result_path = os.path.join('/eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05', 'param'+str(params_n))
+
+    # param_dict = {'$sig_name$': sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
+    # experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
+    # result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
+    # result_paths = result_paths.extend_base_path('fitted_cut', 'param'+str(params_n))
 
     for quantile in quantiles:
 
@@ -95,8 +96,8 @@ for sample_id in [params.qcd_test_sample_id] + signals:
         sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
 
     # write results for all quantiles
-    print('writing selections to ', result_paths.sample_file_path(sample_id))
-    sample.dump(result_paths.sample_file_path(sample_id, mkdir=True))
+    file_path = os.path.join(result_path, sdfr.path_dict['file_names'][sample_id]+'.h5')
+    sample.dump(file_path)
 
 
     
