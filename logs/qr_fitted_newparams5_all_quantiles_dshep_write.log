@@ -1,0 +1,15 @@
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_signalregion_parts
+7671759 events read in 1 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_signalregion_parts
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05/param5/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_reco.h5
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_NEW_parts
+397843 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_NEW_parts
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05/param5/RSGraviton_WW_NARROW_13TeV_PU40_1.5TeV_reco.h5
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_NEW_parts
+492361 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_NEW_parts
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05/param5/RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_reco.h5
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+531825 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05/param5/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_NEW_parts
+561735 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_NEW_parts
+written data sample to /eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05/param5/RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_reco.h5
