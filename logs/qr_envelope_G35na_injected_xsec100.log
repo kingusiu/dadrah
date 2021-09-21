@@ -1,0 +1,3715 @@
+setGPU: Setting GPU to: 0
+bin centers:  [1227.5, 1287.5, 1353.5, 1422.0, 1493.0, 1566.5, 1642.5, 1721.0, 1802.5, 1887.0, 1974.5, 2065.0, 2158.5, 2255.5, 2355.5, 2459.0, 2566.0, 2676.5, 2791.0, 2909.0, 3031.0, 3157.0, 3287.0, 3421.5, 3561.0, 3705.0, 3853.0, 4006.0, 4164.5, 4328.0, 4497.0, 4671.5, 4851.5, 5037.5, 5229.5, 5450.5, 5655.5, 5844.0, 6062.0, 6287.5, 6520.0, 6760.0]
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_signalregion_parts
+4793609 events read in 10 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_signalregion_parts
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_EXT_signalregion_parts
+4796089 events read in 10 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_EXT_signalregion_parts
+qcd all: min mjj = 1200.0001220703125, max mjj = 7285.58154296875
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+531825 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.1
+Model: "functional_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense (Dense)                (None, 60)                120       
+_________________________________________________________________
+dense_1 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_2 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_3 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_4 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_5 (Dense)              (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 48s - loss: 0.0248 - val_loss: 0.0246
+Epoch 2/100
+7493/7493 - 41s - loss: 0.0240 - val_loss: 0.0240
+Epoch 3/100
+7493/7493 - 43s - loss: 0.0238 - val_loss: 0.0239
+Epoch 4/100
+7493/7493 - 36s - loss: 0.0238 - val_loss: 0.0238
+Epoch 5/100
+7493/7493 - 32s - loss: 0.0238 - val_loss: 0.0238
+Epoch 6/100
+7493/7493 - 37s - loss: 0.0238 - val_loss: 0.0237
+Epoch 7/100
+7493/7493 - 45s - loss: 0.0237 - val_loss: 0.0237
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 34s - loss: 0.0237 - val_loss: 0.0237
+Epoch 9/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 10/100
+7493/7493 - 25s - loss: 0.0237 - val_loss: 0.0237
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0237
+Epoch 12/100
+7493/7493 - 30s - loss: 0.0237 - val_loss: 0.0237
+Epoch 13/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 15/100
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0237
+Epoch 16/100
+7493/7493 - 34s - loss: 0.0237 - val_loss: 0.0237
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 18/100
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0237
+Epoch 19/100
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0237
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 41s - loss: 0.0237 - val_loss: 0.0237
+Epoch 21/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 22/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 43s - loss: 0.0237 - val_loss: 0.0237
+Epoch 24/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 25/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 27/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 00027: early stopping
+saving model QRmodel_run_113_qnt_10_GtoWW35na_sigx_100_loss_rk5_05_20210920_A.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.1
+Model: "functional_3"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_2 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_6 (Dense)              (None, 60)                120       
+_________________________________________________________________
+dense_7 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_8 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_9 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_10 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_11 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 33s - loss: 0.0248 - val_loss: 0.0243
+Epoch 2/100
+7493/7493 - 32s - loss: 0.0240 - val_loss: 0.0247
+Epoch 3/100
+7493/7493 - 41s - loss: 0.0239 - val_loss: 0.0238
+Epoch 4/100
+7493/7493 - 44s - loss: 0.0238 - val_loss: 0.0239
+Epoch 5/100
+7493/7493 - 47s - loss: 0.0238 - val_loss: 0.0237
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 38s - loss: 0.0238 - val_loss: 0.0239
+Epoch 7/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 8/100
+7493/7493 - 30s - loss: 0.0237 - val_loss: 0.0237
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 10/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 11/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 13/100
+7493/7493 - 40s - loss: 0.0237 - val_loss: 0.0237
+Epoch 14/100
+7493/7493 - 44s - loss: 0.0237 - val_loss: 0.0237
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0237
+Epoch 16/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 17/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 19/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 20/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 22/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 23/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 25/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 26/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 28/100
+7493/7493 - 40s - loss: 0.0237 - val_loss: 0.0237
+Epoch 29/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 00029: early stopping
+saving model QRmodel_run_113_qnt_10_GtoWW35na_sigx_100_loss_rk5_05_20210920_B.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.1
+Model: "functional_5"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_3 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_12 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_13 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_14 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_15 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_16 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_17 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 32s - loss: 0.0246 - val_loss: 0.0238
+Epoch 2/100
+7493/7493 - 33s - loss: 0.0240 - val_loss: 0.0241
+Epoch 3/100
+7493/7493 - 39s - loss: 0.0239 - val_loss: 0.0238
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 31s - loss: 0.0239 - val_loss: 0.0239
+Epoch 5/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 6/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 7/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 8/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 34s - loss: 0.0237 - val_loss: 0.0237
+Epoch 10/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 11/100
+7493/7493 - 34s - loss: 0.0237 - val_loss: 0.0237
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 38s - loss: 0.0237 - val_loss: 0.0237
+Epoch 13/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 14/100
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0237
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 39s - loss: 0.0237 - val_loss: 0.0237
+Epoch 16/100
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0237
+Epoch 17/100
+7493/7493 - 40s - loss: 0.0237 - val_loss: 0.0237
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 19/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 20/100
+7493/7493 - 46s - loss: 0.0237 - val_loss: 0.0237
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 22/100
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0237
+Epoch 23/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 40s - loss: 0.0237 - val_loss: 0.0237
+Epoch 25/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0237
+Epoch 26/100
+7493/7493 - 41s - loss: 0.0237 - val_loss: 0.0237
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 42s - loss: 0.0237 - val_loss: 0.0237
+Epoch 28/100
+7493/7493 - 43s - loss: 0.0237 - val_loss: 0.0237
+Epoch 29/100
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0237
+Epoch 30/100
+
+Epoch 00030: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 31/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 32/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 33/100
+
+Epoch 00033: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 00033: early stopping
+saving model QRmodel_run_113_qnt_10_GtoWW35na_sigx_100_loss_rk5_05_20210920_C.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918164
+
+training QR for quantile 0.1
+Model: "functional_7"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_4 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_18 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_19 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_20 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_21 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_22 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_23 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 33s - loss: 0.0252 - val_loss: 0.0239
+Epoch 2/100
+7493/7493 - 32s - loss: 0.0240 - val_loss: 0.0238
+Epoch 3/100
+7493/7493 - 37s - loss: 0.0239 - val_loss: 0.0238
+Epoch 4/100
+7493/7493 - 31s - loss: 0.0239 - val_loss: 0.0237
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 39s - loss: 0.0238 - val_loss: 0.0242
+Epoch 6/100
+7493/7493 - 42s - loss: 0.0237 - val_loss: 0.0237
+Epoch 7/100
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0237
+Epoch 8/100
+7493/7493 - 41s - loss: 0.0237 - val_loss: 0.0237
+Epoch 9/100
+7493/7493 - 44s - loss: 0.0237 - val_loss: 0.0237
+Epoch 10/100
+7493/7493 - 47s - loss: 0.0237 - val_loss: 0.0237
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0237
+Epoch 12/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0236
+Epoch 13/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0237
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0236
+Epoch 15/100
+7493/7493 - 39s - loss: 0.0237 - val_loss: 0.0236
+Epoch 16/100
+7493/7493 - 47s - loss: 0.0237 - val_loss: 0.0236
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 38s - loss: 0.0237 - val_loss: 0.0236
+Epoch 18/100
+7493/7493 - 44s - loss: 0.0237 - val_loss: 0.0236
+Epoch 19/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0236
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0236
+Epoch 21/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0236
+Epoch 22/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0236
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0236
+Epoch 24/100
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0236
+Epoch 25/100
+7493/7493 - 35s - loss: 0.0237 - val_loss: 0.0236
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 34s - loss: 0.0237 - val_loss: 0.0236
+Epoch 27/100
+7493/7493 - 30s - loss: 0.0237 - val_loss: 0.0236
+Epoch 28/100
+7493/7493 - 31s - loss: 0.0237 - val_loss: 0.0236
+Epoch 29/100
+
+Epoch 00029: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 32s - loss: 0.0237 - val_loss: 0.0236
+Epoch 30/100
+7493/7493 - 30s - loss: 0.0237 - val_loss: 0.0236
+Epoch 31/100
+7493/7493 - 37s - loss: 0.0237 - val_loss: 0.0236
+Epoch 32/100
+
+Epoch 00032: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0236
+Epoch 33/100
+7493/7493 - 46s - loss: 0.0237 - val_loss: 0.0236
+Epoch 34/100
+7493/7493 - 47s - loss: 0.0237 - val_loss: 0.0236
+Epoch 35/100
+
+Epoch 00035: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 46s - loss: 0.0237 - val_loss: 0.0236
+Epoch 00035: early stopping
+saving model QRmodel_run_113_qnt_10_GtoWW35na_sigx_100_loss_rk5_05_20210920_D.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.1
+Model: "functional_9"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_5 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_24 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_25 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_26 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_27 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_28 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_29 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 31s - loss: 0.0250 - val_loss: 0.0242
+Epoch 2/100
+7493/7493 - 32s - loss: 0.0240 - val_loss: 0.0237
+Epoch 3/100
+7493/7493 - 31s - loss: 0.0239 - val_loss: 0.0237
+Epoch 4/100
+7493/7493 - 37s - loss: 0.0238 - val_loss: 0.0237
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 35s - loss: 0.0238 - val_loss: 0.0237
+Epoch 6/100
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 7/100
+7493/7493 - 36s - loss: 0.0237 - val_loss: 0.0237
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 33s - loss: 0.0237 - val_loss: 0.0237
+Epoch 9/100
+7493/7493 - 32s - loss: 0.0236 - val_loss: 0.0237
+Epoch 10/100
+7493/7493 - 34s - loss: 0.0236 - val_loss: 0.0237
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 30s - loss: 0.0236 - val_loss: 0.0237
+Epoch 12/100
+7493/7493 - 33s - loss: 0.0236 - val_loss: 0.0237
+Epoch 13/100
+7493/7493 - 38s - loss: 0.0236 - val_loss: 0.0237
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 37s - loss: 0.0236 - val_loss: 0.0237
+Epoch 15/100
+7493/7493 - 37s - loss: 0.0236 - val_loss: 0.0237
+Epoch 16/100
+7493/7493 - 36s - loss: 0.0236 - val_loss: 0.0237
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 32s - loss: 0.0236 - val_loss: 0.0237
+Epoch 18/100
+7493/7493 - 30s - loss: 0.0236 - val_loss: 0.0237
+Epoch 19/100
+7493/7493 - 34s - loss: 0.0236 - val_loss: 0.0237
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 33s - loss: 0.0236 - val_loss: 0.0237
+Epoch 21/100
+7493/7493 - 42s - loss: 0.0236 - val_loss: 0.0237
+Epoch 22/100
+7493/7493 - 47s - loss: 0.0236 - val_loss: 0.0237
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 48s - loss: 0.0236 - val_loss: 0.0237
+Epoch 24/100
+7493/7493 - 37s - loss: 0.0236 - val_loss: 0.0237
+Epoch 25/100
+7493/7493 - 34s - loss: 0.0236 - val_loss: 0.0237
+Epoch 00025: early stopping
+saving model QRmodel_run_113_qnt_10_GtoWW35na_sigx_100_loss_rk5_05_20210920_E.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:5 out of the last 9 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f987559c9d8> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+cuts for quantile 0.1: 
+[[1.22750000e+03 1.58439064e+00 1.87461829e-04 1.58421445e+00
+  1.58475363e+00]
+ [1.28750000e+03 1.61245298e+00 3.64975931e-04 1.61200249e+00
+  1.61296988e+00]
+ [1.35350000e+03 1.64327025e+00 4.98527189e-04 1.64245117e+00
+  1.64374614e+00]
+ [1.42200000e+03 1.67519925e+00 8.14008838e-04 1.67431593e+00
+  1.67669392e+00]
+ [1.49300000e+03 1.70747690e+00 8.11633338e-04 1.70659876e+00
+  1.70879257e+00]
+ [1.56650000e+03 1.74181399e+00 4.36189266e-04 1.74116695e+00
+  1.74241388e+00]
+ [1.64250000e+03 1.77660725e+00 5.45292169e-04 1.77627134e+00
+  1.77769494e+00]
+ [1.72100000e+03 1.81310072e+00 3.56598895e-04 1.81263959e+00
+  1.81348658e+00]
+ [1.80250000e+03 1.85165508e+00 5.44398583e-04 1.85111666e+00
+  1.85249782e+00]
+ [1.88700000e+03 1.89258251e+00 8.95528047e-04 1.89165831e+00
+  1.89422953e+00]
+ [1.97450000e+03 1.93628762e+00 9.19207260e-04 1.93517375e+00
+  1.93792486e+00]
+ [2.06500000e+03 1.98355105e+00 4.48927778e-04 1.98276019e+00
+  1.98409069e+00]
+ [2.15850000e+03 2.03436818e+00 8.26473162e-04 2.03282762e+00
+  2.03519964e+00]
+ [2.25550000e+03 2.08863845e+00 1.02859564e-03 2.08682680e+00
+  2.08973098e+00]
+ [2.35550000e+03 2.14655418e+00 1.23440401e-03 2.14454079e+00
+  2.14811110e+00]
+ [2.45900000e+03 2.20960569e+00 1.57413667e-03 2.20673227e+00
+  2.21106911e+00]
+ [2.56600000e+03 2.27822404e+00 2.34482417e-03 2.27438807e+00
+  2.28104401e+00]
+ [2.67650000e+03 2.35331564e+00 3.49696021e-03 2.34930754e+00
+  2.35783362e+00]
+ [2.79100000e+03 2.43557496e+00 4.75179907e-03 2.42986774e+00
+  2.44377398e+00]
+ [2.90900000e+03 2.52686920e+00 5.55259993e-03 2.52219415e+00
+  2.53671837e+00]
+ [3.03100000e+03 2.62999482e+00 7.68944456e-03 2.62003016e+00
+  2.63985825e+00]
+ [3.15700000e+03 2.74268246e+00 9.96665669e-03 2.72880316e+00
+  2.75727391e+00]
+ [3.28700000e+03 2.86364217e+00 1.22014347e-02 2.84551692e+00
+  2.88039780e+00]
+ [3.42150000e+03 2.99406867e+00 1.39006545e-02 2.97169304e+00
+  3.00989962e+00]
+ [3.56100000e+03 3.13731694e+00 1.46894532e-02 3.11015987e+00
+  3.15164590e+00]
+ [3.70500000e+03 3.29354286e+00 1.49497092e-02 3.26415420e+00
+  3.30486608e+00]
+ [3.85300000e+03 3.46288338e+00 1.25990008e-02 3.44019842e+00
+  3.47473907e+00]
+ [4.00600000e+03 3.64547887e+00 1.26719317e-02 3.62354255e+00
+  3.65995002e+00]
+ [4.16450000e+03 3.83925056e+00 2.35647324e-02 3.79785633e+00
+  3.86265922e+00]
+ [4.32800000e+03 4.04387903e+00 3.86713629e-02 3.98311806e+00
+  4.08315754e+00]
+ [4.49700000e+03 4.25898714e+00 5.42026311e-02 4.18381214e+00
+  4.32161856e+00]
+ [4.67150000e+03 4.48545980e+00 6.81555620e-02 4.40759659e+00
+  4.57416248e+00]
+ [4.85150000e+03 4.72474718e+00 7.93294248e-02 4.62097216e+00
+  4.83488369e+00]
+ [5.03750000e+03 4.97347078e+00 9.33935693e-02 4.83627224e+00
+  5.10399294e+00]
+ [5.22950000e+03 5.22998734e+00 1.10508500e-01 5.05870199e+00
+  5.38101053e+00]
+ [5.45050000e+03 5.52471533e+00 1.31826676e-01 5.31486511e+00
+  5.69833755e+00]
+ [5.65550000e+03 5.79714661e+00 1.52061726e-01 5.55252838e+00
+  5.99065065e+00]
+ [5.84400000e+03 6.04662552e+00 1.70571809e-01 5.77103662e+00
+  6.25718975e+00]
+ [6.06200000e+03 6.33373613e+00 1.91510036e-01 6.02362347e+00
+  6.56205797e+00]
+ [6.28750000e+03 6.62881832e+00 2.12293696e-01 6.28464365e+00
+  6.87262440e+00]
+ [6.52000000e+03 6.93053484e+00 2.32447570e-01 6.55328465e+00
+  7.18641233e+00]
+ [6.76000000e+03 7.23848619e+00 2.51558564e-01 6.82967663e+00
+  7.50155401e+00]]
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+findfont: Font family ['cursive'] not found. Falling back to DejaVu Sans.
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.3
+Model: "functional_11"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_6 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_30 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_31 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_32 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_33 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_34 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_35 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 30s - loss: 0.0487 - val_loss: 0.0479
+Epoch 2/100
+7493/7493 - 38s - loss: 0.0472 - val_loss: 0.0467
+Epoch 3/100
+7493/7493 - 31s - loss: 0.0470 - val_loss: 0.0466
+Epoch 4/100
+7493/7493 - 33s - loss: 0.0469 - val_loss: 0.0466
+Epoch 5/100
+7493/7493 - 40s - loss: 0.0468 - val_loss: 0.0468
+Epoch 6/100
+7493/7493 - 33s - loss: 0.0468 - val_loss: 0.0467
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 37s - loss: 0.0468 - val_loss: 0.0467
+Epoch 8/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 9/100
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0466
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 11/100
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0466
+Epoch 12/100
+7493/7493 - 34s - loss: 0.0466 - val_loss: 0.0466
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 35s - loss: 0.0466 - val_loss: 0.0466
+Epoch 14/100
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0466
+Epoch 15/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 35s - loss: 0.0466 - val_loss: 0.0466
+Epoch 17/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 18/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0466
+Epoch 20/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 21/100
+7493/7493 - 35s - loss: 0.0466 - val_loss: 0.0466
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0466
+Epoch 23/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 24/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 41s - loss: 0.0466 - val_loss: 0.0466
+Epoch 26/100
+7493/7493 - 44s - loss: 0.0466 - val_loss: 0.0466
+Epoch 27/100
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0466
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 34s - loss: 0.0466 - val_loss: 0.0466
+Epoch 29/100
+7493/7493 - 47s - loss: 0.0466 - val_loss: 0.0466
+Epoch 30/100
+7493/7493 - 43s - loss: 0.0466 - val_loss: 0.0466
+Epoch 31/100
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0466
+Epoch 00031: early stopping
+saving model QRmodel_run_113_qnt_30_GtoWW35na_sigx_100_loss_rk5_05_20210920_A.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.3
+Model: "functional_13"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_7 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_36 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_37 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_38 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_39 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_40 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_41 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 47s - loss: 0.0485 - val_loss: 0.0471
+Epoch 2/100
+7493/7493 - 40s - loss: 0.0471 - val_loss: 0.0468
+Epoch 3/100
+7493/7493 - 36s - loss: 0.0469 - val_loss: 0.0468
+Epoch 4/100
+7493/7493 - 34s - loss: 0.0468 - val_loss: 0.0469
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 39s - loss: 0.0468 - val_loss: 0.0467
+Epoch 6/100
+7493/7493 - 39s - loss: 0.0466 - val_loss: 0.0468
+Epoch 7/100
+7493/7493 - 48s - loss: 0.0466 - val_loss: 0.0466
+Epoch 8/100
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0467
+Epoch 9/100
+7493/7493 - 47s - loss: 0.0466 - val_loss: 0.0467
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0467
+Epoch 11/100
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0466
+Epoch 12/100
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0467
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0467
+Epoch 14/100
+7493/7493 - 35s - loss: 0.0466 - val_loss: 0.0466
+Epoch 15/100
+7493/7493 - 45s - loss: 0.0466 - val_loss: 0.0466
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 48s - loss: 0.0466 - val_loss: 0.0466
+Epoch 17/100
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0466
+Epoch 18/100
+7493/7493 - 45s - loss: 0.0466 - val_loss: 0.0466
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0466
+Epoch 20/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 21/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0466
+Epoch 23/100
+7493/7493 - 47s - loss: 0.0466 - val_loss: 0.0466
+Epoch 24/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 46s - loss: 0.0466 - val_loss: 0.0466
+Epoch 26/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 27/100
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0466
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 46s - loss: 0.0466 - val_loss: 0.0466
+Epoch 29/100
+7493/7493 - 48s - loss: 0.0466 - val_loss: 0.0466
+Epoch 30/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 31/100
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 47s - loss: 0.0466 - val_loss: 0.0466
+Epoch 32/100
+7493/7493 - 34s - loss: 0.0466 - val_loss: 0.0466
+Epoch 00032: early stopping
+saving model QRmodel_run_113_qnt_30_GtoWW35na_sigx_100_loss_rk5_05_20210920_B.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.3
+Model: "functional_15"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_8 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_42 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_43 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_44 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_45 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_46 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_47 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 30s - loss: 0.0486 - val_loss: 0.0468
+Epoch 2/100
+7493/7493 - 31s - loss: 0.0472 - val_loss: 0.0470
+Epoch 3/100
+7493/7493 - 31s - loss: 0.0470 - val_loss: 0.0470
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 31s - loss: 0.0469 - val_loss: 0.0468
+Epoch 5/100
+7493/7493 - 33s - loss: 0.0467 - val_loss: 0.0467
+Epoch 6/100
+7493/7493 - 35s - loss: 0.0467 - val_loss: 0.0467
+Epoch 7/100
+7493/7493 - 32s - loss: 0.0467 - val_loss: 0.0467
+Epoch 8/100
+7493/7493 - 33s - loss: 0.0467 - val_loss: 0.0469
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 39s - loss: 0.0467 - val_loss: 0.0467
+Epoch 10/100
+7493/7493 - 30s - loss: 0.0466 - val_loss: 0.0467
+Epoch 11/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0467
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0467
+Epoch 13/100
+7493/7493 - 42s - loss: 0.0466 - val_loss: 0.0467
+Epoch 14/100
+7493/7493 - 46s - loss: 0.0466 - val_loss: 0.0467
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0467
+Epoch 16/100
+7493/7493 - 37s - loss: 0.0466 - val_loss: 0.0467
+Epoch 17/100
+7493/7493 - 34s - loss: 0.0466 - val_loss: 0.0467
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 35s - loss: 0.0466 - val_loss: 0.0467
+Epoch 19/100
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0467
+Epoch 20/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0467
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0467
+Epoch 22/100
+7493/7493 - 39s - loss: 0.0466 - val_loss: 0.0467
+Epoch 23/100
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0467
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0467
+Epoch 25/100
+7493/7493 - 48s - loss: 0.0466 - val_loss: 0.0467
+Epoch 26/100
+7493/7493 - 45s - loss: 0.0466 - val_loss: 0.0467
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0467
+Epoch 28/100
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0467
+Epoch 29/100
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0467
+Epoch 30/100
+
+Epoch 00030: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0467
+Epoch 31/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0467
+Epoch 32/100
+7493/7493 - 34s - loss: 0.0466 - val_loss: 0.0467
+Epoch 33/100
+
+Epoch 00033: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0467
+Epoch 34/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0467
+Epoch 35/100
+7493/7493 - 34s - loss: 0.0466 - val_loss: 0.0467
+Epoch 36/100
+
+Epoch 00036: ReduceLROnPlateau reducing learning rate to 2.0480002416167767e-11.
+7493/7493 - 46s - loss: 0.0466 - val_loss: 0.0467
+Epoch 37/100
+7493/7493 - 39s - loss: 0.0466 - val_loss: 0.0467
+Epoch 38/100
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0467
+Epoch 39/100
+
+Epoch 00039: ReduceLROnPlateau reducing learning rate to 4.096000622011431e-12.
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0467
+Epoch 00039: early stopping
+saving model QRmodel_run_113_qnt_30_GtoWW35na_sigx_100_loss_rk5_05_20210920_C.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918164
+
+training QR for quantile 0.3
+Model: "functional_17"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_9 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_48 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_49 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_50 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_51 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_52 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_53 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 43s - loss: 0.0487 - val_loss: 0.0467
+Epoch 2/100
+7493/7493 - 33s - loss: 0.0472 - val_loss: 0.0467
+Epoch 3/100
+7493/7493 - 32s - loss: 0.0470 - val_loss: 0.0468
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 32s - loss: 0.0470 - val_loss: 0.0468
+Epoch 5/100
+7493/7493 - 31s - loss: 0.0467 - val_loss: 0.0466
+Epoch 6/100
+7493/7493 - 31s - loss: 0.0467 - val_loss: 0.0467
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 31s - loss: 0.0467 - val_loss: 0.0467
+Epoch 8/100
+7493/7493 - 33s - loss: 0.0467 - val_loss: 0.0466
+Epoch 9/100
+7493/7493 - 33s - loss: 0.0467 - val_loss: 0.0466
+Epoch 10/100
+7493/7493 - 31s - loss: 0.0467 - val_loss: 0.0466
+Epoch 11/100
+7493/7493 - 33s - loss: 0.0467 - val_loss: 0.0466
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 30s - loss: 0.0467 - val_loss: 0.0466
+Epoch 13/100
+7493/7493 - 32s - loss: 0.0467 - val_loss: 0.0466
+Epoch 14/100
+7493/7493 - 33s - loss: 0.0467 - val_loss: 0.0466
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 38s - loss: 0.0467 - val_loss: 0.0466
+Epoch 16/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 17/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 19/100
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 20/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 00020: early stopping
+saving model QRmodel_run_113_qnt_30_GtoWW35na_sigx_100_loss_rk5_05_20210920_D.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:5 out of the last 169 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f979065bf28> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.3
+Model: "functional_19"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_10 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_54 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_55 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_56 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_57 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_58 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_59 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 32s - loss: 0.0486 - val_loss: 0.0467
+Epoch 2/100
+7493/7493 - 37s - loss: 0.0472 - val_loss: 0.0468
+Epoch 3/100
+7493/7493 - 32s - loss: 0.0470 - val_loss: 0.0469
+Epoch 4/100
+7493/7493 - 32s - loss: 0.0469 - val_loss: 0.0466
+Epoch 5/100
+7493/7493 - 32s - loss: 0.0468 - val_loss: 0.0471
+Epoch 6/100
+7493/7493 - 36s - loss: 0.0468 - val_loss: 0.0467
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 46s - loss: 0.0468 - val_loss: 0.0468
+Epoch 8/100
+7493/7493 - 42s - loss: 0.0466 - val_loss: 0.0466
+Epoch 9/100
+7493/7493 - 41s - loss: 0.0466 - val_loss: 0.0466
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 38s - loss: 0.0466 - val_loss: 0.0466
+Epoch 11/100
+7493/7493 - 35s - loss: 0.0466 - val_loss: 0.0466
+Epoch 12/100
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0466
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 14/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 15/100
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0466
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0466
+Epoch 17/100
+7493/7493 - 41s - loss: 0.0466 - val_loss: 0.0466
+Epoch 18/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 29s - loss: 0.0466 - val_loss: 0.0466
+Epoch 20/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 21/100
+7493/7493 - 30s - loss: 0.0466 - val_loss: 0.0466
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 39s - loss: 0.0466 - val_loss: 0.0466
+Epoch 23/100
+7493/7493 - 31s - loss: 0.0466 - val_loss: 0.0466
+Epoch 24/100
+7493/7493 - 39s - loss: 0.0466 - val_loss: 0.0466
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 45s - loss: 0.0466 - val_loss: 0.0466
+Epoch 26/100
+7493/7493 - 36s - loss: 0.0466 - val_loss: 0.0466
+Epoch 27/100
+7493/7493 - 39s - loss: 0.0466 - val_loss: 0.0466
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 40s - loss: 0.0466 - val_loss: 0.0466
+Epoch 29/100
+7493/7493 - 32s - loss: 0.0466 - val_loss: 0.0466
+Epoch 30/100
+7493/7493 - 33s - loss: 0.0466 - val_loss: 0.0466
+Epoch 00030: early stopping
+saving model QRmodel_run_113_qnt_30_GtoWW35na_sigx_100_loss_rk5_05_20210920_E.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:6 out of the last 171 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f979054c620> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+cuts for quantile 0.3: 
+[[1.22750000e+03 1.67803214e+00 3.56023515e-04 1.67764664e+00
+  1.67854297e+00]
+ [1.28750000e+03 1.70604315e+00 1.77557239e-04 1.70590782e+00
+  1.70638788e+00]
+ [1.35350000e+03 1.73664792e+00 2.95986316e-04 1.73613453e+00
+  1.73704183e+00]
+ [1.42200000e+03 1.76910172e+00 5.00935849e-04 1.76833653e+00
+  1.76972866e+00]
+ [1.49300000e+03 1.80235107e+00 3.20020206e-04 1.80200815e+00
+  1.80277634e+00]
+ [1.56650000e+03 1.83843899e+00 7.45505454e-04 1.83767140e+00
+  1.83965302e+00]
+ [1.64250000e+03 1.87591865e+00 4.05183087e-04 1.87535858e+00
+  1.87635148e+00]
+ [1.72100000e+03 1.91638644e+00 3.42008760e-04 1.91604400e+00
+  1.91700375e+00]
+ [1.80250000e+03 1.96017349e+00 3.90211124e-04 1.95958197e+00
+  1.96076763e+00]
+ [1.88700000e+03 2.00730495e+00 5.75644473e-04 2.00660825e+00
+  2.00832510e+00]
+ [1.97450000e+03 2.05804257e+00 8.55672109e-04 2.05733490e+00
+  2.05968714e+00]
+ [2.06500000e+03 2.11333838e+00 1.11535374e-03 2.11191082e+00
+  2.11505961e+00]
+ [2.15850000e+03 2.17382007e+00 1.37285423e-03 2.17241216e+00
+  2.17602396e+00]
+ [2.25550000e+03 2.23915992e+00 1.90109656e-03 2.23710155e+00
+  2.24230051e+00]
+ [2.35550000e+03 2.30987878e+00 2.21756469e-03 2.30760550e+00
+  2.31309867e+00]
+ [2.45900000e+03 2.38700733e+00 2.49702885e-03 2.38384295e+00
+  2.38982296e+00]
+ [2.56600000e+03 2.47181687e+00 2.05500456e-03 2.46833825e+00
+  2.47447634e+00]
+ [2.67650000e+03 2.56451659e+00 2.04597070e-03 2.56101727e+00
+  2.56677413e+00]
+ [2.79100000e+03 2.66670685e+00 3.05340935e-03 2.66364884e+00
+  2.67191148e+00]
+ [2.90900000e+03 2.77809272e+00 4.65288622e-03 2.77402139e+00
+  2.78642583e+00]
+ [3.03100000e+03 2.89997859e+00 5.56365558e-03 2.89431429e+00
+  2.90961647e+00]
+ [3.15700000e+03 3.03575215e+00 7.32578833e-03 3.02821517e+00
+  3.04513812e+00]
+ [3.28700000e+03 3.18748283e+00 1.08982628e-02 3.17593265e+00
+  3.20191264e+00]
+ [3.42150000e+03 3.35355272e+00 1.36316929e-02 3.33515191e+00
+  3.37429643e+00]
+ [3.56100000e+03 3.53684082e+00 1.03949325e-02 3.52640486e+00
+  3.55625057e+00]
+ [3.70500000e+03 3.73273482e+00 1.11892138e-02 3.71629572e+00
+  3.74730659e+00]
+ [3.85300000e+03 3.93782182e+00 1.93540387e-02 3.90945864e+00
+  3.96684122e+00]
+ [4.00600000e+03 4.15556870e+00 2.76005552e-02 4.12352705e+00
+  4.20420313e+00]
+ [4.16450000e+03 4.39159784e+00 3.45436481e-02 4.35393524e+00
+  4.45671320e+00]
+ [4.32800000e+03 4.64261045e+00 4.87984187e-02 4.57913303e+00
+  4.72243023e+00]
+ [4.49700000e+03 4.90707703e+00 6.79711471e-02 4.81227732e+00
+  4.99840736e+00]
+ [4.67150000e+03 5.19096909e+00 9.19304565e-02 5.05325222e+00
+  5.28405476e+00]
+ [4.85150000e+03 5.49639988e+00 1.31021632e-01 5.30195570e+00
+  5.61483288e+00]
+ [5.03750000e+03 5.81368303e+00 1.80510689e-01 5.55897999e+00
+  6.01765537e+00]
+ [5.22950000e+03 6.14214411e+00 2.35501436e-01 5.82423067e+00
+  6.43909264e+00]
+ [5.45050000e+03 6.52022886e+00 3.00701094e-01 6.12934160e+00
+  6.92427254e+00]
+ [5.65550000e+03 6.87079277e+00 3.62233090e-01 6.41204596e+00
+  7.37428570e+00]
+ [5.84400000e+03 7.19290142e+00 4.19443012e-01 6.67161751e+00
+  7.78794384e+00]
+ [6.06200000e+03 7.56499271e+00 4.86233571e-01 6.97120857e+00
+  8.26605129e+00]
+ [6.28750000e+03 7.94922256e+00 5.56000743e-01 7.28021145e+00
+  8.76013088e+00]
+ [6.52000000e+03 8.34441729e+00 6.28711434e-01 7.59753418e+00
+  9.26882648e+00]
+ [6.76000000e+03 8.75097599e+00 7.04767428e-01 7.92326450e+00
+  9.79290104e+00]]
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.5
+Model: "functional_21"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_11 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_60 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_61 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_62 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_63 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_64 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_65 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 39s - loss: 0.0563 - val_loss: 0.0542
+Epoch 2/100
+7493/7493 - 35s - loss: 0.0545 - val_loss: 0.0541
+Epoch 3/100
+7493/7493 - 30s - loss: 0.0543 - val_loss: 0.0539
+Epoch 4/100
+7493/7493 - 35s - loss: 0.0542 - val_loss: 0.0541
+Epoch 5/100
+7493/7493 - 36s - loss: 0.0542 - val_loss: 0.0539
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 29s - loss: 0.0541 - val_loss: 0.0542
+Epoch 7/100
+7493/7493 - 35s - loss: 0.0539 - val_loss: 0.0539
+Epoch 8/100
+7493/7493 - 26s - loss: 0.0539 - val_loss: 0.0539
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 10/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 11/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 30s - loss: 0.0539 - val_loss: 0.0539
+Epoch 13/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 14/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 29s - loss: 0.0539 - val_loss: 0.0539
+Epoch 16/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0538
+Epoch 17/100
+7493/7493 - 38s - loss: 0.0539 - val_loss: 0.0539
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 38s - loss: 0.0539 - val_loss: 0.0538
+Epoch 19/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0538
+Epoch 20/100
+7493/7493 - 45s - loss: 0.0539 - val_loss: 0.0538
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 48s - loss: 0.0539 - val_loss: 0.0539
+Epoch 22/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0538
+Epoch 23/100
+7493/7493 - 35s - loss: 0.0539 - val_loss: 0.0539
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 40s - loss: 0.0539 - val_loss: 0.0538
+Epoch 25/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0538
+Epoch 26/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0538
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 43s - loss: 0.0539 - val_loss: 0.0538
+Epoch 28/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0538
+Epoch 00028: early stopping
+saving model QRmodel_run_113_qnt_50_GtoWW35na_sigx_100_loss_rk5_05_20210920_A.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.5
+Model: "functional_23"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_12 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_66 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_67 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_68 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_69 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_70 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_71 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 40s - loss: 0.0562 - val_loss: 0.0543
+Epoch 2/100
+7493/7493 - 37s - loss: 0.0545 - val_loss: 0.0542
+Epoch 3/100
+7493/7493 - 31s - loss: 0.0543 - val_loss: 0.0545
+Epoch 4/100
+7493/7493 - 37s - loss: 0.0541 - val_loss: 0.0541
+Epoch 5/100
+7493/7493 - 35s - loss: 0.0541 - val_loss: 0.0540
+Epoch 6/100
+7493/7493 - 30s - loss: 0.0541 - val_loss: 0.0542
+Epoch 7/100
+7493/7493 - 36s - loss: 0.0540 - val_loss: 0.0539
+Epoch 8/100
+7493/7493 - 33s - loss: 0.0540 - val_loss: 0.0540
+Epoch 9/100
+7493/7493 - 33s - loss: 0.0540 - val_loss: 0.0539
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 32s - loss: 0.0540 - val_loss: 0.0539
+Epoch 11/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 12/100
+7493/7493 - 30s - loss: 0.0539 - val_loss: 0.0539
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 40s - loss: 0.0539 - val_loss: 0.0539
+Epoch 14/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 15/100
+7493/7493 - 42s - loss: 0.0539 - val_loss: 0.0539
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 17/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 18/100
+7493/7493 - 47s - loss: 0.0539 - val_loss: 0.0539
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 20/100
+7493/7493 - 38s - loss: 0.0539 - val_loss: 0.0539
+Epoch 21/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 35s - loss: 0.0539 - val_loss: 0.0539
+Epoch 23/100
+7493/7493 - 41s - loss: 0.0539 - val_loss: 0.0539
+Epoch 24/100
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 26/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 27/100
+7493/7493 - 41s - loss: 0.0539 - val_loss: 0.0539
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 39s - loss: 0.0539 - val_loss: 0.0539
+Epoch 29/100
+7493/7493 - 47s - loss: 0.0539 - val_loss: 0.0539
+Epoch 30/100
+7493/7493 - 43s - loss: 0.0539 - val_loss: 0.0539
+Epoch 31/100
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 35s - loss: 0.0539 - val_loss: 0.0539
+Epoch 32/100
+7493/7493 - 39s - loss: 0.0539 - val_loss: 0.0539
+Epoch 33/100
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 00033: early stopping
+saving model QRmodel_run_113_qnt_50_GtoWW35na_sigx_100_loss_rk5_05_20210920_B.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.5
+Model: "functional_25"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_13 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_72 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_73 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_74 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_75 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_76 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_77 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 33s - loss: 0.0568 - val_loss: 0.0541
+Epoch 2/100
+7493/7493 - 31s - loss: 0.0545 - val_loss: 0.0545
+Epoch 3/100
+7493/7493 - 34s - loss: 0.0543 - val_loss: 0.0541
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 37s - loss: 0.0542 - val_loss: 0.0544
+Epoch 5/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0540
+Epoch 6/100
+7493/7493 - 38s - loss: 0.0539 - val_loss: 0.0540
+Epoch 7/100
+7493/7493 - 40s - loss: 0.0539 - val_loss: 0.0539
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0540
+Epoch 9/100
+7493/7493 - 30s - loss: 0.0539 - val_loss: 0.0539
+Epoch 10/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 12/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 13/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 15/100
+7493/7493 - 35s - loss: 0.0539 - val_loss: 0.0539
+Epoch 16/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 18/100
+7493/7493 - 35s - loss: 0.0539 - val_loss: 0.0539
+Epoch 19/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 21/100
+7493/7493 - 42s - loss: 0.0539 - val_loss: 0.0539
+Epoch 22/100
+7493/7493 - 47s - loss: 0.0539 - val_loss: 0.0539
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 24/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 25/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 27/100
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 28/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 29/100
+
+Epoch 00029: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 30/100
+7493/7493 - 29s - loss: 0.0539 - val_loss: 0.0539
+Epoch 31/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 00031: early stopping
+saving model QRmodel_run_113_qnt_50_GtoWW35na_sigx_100_loss_rk5_05_20210920_C.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918164
+
+training QR for quantile 0.5
+Model: "functional_27"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_14 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_78 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_79 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_80 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_81 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_82 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_83 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 35s - loss: 0.0562 - val_loss: 0.0545
+Epoch 2/100
+7493/7493 - 35s - loss: 0.0546 - val_loss: 0.0548
+Epoch 3/100
+7493/7493 - 36s - loss: 0.0543 - val_loss: 0.0545
+Epoch 4/100
+7493/7493 - 48s - loss: 0.0542 - val_loss: 0.0540
+Epoch 5/100
+7493/7493 - 36s - loss: 0.0542 - val_loss: 0.0539
+Epoch 6/100
+7493/7493 - 39s - loss: 0.0541 - val_loss: 0.0539
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 30s - loss: 0.0541 - val_loss: 0.0540
+Epoch 8/100
+7493/7493 - 34s - loss: 0.0540 - val_loss: 0.0539
+Epoch 9/100
+7493/7493 - 31s - loss: 0.0540 - val_loss: 0.0539
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0540 - val_loss: 0.0539
+Epoch 11/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 12/100
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 14/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 15/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 17/100
+7493/7493 - 40s - loss: 0.0539 - val_loss: 0.0539
+Epoch 18/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 20/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 21/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 43s - loss: 0.0539 - val_loss: 0.0539
+Epoch 23/100
+7493/7493 - 43s - loss: 0.0539 - val_loss: 0.0539
+Epoch 24/100
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 36s - loss: 0.0539 - val_loss: 0.0539
+Epoch 26/100
+7493/7493 - 41s - loss: 0.0539 - val_loss: 0.0539
+Epoch 27/100
+7493/7493 - 38s - loss: 0.0539 - val_loss: 0.0539
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 29/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 00029: early stopping
+saving model QRmodel_run_113_qnt_50_GtoWW35na_sigx_100_loss_rk5_05_20210920_D.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:5 out of the last 169 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f98841930d0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.5
+Model: "functional_29"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_15 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_84 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_85 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_86 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_87 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_88 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_89 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 33s - loss: 0.0562 - val_loss: 0.0548
+Epoch 2/100
+7493/7493 - 31s - loss: 0.0544 - val_loss: 0.0542
+Epoch 3/100
+7493/7493 - 32s - loss: 0.0542 - val_loss: 0.0539
+Epoch 4/100
+7493/7493 - 32s - loss: 0.0542 - val_loss: 0.0541
+Epoch 5/100
+7493/7493 - 33s - loss: 0.0541 - val_loss: 0.0539
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 39s - loss: 0.0541 - val_loss: 0.0541
+Epoch 7/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 8/100
+7493/7493 - 42s - loss: 0.0539 - val_loss: 0.0539
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 43s - loss: 0.0539 - val_loss: 0.0542
+Epoch 10/100
+7493/7493 - 41s - loss: 0.0539 - val_loss: 0.0539
+Epoch 11/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 42s - loss: 0.0539 - val_loss: 0.0539
+Epoch 13/100
+7493/7493 - 42s - loss: 0.0539 - val_loss: 0.0539
+Epoch 14/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 34s - loss: 0.0539 - val_loss: 0.0539
+Epoch 16/100
+7493/7493 - 39s - loss: 0.0539 - val_loss: 0.0539
+Epoch 17/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 39s - loss: 0.0539 - val_loss: 0.0539
+Epoch 19/100
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 20/100
+7493/7493 - 28s - loss: 0.0539 - val_loss: 0.0539
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 22/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 23/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 33s - loss: 0.0539 - val_loss: 0.0539
+Epoch 25/100
+7493/7493 - 31s - loss: 0.0539 - val_loss: 0.0539
+Epoch 26/100
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 32s - loss: 0.0539 - val_loss: 0.0539
+Epoch 28/100
+7493/7493 - 37s - loss: 0.0539 - val_loss: 0.0539
+Epoch 29/100
+7493/7493 - 29s - loss: 0.0539 - val_loss: 0.0539
+Epoch 00029: early stopping
+saving model QRmodel_run_113_qnt_50_GtoWW35na_sigx_100_loss_rk5_05_20210920_E.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:6 out of the last 171 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f9875d14268> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+cuts for quantile 0.5: 
+[[1.22750000e+03 1.73779552e+00 1.36674490e-04 1.73763430e+00
+  1.73799133e+00]
+ [1.28750000e+03 1.76607084e+00 1.25701072e-04 1.76587653e+00
+  1.76626480e+00]
+ [1.35350000e+03 1.79760506e+00 2.08644857e-04 1.79730332e+00
+  1.79784822e+00]
+ [1.42200000e+03 1.83138223e+00 5.91126996e-04 1.83059442e+00
+  1.83190095e+00]
+ [1.49300000e+03 1.86714716e+00 2.69677284e-04 1.86685538e+00
+  1.86759484e+00]
+ [1.56650000e+03 1.90549629e+00 2.96975608e-04 1.90516043e+00
+  1.90586197e+00]
+ [1.64250000e+03 1.94630775e+00 6.15740648e-04 1.94535959e+00
+  1.94713032e+00]
+ [1.72100000e+03 1.99100184e+00 3.98925156e-04 1.99051559e+00
+  1.99164557e+00]
+ [1.80250000e+03 2.03963151e+00 9.00476687e-04 2.03790569e+00
+  2.04050064e+00]
+ [1.88700000e+03 2.09252090e+00 1.26558631e-03 2.09018612e+00
+  2.09378886e+00]
+ [1.97450000e+03 2.15026870e+00 7.49303564e-04 2.14924359e+00
+  2.15134549e+00]
+ [2.06500000e+03 2.21258359e+00 1.06506679e-03 2.21115541e+00
+  2.21393895e+00]
+ [2.15850000e+03 2.28045006e+00 1.41200913e-03 2.27869534e+00
+  2.28237224e+00]
+ [2.25550000e+03 2.35560594e+00 1.29921962e-03 2.35325408e+00
+  2.35681558e+00]
+ [2.35550000e+03 2.43815536e+00 1.19715650e-03 2.43657660e+00
+  2.44019771e+00]
+ [2.45900000e+03 2.52739348e+00 2.58840283e-03 2.52513051e+00
+  2.53166056e+00]
+ [2.56600000e+03 2.62396755e+00 3.14930852e-03 2.61986423e+00
+  2.62774467e+00]
+ [2.67650000e+03 2.72993259e+00 2.41394001e-03 2.72667575e+00
+  2.73357964e+00]
+ [2.79100000e+03 2.84711022e+00 3.26447115e-03 2.84110689e+00
+  2.84965110e+00]
+ [2.90900000e+03 2.97793012e+00 1.46228063e-03 2.97513509e+00
+  2.97911835e+00]
+ [3.03100000e+03 3.12319193e+00 3.00059237e-03 3.11873746e+00
+  3.12577128e+00]
+ [3.15700000e+03 3.28170328e+00 5.41437171e-03 3.27518845e+00
+  3.28825092e+00]
+ [3.28700000e+03 3.45594163e+00 5.93793810e-03 3.44612050e+00
+  3.46466637e+00]
+ [3.42150000e+03 3.64974146e+00 7.96478365e-03 3.64132452e+00
+  3.66212749e+00]
+ [3.56100000e+03 3.86053104e+00 1.07078662e-02 3.84751749e+00
+  3.87891078e+00]
+ [3.70500000e+03 4.08472614e+00 1.63368070e-02 4.06717205e+00
+  4.10560751e+00]
+ [3.85300000e+03 4.32254648e+00 2.25307753e-02 4.29241323e+00
+  4.35433149e+00]
+ [4.00600000e+03 4.57996359e+00 3.02421740e-02 4.53858852e+00
+  4.62645817e+00]
+ [4.16450000e+03 4.86069212e+00 3.75336602e-02 4.81492043e+00
+  4.91218901e+00]
+ [4.32800000e+03 5.15427065e+00 5.04117123e-02 5.08144569e+00
+  5.21422482e+00]
+ [4.49700000e+03 5.45915842e+00 6.84978653e-02 5.35714722e+00
+  5.54663324e+00]
+ [4.67150000e+03 5.77563009e+00 9.00106208e-02 5.64193964e+00
+  5.89122820e+00]
+ [4.85150000e+03 6.10430174e+00 1.14730695e-01 5.93577051e+00
+  6.24762249e+00]
+ [5.03750000e+03 6.44500446e+00 1.42139037e-01 6.23941374e+00
+  6.61652613e+00]
+ [5.22950000e+03 6.79698029e+00 1.71408559e-01 6.55283737e+00
+  6.99765730e+00]
+ [5.45050000e+03 7.20233307e+00 2.05791197e-01 6.91355038e+00
+  7.43648720e+00]
+ [5.65550000e+03 7.57849197e+00 2.38078120e-01 7.24807787e+00
+  7.84343958e+00]
+ [5.84400000e+03 7.92447729e+00 2.67964791e-01 7.55560827e+00
+  8.21739769e+00]
+ [6.06200000e+03 8.32455149e+00 3.02655722e-01 7.91116476e+00
+  8.64955807e+00]
+ [6.28750000e+03 8.73821526e+00 3.38610538e-01 8.27882576e+00
+  9.09794998e+00]
+ [6.52000000e+03 9.16448803e+00 3.75700784e-01 8.65776920e+00
+  9.57244205e+00]
+ [6.76000000e+03 9.60416222e+00 4.13916905e-01 9.04877377e+00
+  1.00616837e+01]]
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.7
+Model: "functional_31"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_16 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_90 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_91 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_92 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_93 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_94 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_95 (Dense)             (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 36s - loss: 0.0507 - val_loss: 0.0484
+Epoch 2/100
+7493/7493 - 40s - loss: 0.0483 - val_loss: 0.0487
+Epoch 3/100
+7493/7493 - 36s - loss: 0.0482 - val_loss: 0.0480
+Epoch 4/100
+7493/7493 - 43s - loss: 0.0481 - val_loss: 0.0479
+Epoch 5/100
+7493/7493 - 36s - loss: 0.0481 - val_loss: 0.0479
+Epoch 6/100
+7493/7493 - 46s - loss: 0.0480 - val_loss: 0.0479
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 38s - loss: 0.0480 - val_loss: 0.0479
+Epoch 8/100
+7493/7493 - 38s - loss: 0.0478 - val_loss: 0.0479
+Epoch 9/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0479
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 28s - loss: 0.0478 - val_loss: 0.0481
+Epoch 11/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 12/100
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 14/100
+7493/7493 - 41s - loss: 0.0478 - val_loss: 0.0478
+Epoch 15/100
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 17/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 18/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 20/100
+7493/7493 - 28s - loss: 0.0478 - val_loss: 0.0478
+Epoch 21/100
+7493/7493 - 32s - loss: 0.0478 - val_loss: 0.0478
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 30s - loss: 0.0478 - val_loss: 0.0478
+Epoch 23/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 24/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 26/100
+7493/7493 - 28s - loss: 0.0478 - val_loss: 0.0478
+Epoch 27/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 29s - loss: 0.0478 - val_loss: 0.0478
+Epoch 29/100
+7493/7493 - 32s - loss: 0.0478 - val_loss: 0.0478
+Epoch 30/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 31/100
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 32/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 33/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 34/100
+
+Epoch 00034: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 35/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 00035: early stopping
+saving model QRmodel_run_113_qnt_70_GtoWW35na_sigx_100_loss_rk5_05_20210920_A.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.7
+Model: "functional_33"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_17 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_96 (Dense)             (None, 60)                120       
+_________________________________________________________________
+dense_97 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_98 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_99 (Dense)             (None, 60)                3660      
+_________________________________________________________________
+dense_100 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_101 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 38s - loss: 0.0507 - val_loss: 0.0487
+Epoch 2/100
+7493/7493 - 38s - loss: 0.0485 - val_loss: 0.0481
+Epoch 3/100
+7493/7493 - 35s - loss: 0.0482 - val_loss: 0.0480
+Epoch 4/100
+7493/7493 - 36s - loss: 0.0481 - val_loss: 0.0480
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 35s - loss: 0.0481 - val_loss: 0.0491
+Epoch 6/100
+7493/7493 - 37s - loss: 0.0479 - val_loss: 0.0479
+Epoch 7/100
+7493/7493 - 35s - loss: 0.0479 - val_loss: 0.0478
+Epoch 8/100
+7493/7493 - 33s - loss: 0.0479 - val_loss: 0.0478
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 28s - loss: 0.0479 - val_loss: 0.0479
+Epoch 10/100
+7493/7493 - 32s - loss: 0.0478 - val_loss: 0.0478
+Epoch 11/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 13/100
+7493/7493 - 42s - loss: 0.0478 - val_loss: 0.0478
+Epoch 14/100
+7493/7493 - 50s - loss: 0.0478 - val_loss: 0.0478
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 16/100
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 17/100
+7493/7493 - 43s - loss: 0.0478 - val_loss: 0.0478
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 19/100
+7493/7493 - 42s - loss: 0.0478 - val_loss: 0.0478
+Epoch 20/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 22/100
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 23/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 25/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 26/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 28/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 29/100
+7493/7493 - 46s - loss: 0.0478 - val_loss: 0.0478
+Epoch 30/100
+
+Epoch 00030: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 31/100
+7493/7493 - 41s - loss: 0.0478 - val_loss: 0.0478
+Epoch 32/100
+7493/7493 - 47s - loss: 0.0478 - val_loss: 0.0478
+Epoch 33/100
+
+Epoch 00033: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 32s - loss: 0.0478 - val_loss: 0.0478
+Epoch 34/100
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 00034: early stopping
+saving model QRmodel_run_113_qnt_70_GtoWW35na_sigx_100_loss_rk5_05_20210920_B.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.7
+Model: "functional_35"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_18 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_102 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_103 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_104 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_105 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_106 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_107 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 37s - loss: 0.0505 - val_loss: 0.0486
+Epoch 2/100
+7493/7493 - 34s - loss: 0.0484 - val_loss: 0.0483
+Epoch 3/100
+7493/7493 - 37s - loss: 0.0482 - val_loss: 0.0485
+Epoch 4/100
+7493/7493 - 48s - loss: 0.0481 - val_loss: 0.0482
+Epoch 5/100
+7493/7493 - 35s - loss: 0.0481 - val_loss: 0.0479
+Epoch 6/100
+7493/7493 - 31s - loss: 0.0480 - val_loss: 0.0479
+Epoch 7/100
+7493/7493 - 33s - loss: 0.0480 - val_loss: 0.0482
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 30s - loss: 0.0480 - val_loss: 0.0481
+Epoch 9/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0479
+Epoch 10/100
+7493/7493 - 41s - loss: 0.0478 - val_loss: 0.0479
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 12/100
+7493/7493 - 32s - loss: 0.0478 - val_loss: 0.0478
+Epoch 13/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 38s - loss: 0.0478 - val_loss: 0.0478
+Epoch 15/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 16/100
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 18/100
+7493/7493 - 30s - loss: 0.0478 - val_loss: 0.0478
+Epoch 19/100
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 21/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 22/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 24/100
+7493/7493 - 42s - loss: 0.0478 - val_loss: 0.0478
+Epoch 25/100
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 32s - loss: 0.0478 - val_loss: 0.0478
+Epoch 27/100
+7493/7493 - 29s - loss: 0.0478 - val_loss: 0.0478
+Epoch 28/100
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 29/100
+
+Epoch 00029: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 30/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 31/100
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 32/100
+
+Epoch 00032: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 30s - loss: 0.0478 - val_loss: 0.0478
+Epoch 33/100
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 34/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 35/100
+
+Epoch 00035: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 00035: early stopping
+saving model QRmodel_run_113_qnt_70_GtoWW35na_sigx_100_loss_rk5_05_20210920_C.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918164
+
+training QR for quantile 0.7
+Model: "functional_37"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_19 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_108 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_109 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_110 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_111 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_112 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_113 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 32s - loss: 0.0506 - val_loss: 0.0483
+Epoch 2/100
+7493/7493 - 30s - loss: 0.0485 - val_loss: 0.0479
+Epoch 3/100
+7493/7493 - 37s - loss: 0.0483 - val_loss: 0.0481
+Epoch 4/100
+7493/7493 - 32s - loss: 0.0481 - val_loss: 0.0489
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 32s - loss: 0.0481 - val_loss: 0.0479
+Epoch 6/100
+7493/7493 - 32s - loss: 0.0479 - val_loss: 0.0478
+Epoch 7/100
+7493/7493 - 35s - loss: 0.0479 - val_loss: 0.0479
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 28s - loss: 0.0479 - val_loss: 0.0480
+Epoch 9/100
+7493/7493 - 32s - loss: 0.0479 - val_loss: 0.0478
+Epoch 10/100
+7493/7493 - 32s - loss: 0.0479 - val_loss: 0.0478
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 34s - loss: 0.0479 - val_loss: 0.0478
+Epoch 12/100
+7493/7493 - 42s - loss: 0.0478 - val_loss: 0.0478
+Epoch 13/100
+7493/7493 - 47s - loss: 0.0478 - val_loss: 0.0478
+Epoch 14/100
+7493/7493 - 38s - loss: 0.0478 - val_loss: 0.0478
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 16/100
+7493/7493 - 45s - loss: 0.0478 - val_loss: 0.0478
+Epoch 17/100
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 19/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 20/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 22/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 23/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 31s - loss: 0.0478 - val_loss: 0.0478
+Epoch 25/100
+7493/7493 - 29s - loss: 0.0478 - val_loss: 0.0478
+Epoch 00025: early stopping
+saving model QRmodel_run_113_qnt_70_GtoWW35na_sigx_100_loss_rk5_05_20210920_D.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:5 out of the last 169 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f97a023df28> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.7
+Model: "functional_39"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_20 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_114 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_115 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_116 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_117 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_118 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_119 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 31s - loss: 0.0507 - val_loss: 0.0485
+Epoch 2/100
+7493/7493 - 32s - loss: 0.0485 - val_loss: 0.0485
+Epoch 3/100
+7493/7493 - 31s - loss: 0.0482 - val_loss: 0.0480
+Epoch 4/100
+7493/7493 - 31s - loss: 0.0482 - val_loss: 0.0482
+Epoch 5/100
+7493/7493 - 39s - loss: 0.0481 - val_loss: 0.0479
+Epoch 6/100
+7493/7493 - 32s - loss: 0.0481 - val_loss: 0.0478
+Epoch 7/100
+7493/7493 - 31s - loss: 0.0481 - val_loss: 0.0479
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 29s - loss: 0.0480 - val_loss: 0.0480
+Epoch 9/100
+7493/7493 - 28s - loss: 0.0479 - val_loss: 0.0478
+Epoch 10/100
+7493/7493 - 31s - loss: 0.0479 - val_loss: 0.0478
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 31s - loss: 0.0479 - val_loss: 0.0479
+Epoch 12/100
+7493/7493 - 38s - loss: 0.0478 - val_loss: 0.0478
+Epoch 13/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 29s - loss: 0.0478 - val_loss: 0.0478
+Epoch 15/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 16/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 40s - loss: 0.0478 - val_loss: 0.0478
+Epoch 18/100
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 19/100
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 34s - loss: 0.0478 - val_loss: 0.0478
+Epoch 21/100
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 22/100
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 45s - loss: 0.0478 - val_loss: 0.0478
+Epoch 24/100
+7493/7493 - 36s - loss: 0.0478 - val_loss: 0.0478
+Epoch 25/100
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 35s - loss: 0.0478 - val_loss: 0.0478
+Epoch 27/100
+7493/7493 - 38s - loss: 0.0478 - val_loss: 0.0478
+Epoch 28/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 29/100
+
+Epoch 00029: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 30/100
+7493/7493 - 37s - loss: 0.0478 - val_loss: 0.0478
+Epoch 31/100
+7493/7493 - 33s - loss: 0.0478 - val_loss: 0.0478
+Epoch 32/100
+
+Epoch 00032: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 39s - loss: 0.0478 - val_loss: 0.0478
+Epoch 33/100
+7493/7493 - 38s - loss: 0.0478 - val_loss: 0.0478
+Epoch 00033: early stopping
+saving model QRmodel_run_113_qnt_70_GtoWW35na_sigx_100_loss_rk5_05_20210920_E.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:6 out of the last 171 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f97903072f0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+cuts for quantile 0.7: 
+[[1.22750000e+03 1.79561911e+00 2.29894173e-04 1.79532290e+00
+  1.79598200e+00]
+ [1.28750000e+03 1.82499173e+00 2.93222493e-04 1.82450998e+00
+  1.82532501e+00]
+ [1.35350000e+03 1.85835922e+00 4.16755131e-04 1.85790253e+00
+  1.85901272e+00]
+ [1.42200000e+03 1.89445951e+00 4.43944129e-04 1.89405143e+00
+  1.89514303e+00]
+ [1.49300000e+03 1.93343468e+00 6.70050052e-04 1.93243504e+00
+  1.93443167e+00]
+ [1.56650000e+03 1.97566116e+00 5.31210602e-04 1.97496819e+00
+  1.97641551e+00]
+ [1.64250000e+03 2.02120099e+00 4.66078762e-04 2.02054191e+00
+  2.02176499e+00]
+ [1.72100000e+03 2.07088933e+00 6.48858072e-04 2.06959891e+00
+  2.07131386e+00]
+ [1.80250000e+03 2.12558532e+00 6.96809923e-04 2.12460876e+00
+  2.12654352e+00]
+ [1.88700000e+03 2.18586330e+00 5.31407392e-04 2.18530393e+00
+  2.18674755e+00]
+ [1.97450000e+03 2.25122542e+00 2.88509983e-04 2.25098252e+00
+  2.25175047e+00]
+ [2.06500000e+03 2.32279811e+00 6.94438445e-04 2.32200480e+00
+  2.32400751e+00]
+ [2.15850000e+03 2.40089259e+00 8.19031202e-04 2.39982986e+00
+  2.40194249e+00]
+ [2.25550000e+03 2.48671031e+00 1.18191995e-03 2.48575974e+00
+  2.48896742e+00]
+ [2.35550000e+03 2.58046403e+00 2.16102124e-03 2.57733083e+00
+  2.58363795e+00]
+ [2.45900000e+03 2.68298545e+00 3.05322852e-03 2.67772627e+00
+  2.68615174e+00]
+ [2.56600000e+03 2.79526958e+00 2.95289578e-03 2.79063773e+00
+  2.79990721e+00]
+ [2.67650000e+03 2.91869202e+00 2.72895269e-03 2.91573167e+00
+  2.92335010e+00]
+ [2.79100000e+03 3.05376415e+00 3.78093510e-03 3.04969907e+00
+  3.05898666e+00]
+ [2.90900000e+03 3.20264263e+00 4.09367320e-03 3.19792891e+00
+  3.20898318e+00]
+ [3.03100000e+03 3.36855779e+00 6.64657757e-03 3.35962987e+00
+  3.37691784e+00]
+ [3.15700000e+03 3.55401721e+00 8.30026066e-03 3.54481459e+00
+  3.56719136e+00]
+ [3.28700000e+03 3.75852442e+00 8.15504422e-03 3.75094819e+00
+  3.77412605e+00]
+ [3.42150000e+03 3.98305969e+00 6.65495890e-03 3.97575212e+00
+  3.99290895e+00]
+ [3.56100000e+03 4.22405376e+00 1.00108809e-02 4.21178007e+00
+  4.24184847e+00]
+ [3.70500000e+03 4.47971039e+00 1.50887308e-02 4.46235514e+00
+  4.50680208e+00]
+ [3.85300000e+03 4.75495615e+00 2.07933989e-02 4.72756290e+00
+  4.78302288e+00]
+ [4.00600000e+03 5.05302553e+00 2.95008436e-02 5.01418924e+00
+  5.09306860e+00]
+ [4.16450000e+03 5.37533092e+00 3.26799229e-02 5.33546114e+00
+  5.42969322e+00]
+ [4.32800000e+03 5.72228727e+00 3.07954140e-02 5.68968201e+00
+  5.77936316e+00]
+ [4.49700000e+03 6.08511581e+00 4.21262848e-02 6.03665495e+00
+  6.14194059e+00]
+ [4.67150000e+03 6.46134853e+00 6.22328725e-02 6.38086700e+00
+  6.54904175e+00]
+ [4.85150000e+03 6.85098515e+00 8.59384974e-02 6.73635578e+00
+  6.98432589e+00]
+ [5.03750000e+03 7.25498753e+00 1.11659904e-01 7.10396004e+00
+  7.43573046e+00]
+ [5.22950000e+03 7.67384462e+00 1.38524198e-01 7.48354244e+00
+  7.90298796e+00]
+ [5.45050000e+03 8.15959930e+00 1.68974699e-01 7.92043877e+00
+  8.44201088e+00]
+ [5.65550000e+03 8.61579056e+00 1.96737421e-01 8.32554245e+00
+  8.94284153e+00]
+ [5.84400000e+03 9.04118423e+00 2.23560272e-01 8.69780159e+00
+  9.40387249e+00]
+ [6.06200000e+03 9.53363228e+00 2.57982927e-01 9.12789536e+00
+  9.93748379e+00]
+ [6.28750000e+03 1.00426666e+01 2.96078929e-01 9.57253170e+00
+  1.04897766e+01]
+ [6.52000000e+03 1.05671232e+01 3.36916192e-01 1.00308638e+01
+  1.10593977e+01]
+ [6.76000000e+03 1.11080029e+01 3.80014494e-01 1.05038357e+01
+  1.16474314e+01]]
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.9
+Model: "functional_41"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_21 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_120 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_121 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_122 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_123 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_124 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_125 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 32s - loss: 0.0278 - val_loss: 0.0256
+Epoch 2/100
+7493/7493 - 28s - loss: 0.0257 - val_loss: 0.0254
+Epoch 3/100
+7493/7493 - 32s - loss: 0.0255 - val_loss: 0.0254
+Epoch 4/100
+7493/7493 - 33s - loss: 0.0255 - val_loss: 0.0254
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 32s - loss: 0.0255 - val_loss: 0.0255
+Epoch 6/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 7/100
+7493/7493 - 40s - loss: 0.0253 - val_loss: 0.0254
+Epoch 8/100
+7493/7493 - 41s - loss: 0.0253 - val_loss: 0.0254
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0254
+Epoch 10/100
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 11/100
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 46s - loss: 0.0253 - val_loss: 0.0253
+Epoch 13/100
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 14/100
+7493/7493 - 38s - loss: 0.0253 - val_loss: 0.0253
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 38s - loss: 0.0253 - val_loss: 0.0253
+Epoch 16/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 17/100
+7493/7493 - 38s - loss: 0.0253 - val_loss: 0.0253
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 19/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 20/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 28s - loss: 0.0253 - val_loss: 0.0253
+Epoch 22/100
+7493/7493 - 30s - loss: 0.0253 - val_loss: 0.0253
+Epoch 23/100
+7493/7493 - 38s - loss: 0.0253 - val_loss: 0.0253
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 25/100
+7493/7493 - 47s - loss: 0.0253 - val_loss: 0.0253
+Epoch 26/100
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 28/100
+7493/7493 - 44s - loss: 0.0253 - val_loss: 0.0253
+Epoch 29/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 30/100
+
+Epoch 00030: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 00030: early stopping
+saving model QRmodel_run_113_qnt_90_GtoWW35na_sigx_100_loss_rk5_05_20210921_A.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.9
+Model: "functional_43"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_22 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_126 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_127 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_128 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_129 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_130 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_131 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 37s - loss: 0.0275 - val_loss: 0.0257
+Epoch 2/100
+7493/7493 - 39s - loss: 0.0257 - val_loss: 0.0254
+Epoch 3/100
+7493/7493 - 44s - loss: 0.0256 - val_loss: 0.0255
+Epoch 4/100
+7493/7493 - 46s - loss: 0.0255 - val_loss: 0.0254
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 35s - loss: 0.0255 - val_loss: 0.0254
+Epoch 6/100
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 7/100
+7493/7493 - 28s - loss: 0.0253 - val_loss: 0.0253
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 9/100
+7493/7493 - 29s - loss: 0.0253 - val_loss: 0.0253
+Epoch 10/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 12/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 13/100
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 30s - loss: 0.0253 - val_loss: 0.0253
+Epoch 15/100
+7493/7493 - 30s - loss: 0.0253 - val_loss: 0.0253
+Epoch 16/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 18/100
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 19/100
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 41s - loss: 0.0253 - val_loss: 0.0253
+Epoch 21/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 22/100
+7493/7493 - 45s - loss: 0.0253 - val_loss: 0.0253
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 38s - loss: 0.0253 - val_loss: 0.0253
+Epoch 00023: early stopping
+saving model QRmodel_run_113_qnt_90_GtoWW35na_sigx_100_loss_rk5_05_20210921_B.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.9
+Model: "functional_45"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_23 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_132 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_133 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_134 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_135 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_136 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_137 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 38s - loss: 0.0276 - val_loss: 0.0259
+Epoch 2/100
+7493/7493 - 33s - loss: 0.0257 - val_loss: 0.0257
+Epoch 3/100
+7493/7493 - 39s - loss: 0.0255 - val_loss: 0.0254
+Epoch 4/100
+7493/7493 - 33s - loss: 0.0255 - val_loss: 0.0255
+Epoch 5/100
+7493/7493 - 39s - loss: 0.0254 - val_loss: 0.0254
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 36s - loss: 0.0254 - val_loss: 0.0254
+Epoch 7/100
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0254
+Epoch 8/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0254
+Epoch 10/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 11/100
+7493/7493 - 40s - loss: 0.0253 - val_loss: 0.0253
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 13/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 14/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 47s - loss: 0.0253 - val_loss: 0.0253
+Epoch 16/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 17/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 19/100
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 20/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 22/100
+7493/7493 - 41s - loss: 0.0253 - val_loss: 0.0253
+Epoch 23/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 25/100
+7493/7493 - 30s - loss: 0.0253 - val_loss: 0.0253
+Epoch 26/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 27/100
+
+Epoch 00027: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 28/100
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 00028: early stopping
+saving model QRmodel_run_113_qnt_90_GtoWW35na_sigx_100_loss_rk5_05_20210921_C.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918164
+
+training QR for quantile 0.9
+Model: "functional_47"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_24 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_138 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_139 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_140 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_141 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_142 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_143 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 44s - loss: 0.0274 - val_loss: 0.0254
+Epoch 2/100
+7493/7493 - 44s - loss: 0.0258 - val_loss: 0.0261
+Epoch 3/100
+7493/7493 - 37s - loss: 0.0256 - val_loss: 0.0253
+Epoch 4/100
+7493/7493 - 40s - loss: 0.0255 - val_loss: 0.0254
+Epoch 5/100
+7493/7493 - 42s - loss: 0.0255 - val_loss: 0.0253
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 35s - loss: 0.0255 - val_loss: 0.0254
+Epoch 7/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 8/100
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 45s - loss: 0.0253 - val_loss: 0.0253
+Epoch 10/100
+7493/7493 - 40s - loss: 0.0253 - val_loss: 0.0253
+Epoch 11/100
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 13/100
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 14/100
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 16/100
+7493/7493 - 38s - loss: 0.0253 - val_loss: 0.0253
+Epoch 17/100
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 47s - loss: 0.0253 - val_loss: 0.0253
+Epoch 19/100
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 20/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 35s - loss: 0.0253 - val_loss: 0.0253
+Epoch 00021: early stopping
+saving model QRmodel_run_113_qnt_90_GtoWW35na_sigx_100_loss_rk5_05_20210921_D.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:5 out of the last 169 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f98755440d0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.9
+Model: "functional_49"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_25 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_144 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_145 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_146 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_147 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_148 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_149 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 33s - loss: 0.0280 - val_loss: 0.0260
+Epoch 2/100
+7493/7493 - 39s - loss: 0.0257 - val_loss: 0.0253
+Epoch 3/100
+7493/7493 - 30s - loss: 0.0255 - val_loss: 0.0253
+Epoch 4/100
+7493/7493 - 33s - loss: 0.0255 - val_loss: 0.0258
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 25s - loss: 0.0255 - val_loss: 0.0255
+Epoch 6/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 7/100
+7493/7493 - 29s - loss: 0.0253 - val_loss: 0.0253
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 9/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 10/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 29s - loss: 0.0253 - val_loss: 0.0253
+Epoch 12/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 13/100
+7493/7493 - 36s - loss: 0.0253 - val_loss: 0.0253
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 15/100
+7493/7493 - 42s - loss: 0.0253 - val_loss: 0.0253
+Epoch 16/100
+7493/7493 - 45s - loss: 0.0253 - val_loss: 0.0253
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 40s - loss: 0.0253 - val_loss: 0.0253
+Epoch 18/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 19/100
+7493/7493 - 34s - loss: 0.0253 - val_loss: 0.0253
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 21/100
+7493/7493 - 26s - loss: 0.0253 - val_loss: 0.0253
+Epoch 22/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 33s - loss: 0.0253 - val_loss: 0.0253
+Epoch 24/100
+7493/7493 - 39s - loss: 0.0253 - val_loss: 0.0253
+Epoch 25/100
+7493/7493 - 40s - loss: 0.0253 - val_loss: 0.0253
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 32s - loss: 0.0253 - val_loss: 0.0253
+Epoch 27/100
+7493/7493 - 37s - loss: 0.0253 - val_loss: 0.0253
+Epoch 28/100
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 29/100
+
+Epoch 00029: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 31s - loss: 0.0253 - val_loss: 0.0253
+Epoch 30/100
+7493/7493 - 39s - loss: 0.0253 - val_loss: 0.0253
+Epoch 00030: early stopping
+saving model QRmodel_run_113_qnt_90_GtoWW35na_sigx_100_loss_rk5_05_20210921_E.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:6 out of the last 171 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f98760e42f0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+cuts for quantile 0.9: 
+[[1.22750000e+03 1.88120329e+00 2.91887406e-04 1.88094711e+00
+  1.88174772e+00]
+ [1.28750000e+03 1.91370203e+00 3.88048144e-04 1.91315854e+00
+  1.91434193e+00]
+ [1.35350000e+03 1.95152988e+00 5.35718406e-04 1.95054638e+00
+  1.95204353e+00]
+ [1.42200000e+03 1.99153790e+00 6.05569099e-04 1.99092627e+00
+  1.99256897e+00]
+ [1.49300000e+03 2.03749743e+00 5.16228664e-04 2.03672910e+00
+  2.03818083e+00]
+ [1.56650000e+03 2.08684177e+00 7.11490982e-04 2.08555365e+00
+  2.08746576e+00]
+ [1.64250000e+03 2.14056015e+00 5.26596600e-04 2.13989902e+00
+  2.14139581e+00]
+ [1.72100000e+03 2.20005236e+00 3.89496680e-04 2.19954228e+00
+  2.20073819e+00]
+ [1.80250000e+03 2.26632543e+00 1.14168227e-03 2.26432395e+00
+  2.26761675e+00]
+ [1.88700000e+03 2.33921556e+00 9.83296833e-04 2.33779716e+00
+  2.34066868e+00]
+ [1.97450000e+03 2.41807332e+00 9.84760107e-04 2.41610885e+00
+  2.41867971e+00]
+ [2.06500000e+03 2.50409794e+00 1.76192808e-03 2.50091672e+00
+  2.50618196e+00]
+ [2.15850000e+03 2.59964280e+00 2.04158339e-03 2.59581137e+00
+  2.60133171e+00]
+ [2.25550000e+03 2.70428967e+00 1.82149250e-03 2.70126557e+00
+  2.70662642e+00]
+ [2.35550000e+03 2.81880870e+00 1.41798694e-03 2.81750751e+00
+  2.82117558e+00]
+ [2.45900000e+03 2.94374676e+00 1.35551935e-03 2.94267321e+00
+  2.94634414e+00]
+ [2.56600000e+03 3.07960978e+00 2.26130027e-03 3.07727051e+00
+  3.08347654e+00]
+ [2.67650000e+03 3.22939510e+00 4.88661256e-03 3.22328043e+00
+  3.23471045e+00]
+ [2.79100000e+03 3.39784036e+00 7.83103603e-03 3.38848805e+00
+  3.41102791e+00]
+ [2.90900000e+03 3.58611693e+00 9.89212257e-03 3.57775664e+00
+  3.60426092e+00]
+ [3.03100000e+03 3.79562373e+00 1.24844046e-02 3.77805424e+00
+  3.81529403e+00]
+ [3.15700000e+03 4.02639208e+00 1.53051682e-02 4.00187111e+00
+  4.04316521e+00]
+ [3.28700000e+03 4.28093023e+00 1.40485667e-02 4.26355410e+00
+  4.30378199e+00]
+ [3.42150000e+03 4.55694218e+00 1.82326629e-02 4.52987242e+00
+  4.58494949e+00]
+ [3.56100000e+03 4.85346460e+00 2.51439895e-02 4.82356071e+00
+  4.88568401e+00]
+ [3.70500000e+03 5.16884127e+00 3.40730659e-02 5.11603260e+00
+  5.20964336e+00]
+ [3.85300000e+03 5.50768604e+00 4.63970269e-02 5.42655230e+00
+  5.56617069e+00]
+ [4.00600000e+03 5.86913662e+00 5.76924467e-02 5.76451159e+00
+  5.94146490e+00]
+ [4.16450000e+03 6.25403395e+00 6.04874655e-02 6.14642382e+00
+  6.33308411e+00]
+ [4.32800000e+03 6.66179857e+00 5.56247124e-02 6.57134962e+00
+  6.73862410e+00]
+ [4.49700000e+03 7.09059324e+00 5.79040410e-02 7.01234484e+00
+  7.15862942e+00]
+ [4.67150000e+03 7.54265556e+00 7.92160871e-02 7.46889496e+00
+  7.67436838e+00]
+ [4.85150000e+03 8.01168337e+00 1.12452672e-01 7.91357660e+00
+  8.21921635e+00]
+ [5.03750000e+03 8.49743500e+00 1.51232784e-01 8.36375427e+00
+  8.78554249e+00]
+ [5.22950000e+03 8.99993896e+00 1.93984299e-01 8.82868481e+00
+  9.37371635e+00]
+ [5.45050000e+03 9.57966652e+00 2.45747392e-01 9.36402798e+00
+  1.00554628e+01]
+ [5.65550000e+03 1.01184525e+01 2.95365308e-01 9.86070824e+00
+  1.06912346e+01]
+ [5.84400000e+03 1.06142216e+01 3.41077312e-01 1.03174171e+01
+  1.12758875e+01]
+ [6.06200000e+03 1.11879574e+01 3.93708775e-01 1.08453608e+01
+  1.19515448e+01]
+ [6.28750000e+03 1.17818769e+01 4.47516986e-01 1.13907757e+01
+  1.26492233e+01]
+ [6.52000000e+03 1.23945139e+01 5.01926047e-01 1.19520149e+01
+  1.33662119e+01]
+ [6.76000000e+03 1.30261061e+01 5.57354065e-01 1.25295830e+01
+  1.41033468e+01]]
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.99
+Model: "functional_51"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_26 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_150 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_151 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_152 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_153 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_154 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_155 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 34s - loss: 0.0054 - val_loss: 0.0044
+Epoch 2/100
+7493/7493 - 46s - loss: 0.0044 - val_loss: 0.0044
+Epoch 3/100
+7493/7493 - 37s - loss: 0.0044 - val_loss: 0.0044
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 38s - loss: 0.0043 - val_loss: 0.0043
+Epoch 5/100
+7493/7493 - 41s - loss: 0.0043 - val_loss: 0.0043
+Epoch 6/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 8/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 9/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 11/100
+7493/7493 - 40s - loss: 0.0043 - val_loss: 0.0043
+Epoch 12/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 41s - loss: 0.0043 - val_loss: 0.0043
+Epoch 14/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 15/100
+7493/7493 - 45s - loss: 0.0043 - val_loss: 0.0043
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 17/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 18/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 20/100
+7493/7493 - 38s - loss: 0.0043 - val_loss: 0.0043
+Epoch 21/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 23/100
+7493/7493 - 37s - loss: 0.0043 - val_loss: 0.0043
+Epoch 24/100
+7493/7493 - 44s - loss: 0.0043 - val_loss: 0.0043
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 26/100
+7493/7493 - 37s - loss: 0.0043 - val_loss: 0.0043
+Epoch 27/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 29/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 30/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 31/100
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 40s - loss: 0.0043 - val_loss: 0.0043
+Epoch 32/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 33/100
+7493/7493 - 37s - loss: 0.0043 - val_loss: 0.0043
+Epoch 34/100
+
+Epoch 00034: ReduceLROnPlateau reducing learning rate to 2.0480002416167767e-11.
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 35/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 00035: early stopping
+saving model QRmodel_run_113_qnt_99_GtoWW35na_sigx_100_loss_rk5_05_20210921_A.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.99
+Model: "functional_53"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_27 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_156 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_157 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_158 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_159 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_160 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_161 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 35s - loss: 0.0053 - val_loss: 0.0046
+Epoch 2/100
+7493/7493 - 34s - loss: 0.0045 - val_loss: 0.0043
+Epoch 3/100
+7493/7493 - 36s - loss: 0.0044 - val_loss: 0.0043
+Epoch 4/100
+7493/7493 - 28s - loss: 0.0044 - val_loss: 0.0044
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 40s - loss: 0.0044 - val_loss: 0.0044
+Epoch 6/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 7/100
+7493/7493 - 35s - loss: 0.0043 - val_loss: 0.0043
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 9/100
+7493/7493 - 40s - loss: 0.0043 - val_loss: 0.0043
+Epoch 10/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 39s - loss: 0.0043 - val_loss: 0.0043
+Epoch 12/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 13/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 15/100
+7493/7493 - 35s - loss: 0.0043 - val_loss: 0.0043
+Epoch 16/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 18/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 19/100
+7493/7493 - 30s - loss: 0.0043 - val_loss: 0.0043
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 21/100
+7493/7493 - 38s - loss: 0.0043 - val_loss: 0.0043
+Epoch 22/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 29s - loss: 0.0043 - val_loss: 0.0043
+Epoch 24/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 25/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 26/100
+
+Epoch 00026: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 43s - loss: 0.0043 - val_loss: 0.0043
+Epoch 27/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 28/100
+7493/7493 - 30s - loss: 0.0043 - val_loss: 0.0043
+Epoch 29/100
+
+Epoch 00029: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 00029: early stopping
+saving model QRmodel_run_113_qnt_99_GtoWW35na_sigx_100_loss_rk5_05_20210921_B.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.99
+Model: "functional_55"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_28 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_162 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_163 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_164 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_165 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_166 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_167 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 31s - loss: 0.0055 - val_loss: 0.0050
+Epoch 2/100
+7493/7493 - 30s - loss: 0.0044 - val_loss: 0.0045
+Epoch 3/100
+7493/7493 - 33s - loss: 0.0044 - val_loss: 0.0045
+Epoch 4/100
+7493/7493 - 32s - loss: 0.0044 - val_loss: 0.0043
+Epoch 5/100
+7493/7493 - 31s - loss: 0.0044 - val_loss: 0.0043
+Epoch 6/100
+7493/7493 - 33s - loss: 0.0044 - val_loss: 0.0043
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 31s - loss: 0.0044 - val_loss: 0.0044
+Epoch 8/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 9/100
+7493/7493 - 35s - loss: 0.0043 - val_loss: 0.0043
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 39s - loss: 0.0043 - val_loss: 0.0043
+Epoch 11/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 12/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 40s - loss: 0.0043 - val_loss: 0.0043
+Epoch 14/100
+7493/7493 - 47s - loss: 0.0043 - val_loss: 0.0043
+Epoch 15/100
+7493/7493 - 46s - loss: 0.0043 - val_loss: 0.0043
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 42s - loss: 0.0043 - val_loss: 0.0043
+Epoch 17/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 18/100
+7493/7493 - 39s - loss: 0.0043 - val_loss: 0.0043
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 20/100
+7493/7493 - 29s - loss: 0.0043 - val_loss: 0.0043
+Epoch 21/100
+7493/7493 - 35s - loss: 0.0043 - val_loss: 0.0043
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 23/100
+7493/7493 - 41s - loss: 0.0043 - val_loss: 0.0043
+Epoch 24/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 26/100
+7493/7493 - 42s - loss: 0.0043 - val_loss: 0.0043
+Epoch 27/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 28/100
+
+Epoch 00028: ReduceLROnPlateau reducing learning rate to 2.5600002118153498e-09.
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 29/100
+7493/7493 - 35s - loss: 0.0043 - val_loss: 0.0043
+Epoch 30/100
+7493/7493 - 42s - loss: 0.0043 - val_loss: 0.0043
+Epoch 31/100
+
+Epoch 00031: ReduceLROnPlateau reducing learning rate to 5.1200004236307e-10.
+7493/7493 - 38s - loss: 0.0043 - val_loss: 0.0043
+Epoch 32/100
+7493/7493 - 30s - loss: 0.0043 - val_loss: 0.0043
+Epoch 33/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 34/100
+
+Epoch 00034: ReduceLROnPlateau reducing learning rate to 1.0240001069306004e-10.
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 35/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 36/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 37/100
+
+Epoch 00037: ReduceLROnPlateau reducing learning rate to 2.0480002416167767e-11.
+7493/7493 - 47s - loss: 0.0043 - val_loss: 0.0043
+Epoch 38/100
+7493/7493 - 42s - loss: 0.0043 - val_loss: 0.0043
+Epoch 39/100
+7493/7493 - 48s - loss: 0.0043 - val_loss: 0.0043
+Epoch 00039: early stopping
+saving model QRmodel_run_113_qnt_99_GtoWW35na_sigx_100_loss_rk5_05_20210921_C.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+training on 1918164 events, validating on 1918164
+
+training QR for quantile 0.99
+Model: "functional_57"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_29 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_168 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_169 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_170 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_171 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_172 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_173 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 35s - loss: 0.0062 - val_loss: 0.0044
+Epoch 2/100
+7493/7493 - 34s - loss: 0.0044 - val_loss: 0.0044
+Epoch 3/100
+7493/7493 - 40s - loss: 0.0044 - val_loss: 0.0044
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 28s - loss: 0.0044 - val_loss: 0.0044
+Epoch 5/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 6/100
+7493/7493 - 30s - loss: 0.0043 - val_loss: 0.0043
+Epoch 7/100
+7493/7493 - 42s - loss: 0.0043 - val_loss: 0.0043
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 9/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 10/100
+7493/7493 - 31s - loss: 0.0043 - val_loss: 0.0043
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 12/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 13/100
+7493/7493 - 39s - loss: 0.0043 - val_loss: 0.0043
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 15/100
+7493/7493 - 37s - loss: 0.0043 - val_loss: 0.0043
+Epoch 16/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 41s - loss: 0.0043 - val_loss: 0.0043
+Epoch 18/100
+7493/7493 - 37s - loss: 0.0043 - val_loss: 0.0043
+Epoch 19/100
+7493/7493 - 47s - loss: 0.0043 - val_loss: 0.0043
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 21/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 22/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 24/100
+7493/7493 - 41s - loss: 0.0043 - val_loss: 0.0043
+Epoch 00024: early stopping
+saving model QRmodel_run_113_qnt_99_GtoWW35na_sigx_100_loss_rk5_05_20210921_D.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:5 out of the last 169 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f97a0377ae8> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+training on 1918164 events, validating on 1918163
+
+training QR for quantile 0.99
+Model: "functional_59"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_30 (InputLayer)        [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense_174 (Dense)            (None, 60)                120       
+_________________________________________________________________
+dense_175 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_176 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_177 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_178 (Dense)            (None, 60)                3660      
+_________________________________________________________________
+dense_179 (Dense)            (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 41s - loss: 0.0064 - val_loss: 0.0043
+Epoch 2/100
+7493/7493 - 41s - loss: 0.0044 - val_loss: 0.0044
+Epoch 3/100
+7493/7493 - 37s - loss: 0.0044 - val_loss: 0.0046
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+7493/7493 - 34s - loss: 0.0044 - val_loss: 0.0043
+Epoch 5/100
+7493/7493 - 36s - loss: 0.0043 - val_loss: 0.0043
+Epoch 6/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 8/100
+7493/7493 - 34s - loss: 0.0043 - val_loss: 0.0043
+Epoch 9/100
+7493/7493 - 39s - loss: 0.0043 - val_loss: 0.0043
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 11/100
+7493/7493 - 33s - loss: 0.0043 - val_loss: 0.0043
+Epoch 12/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+7493/7493 - 37s - loss: 0.0043 - val_loss: 0.0043
+Epoch 14/100
+7493/7493 - 29s - loss: 0.0043 - val_loss: 0.0043
+Epoch 15/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+7493/7493 - 29s - loss: 0.0043 - val_loss: 0.0043
+Epoch 17/100
+7493/7493 - 35s - loss: 0.0043 - val_loss: 0.0043
+Epoch 18/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 20/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 21/100
+7493/7493 - 32s - loss: 0.0043 - val_loss: 0.0043
+Epoch 00021: early stopping
+saving model QRmodel_run_113_qnt_99_GtoWW35na_sigx_100_loss_rk5_05_20210921_E.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113/envelope
+WARNING:tensorflow:6 out of the last 171 calls to <function Model.make_predict_function.<locals>.predict_function at 0x7f97a046fbf8> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+cuts for quantile 0.99: 
+[[1.22750000e+03 2.01604118e+00 8.47730892e-04 2.01521635e+00
+  2.01757336e+00]
+ [1.28750000e+03 2.05661154e+00 5.32821562e-04 2.05601430e+00
+  2.05749583e+00]
+ [1.35350000e+03 2.10447521e+00 7.07563304e-04 2.10364413e+00
+  2.10575843e+00]
+ [1.42200000e+03 2.15472746e+00 8.92654341e-04 2.15325189e+00
+  2.15560055e+00]
+ [1.49300000e+03 2.21228113e+00 3.01038282e-03 2.20754576e+00
+  2.21655130e+00]
+ [1.56650000e+03 2.27670403e+00 2.00516528e-03 2.27457094e+00
+  2.28025579e+00]
+ [1.64250000e+03 2.34522076e+00 1.78334941e-03 2.34317756e+00
+  2.34784651e+00]
+ [1.72100000e+03 2.42400651e+00 1.30964835e-03 2.42227530e+00
+  2.42559338e+00]
+ [1.80250000e+03 2.51076174e+00 1.44792431e-03 2.50888252e+00
+  2.51315308e+00]
+ [1.88700000e+03 2.60450697e+00 3.03066022e-03 2.59916878e+00
+  2.60818601e+00]
+ [1.97450000e+03 2.70698252e+00 4.16197798e-03 2.70193529e+00
+  2.71389246e+00]
+ [2.06500000e+03 2.82050915e+00 6.47615754e-03 2.80972934e+00
+  2.82976556e+00]
+ [2.15850000e+03 2.94751959e+00 7.15373120e-03 2.93547964e+00
+  2.95465136e+00]
+ [2.25550000e+03 3.08807902e+00 9.05940722e-03 3.07640982e+00
+  3.09804392e+00]
+ [2.35550000e+03 3.24292808e+00 1.17920090e-02 3.22853637e+00
+  3.25851083e+00]
+ [2.45900000e+03 3.41373267e+00 1.64727397e-02 3.39404941e+00
+  3.43289495e+00]
+ [2.56600000e+03 3.59941678e+00 2.18675941e-02 3.56914687e+00
+  3.62178063e+00]
+ [2.67650000e+03 3.80118399e+00 2.43720590e-02 3.77005935e+00
+  3.82580948e+00]
+ [2.79100000e+03 4.01792011e+00 2.64343051e-02 3.98464036e+00
+  4.04640722e+00]
+ [2.90900000e+03 4.24939413e+00 2.58015691e-02 4.21575403e+00
+  4.27814484e+00]
+ [3.03100000e+03 4.50529194e+00 1.67606375e-02 4.48424149e+00
+  4.52627325e+00]
+ [3.15700000e+03 4.79360094e+00 1.53953270e-02 4.76681185e+00
+  4.80960321e+00]
+ [3.28700000e+03 5.11404419e+00 3.45653216e-02 5.06083775e+00
+  5.16557884e+00]
+ [3.42150000e+03 5.47726154e+00 4.74266941e-02 5.43252277e+00
+  5.56720543e+00]
+ [3.56100000e+03 5.87560816e+00 5.65948065e-02 5.83303595e+00
+  5.98728037e+00]
+ [3.70500000e+03 6.30340109e+00 7.03079611e-02 6.22661543e+00
+  6.42302704e+00]
+ [3.85300000e+03 6.75455990e+00 8.46357929e-02 6.64513493e+00
+  6.87282801e+00]
+ [4.00600000e+03 7.23620062e+00 8.94719234e-02 7.10773325e+00
+  7.33989906e+00]
+ [4.16450000e+03 7.74017820e+00 9.27891630e-02 7.59993744e+00
+  7.85272694e+00]
+ [4.32800000e+03 8.26325016e+00 9.63575050e-02 8.11414814e+00
+  8.39337730e+00]
+ [4.49700000e+03 8.80655117e+00 1.01784346e-01 8.64603901e+00
+  8.95245647e+00]
+ [4.67150000e+03 9.36991997e+00 1.09414494e-01 9.19346714e+00
+  9.52988529e+00]
+ [4.85150000e+03 9.95376759e+00 1.20336699e-01 9.75369549e+00
+  1.01256046e+01]
+ [5.03750000e+03 1.05550934e+01 1.36293135e-01 1.03213587e+01
+  1.07411928e+01]
+ [5.22950000e+03 1.11576262e+01 1.60030930e-01 1.08779745e+01
+  1.13766022e+01]
+ [5.45050000e+03 1.18315889e+01 2.17866212e-01 1.14405775e+01
+  1.21078625e+01]
+ [5.65550000e+03 1.24517614e+01 2.83456788e-01 1.19364681e+01
+  1.27859592e+01]
+ [5.84400000e+03 1.30220669e+01 3.44990462e-01 1.23920698e+01
+  1.34091539e+01]
+ [6.06200000e+03 1.36815615e+01 4.16834695e-01 1.29186764e+01
+  1.41291246e+01]
+ [6.28750000e+03 1.43635443e+01 4.91424573e-01 1.34631033e+01
+  1.48722620e+01]
+ [6.52000000e+03 1.50668276e+01 5.68701724e-01 1.40241737e+01
+  1.56381397e+01]
+ [6.76000000e+03 1.57930677e+01 6.48727797e-01 1.46031141e+01
+  1.64284286e+01]]
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.

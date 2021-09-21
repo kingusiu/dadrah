@@ -1,0 +1,42 @@
+setGPU: Setting GPU to: 1
+bin centers:  [1227.5, 1287.5, 1353.5, 1422.0, 1493.0, 1566.5, 1642.5, 1721.0, 1802.5, 1887.0, 1974.5, 2065.0, 2158.5, 2255.5, 2355.5, 2459.0, 2566.0, 2676.5, 2791.0, 2909.0, 3031.0, 3157.0, 3287.0, 3421.5, 3561.0, 3705.0, 3853.0, 4006.0, 4164.5, 4328.0, 4497.0, 4671.5, 4851.5, 5037.5, 5229.5, 5450.5, 5655.5, 5844.0, 6062.0, 6287.5, 6520.0, 6760.0]
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_signalregion_parts
+4793609 events read in 10 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_signalregion_parts
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_EXT_signalregion_parts
+4796089 events read in 10 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_EXT_signalregion_parts
+qcd all: min mjj = 1200.0001220703125, max mjj = 7285.58154296875
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+531825 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+training on 1918163 events, validating on 1918164
+
+training QR for quantile 0.1
+Model: "functional_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+Std_Normalize (StdNormalizat (None, 1)                 0         
+_________________________________________________________________
+dense (Dense)                (None, 60)                120       
+_________________________________________________________________
+dense_1 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_2 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_3 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_4 (Dense)              (None, 60)                3660      
+_________________________________________________________________
+dense_5 (Dense)              (None, 1)                 61        
+=================================================================
+Total params: 14,821
+Trainable params: 14,821
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+7493/7493 - 31s - loss: 0.0248 - val_loss: 0.0238
+Epoch 2/100
+7493/7493 - 33s - loss: 0.0240 - val_loss: 0.0239
+Epoch 3/100
+7493/7493 - 26s - loss: 0.0239 - val_loss: 0.0237
