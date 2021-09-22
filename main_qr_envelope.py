@@ -28,7 +28,16 @@ def inv_quantile_str(quantile):
     return 'q{:02}'.format(int(inv_quant*100))
 
 
+# signal contamination for xsec 1 fb (1.5, 2.5, 3.5, 4.5 TeV)
+
+signal_contamin = { 'na' : [10.612, 11.006, 11.227, 11.398], # narrow
+                    'br' : [10.654, 10.942, 11.135, 11.247] # broad
+                    }
+
+
+
 # setup runtime params and csv file
+resonance = 'na'
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 parts_n = 5
 bin_edges = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
@@ -37,24 +46,20 @@ bin_edges = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844
 bin_centers = [(high+low)/2 for low, high in zip(bin_edges[:-1], bin_edges[1:])]
 print('bin centers: ', bin_centers)
 
-Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, sig_xsec, strategy_id, epochs, read_n')
+Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n')
 params = Parameters(run_n=113, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
                     qcd_test_sample_id='qcdSigAllTestReco',
-                    sig_sample_id='GtoWW35brReco',
-                    sig_xsec=100,
+                    sig_sample_id='GtoWW35'+resonance+'Reco',
                     strategy_id='rk5_05',
                     epochs=100,
                     read_n=None)
 
 # set directories for saving and loading with extra envelope subdir for qr models
 experiment = ex.Experiment(run_n=params.run_n).setup(model_dir_qr=True, analysis_dir_qr=True)
-experiment.model_dir_qr = os.path.join(experiment.model_dir_qr, 'envelope')
-pathlib.Path(experiment.model_dir_qr).mkdir(parents=True, exist_ok=True)
-result_dir = '/eos/user/k/kiwoznia/data/QR_results/analysis/run_' + str(params.run_n) + '/envelope'
-pathlib.Path(result_dir).mkdir(parents=True, exist_ok=True)            
+result_base_dir = '/eos/user/k/kiwoznia/data/QR_results/analysis/run_' + str(params.run_n) + '/envelope'
 
 
 #****************************************#
@@ -71,69 +76,83 @@ data_qcd_parts = slice_datasample_n_parts(data_qcd_all, parts_n)
 #           signal injection             #
 
 signal_str = params.sig_sample_id[:-4] or 'no_signal'
-sig_in_training_n = 1113
 sig_sample = js.JetSample.from_input_dir(params.sig_sample_id, paths.sample_dir_path(params.sig_sample_id), read_n=params.read_n, **cuts.signalregion_cuts) 
 
 
-
-cut_results = {}
-
 #****************************************#
-#           for each quantile
+#           for each xsec
 #****************************************#
-for quantile in quantiles:
+for sig_xsec in range(10,100,10):
 
-    models = []
-    cuts = np.empty([0, len(bin_centers)])
+    # set up paths
+    result_dir = os.join(result_base_dir, signal_str, 'xsec_'+str(sig_xsec))
+    pathlib.Path(result_dir).mkdir(parents=True, exist_ok=True)            
 
-    #****************************************#
-    #      train, save, predict 5 models
-    #****************************************#
+    experiment.model_dir_qr = os.path.join(experiment.model_dir_qr, 'envelope', signal_str, 'xsec_'+str(sig_xsec))
+    pathlib.Path(experiment.model_dir_qr).mkdir(parents=True, exist_ok=True)
 
-    # for each qcd data part
-    for dat_train, dat_valid, model_n in zip(data_qcd_parts, data_qcd_parts[1:] + [data_qcd_parts[0]], list('ABCDE')):
+    sig_in_training_n = signal_contamin[resonance][2] * sig_xsec # 2nd entry for 3.5TeV
 
-        # inject signal
-        sig_train = sig_sample.sample(int(sig_in_training_n/parts_n))
-        sig_valid = sig_sample.sample(int(sig_in_training_n/parts_n))
-        dat_train = dat_train.merge(sig_train)
-        dat_valid = dat_valid.merge(sig_valid)
-
-        # train qr
-        print('training on {} events, validating on {}'.format(len(dat_train), len(dat_valid)))
-        discriminator = qrwf.train_QR(quantile, dat_train, dat_valid, params)
-        models.append(discriminator)
-
-        # save qr
-        model_str = stco.make_qr_model_str(experiment.run_n, quantile, signal_str, params.sig_xsec, params.strategy_id)
-        model_str = model_str[:-3] + '_' + model_n + model_str[-3:]
-        discriminator_path = qrwf.save_QR(discriminator, params, experiment, quantile, params.sig_xsec, model_str)
-
-        # predict cut values per bin
-        cuts_part = discriminator.predict(bin_centers)
-        cuts = np.append(cuts, cuts_part[np.newaxis,:], axis=0)
+    cut_results = {}
 
     #****************************************#
-    #      compute, save and plot envelope
+    #           for each quantile
     #****************************************#
+    for quantile in quantiles:
 
-    # compute mean, RMS, min, max per bin center over 5 trained models
-    mu = np.mean(cuts, axis=0)
-    mi = np.min(cuts, axis=0)
-    ma = np.max(cuts, axis=0)
-    rmse = np.sqrt(np.mean(np.square(cuts-mu), axis=0))
-    cuts_for_quantile = np.stack([bin_centers, mu, rmse, mi, ma], axis=1)
-    print('cuts for quantile ' + str(quantile) + ': ')
-    print(cuts_for_quantile)
-    # store cut values in dict
-    cut_results.update({inv_quantile_str(quantile): cuts_for_quantile.tolist()})
+        models = []
+        cuts = np.empty([0, len(bin_centers)])
 
-    # plot quantile cut bands
-    title_suffix = ' 5 models trained qcd SR ' + signal_str + ' q ' + 'q{:02}'.format(int(quantile*100))
-    plot_name = 'multi_discr_cut_' + signal_str + '_5models_' + 'q{:02}'.format(int(quantile*100))
-    andi.analyze_multi_quantile_discriminator_cut(models, dat_valid, title_suffix=title_suffix, plot_name=plot_name, fig_dir=result_dir)
+        #****************************************#
+        #      train, save, predict 5 models
+        #****************************************#
 
-# write cut result json file
-json_name = 'cut_stats_allQ_'+ signal_str +'.json'
-with open(os.path.join(result_dir, json_name), 'w') as ff:
-    json.dump(cut_results, ff)
+        # for each qcd data part
+        for dat_train, dat_valid, model_n in zip(data_qcd_parts, data_qcd_parts[1:] + [data_qcd_parts[0]], list('ABCDE')):
+
+            # inject signal
+            sig_train = sig_sample.sample(int(sig_in_training_n/parts_n))
+            sig_valid = sig_sample.sample(int(sig_in_training_n/parts_n))
+            dat_train = dat_train.merge(sig_train)
+            dat_valid = dat_valid.merge(sig_valid)
+
+            # train qr
+            print('training on {} events, validating on {}'.format(len(dat_train), len(dat_valid)))
+            discriminator = qrwf.train_QR(quantile, dat_train, dat_valid, params)
+            models.append(discriminator)
+
+            # save qr
+            model_str = stco.make_qr_model_str(experiment.run_n, quantile, signal_str, sig_xsec, params.strategy_id)
+            model_str = model_str[:-3] + '_' + model_n + model_str[-3:]
+            discriminator_path = qrwf.save_QR(discriminator, params, experiment, quantile, sig_xsec, model_str)
+
+            # predict cut values per bin
+            cuts_part = discriminator.predict(bin_centers)
+            cuts = np.append(cuts, cuts_part[np.newaxis,:], axis=0)
+
+        #****************************************#
+        #      compute, save and plot envelope
+        #****************************************#
+
+        # compute mean, RMS, min, max per bin center over 5 trained models
+        mu = np.mean(cuts, axis=0)
+        mi = np.min(cuts, axis=0)
+        ma = np.max(cuts, axis=0)
+        rmse = np.sqrt(np.mean(np.square(cuts-mu), axis=0))
+        cuts_for_quantile = np.stack([bin_centers, mu, rmse, mi, ma], axis=1)
+        print('cuts for quantile ' + str(quantile) + ': ')
+        print(cuts_for_quantile)
+        # store cut values in dict
+        cut_results.update({inv_quantile_str(quantile): cuts_for_quantile.tolist()})
+
+        # plot quantile cut bands
+        title_suffix = ' 5 models trained qcd SR ' + signal_str + ' q ' + 'q{:02}'.format(int(quantile*100))
+        plot_name = 'multi_discr_cut_' + signal_str + '_xsec_'+str(sig_xsec) + '_5models_' + 'q{:02}'.format(int(quantile*100))
+        andi.analyze_multi_quantile_discriminator_cut(models, dat_valid, title_suffix=title_suffix, plot_name=plot_name, fig_dir=result_dir)
+
+    # write cut result json file
+    json_name = 'cut_stats_allQ_'+ signal_str + '_xsec_' + str(sig_xsec) + '.json'
+    with open(os.path.join(result_dir, json_name), 'w') as ff:
+        json.dump(cut_results, ff)
+
+# end for each signal xsec
