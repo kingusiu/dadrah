@@ -160,12 +160,13 @@ class QRDiscriminator_KerasAPI(QRDiscriminator):
     """docstring for QRDiscriminator_KerasAPI"""
     def __init__(self, **kwargs):
         super(QRDiscriminator_KerasAPI, self).__init__(**kwargs)
+        self.model_class = qr.QuantileRegression
 
     def fit(self, train_sample, valid_sample):
         # prepare training set
         (x_train, y_train), (x_valid, y_valid) = self.make_training_datasets(train_sample, valid_sample)
 
-        self.model = qr.QuantileRegression(quantile=self.quantile, x_mu_std=(np.mean(x_train), np.std(x_train)), **self.model_params).build()
+        self.model = self.model_class(quantile=self.quantile, x_mu_std=(np.mean(x_train), np.std(x_train)), **self.model_params).build()
         self.history = self.model.fit(x_train, y_train, epochs=self.epochs, batch_size=self.batch_sz, verbose=2, validation_data=(x_valid, y_valid), shuffle=True, \
             callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=1), tf.keras.callbacks.ReduceLROnPlateau(factor=0.2, patience=3, verbose=1)])
        
@@ -178,6 +179,14 @@ class QRDiscriminator_KerasAPI(QRDiscriminator):
         predicted = self.model.predict(xx).flatten() 
         # return self.unscale_output(predicted)
         return predicted
+
+class QRDiscriminator_poly_KerasAPI(QRDiscriminator_KerasAPI):
+
+    """docstring for QRDiscriminator_KerasAPI"""
+    
+    def __init__(self, **kwargs):
+        super(QRDiscriminator_KerasAPI, self).__init__(**kwargs)
+        self.model_class = qr.QuantileRegressionPoly
         
 
 class GBRDiscriminator(Discriminator):

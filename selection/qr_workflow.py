@@ -7,7 +7,7 @@ import vande.training as train
 
 
 
-def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False):
+def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False, poly_qr=False):
 
     # train QR on qcd-signal-injected sample and quantile q
     

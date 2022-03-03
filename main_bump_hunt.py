@@ -49,7 +49,7 @@ train_qr = True
 do_bump_hunt = False
 model_path_date = '20220303'
 
-Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n')
+Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, poly_qr')
 params = Parameters(run_n=114, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
@@ -58,7 +58,8 @@ params = Parameters(run_n=114,
                     sig_sample_id=None, # set sig id later in loop
                     strategy_id='rk5_05',
                     epochs=100,
-                    read_n=None)
+                    read_n=None,
+                    poly_qr=True)
 
 
 #****************************************#

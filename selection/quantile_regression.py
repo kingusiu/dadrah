@@ -40,7 +40,8 @@ class QuantileRegression():
         model.summary()
         return model
 
-class PolyQuantileRegression():
+
+class QuantileRegressionPoly():
 
     def __init__(self, quantile, x_mu_std=(0.,1.), optimizer='adam',  activation='linear'):
         self.quantile = quantile
