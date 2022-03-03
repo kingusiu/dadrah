@@ -125,7 +125,7 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
                     print('training on {} events, validating on {}'.format(len(mixed_train_sample), len(mixed_valid_sample)))
 
                     # train and save QR model
-                    discriminator = qrwf.train_QR(quantile, mixed_train_sample, mixed_valid_sample, params)
+                    discriminator = qrwf.train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, poly_qr=params.poly_qr)
                     discriminator_path = qrwf.save_QR(discriminator, params, experiment, quantile, xsec)
                     model_paths.append(discriminator_path)
 

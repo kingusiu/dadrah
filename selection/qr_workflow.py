@@ -10,9 +10,11 @@ import vande.training as train
 def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False, poly_qr=False):
 
     # train QR on qcd-signal-injected sample and quantile q
+
+    discriminator_class = disc.QRDiscriminatorPoly_KerasAPI if poly_qr else disc.QRDiscriminator_KerasAPI
     
-    print('\ntraining QR for quantile {}'.format(quantile))    
-    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
+    print('\ntraining {} QR for quantile {}'.format(discriminator_class, quantile))    
+    discriminator = discriminator_class(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
     losses_train, losses_valid = discriminator.fit(mixed_train_sample, mixed_valid_sample)
 
     if plot_loss:
