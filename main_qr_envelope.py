@@ -82,10 +82,10 @@ sig_sample = js.JetSample.from_input_dir(params.sig_sample_id, paths.sample_dir_
 #****************************************#
 #           for each xsec
 #****************************************#
-for sig_xsec in range(10,100,10):
+for sig_xsec in range(30,100,10):
 
     # set up paths
-    result_dir = os.join(result_base_dir, signal_str, 'xsec_'+str(sig_xsec))
+    result_dir = os.path.join(result_base_dir, signal_str, 'xsec_'+str(sig_xsec))
     pathlib.Path(result_dir).mkdir(parents=True, exist_ok=True)            
 
     experiment.model_dir_qr = os.path.join(experiment.model_dir_qr, 'envelope', signal_str, 'xsec_'+str(sig_xsec))

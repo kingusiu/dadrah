@@ -32,12 +32,12 @@ signal_contamin = { ('na', 0): [[0]]*4,
 
 # signals
 resonance = 'na'
-signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
-# signals = ['GtoWW35'+resonance+'Reco']
-masses = [1500, 2500, 3500, 4500]
-# masses = [3500]
+#signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
+signals = ['GtoWW35'+resonance+'Reco']
+#masses = [1500, 2500, 3500, 4500]
+masses = [3500]
 # xsecs = [100., 10., 1., 0.]
-xsecs = [0.]
+xsecs = [100.]
 sig_in_training_nums_arr = signal_contamin[(resonance, xsecs[0])] # TODO: adapt to multiple xsecs
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
@@ -47,10 +47,10 @@ make_qcd_train_test_datasample = False
 do_qr = True
 train_qr = True
 do_bump_hunt = False
-model_path_date = '20210423'
+model_path_date = '20220303'
 
 Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n')
-params = Parameters(run_n=113, 
+params = Parameters(run_n=114, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
