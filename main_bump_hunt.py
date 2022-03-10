@@ -49,8 +49,9 @@ train_qr = True
 do_bump_hunt = False
 model_path_date = '20220303'
 
-Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, poly_qr')
-params = Parameters(run_n=114, 
+Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, poly_qr')
+params = Parameters(run_n_vae=113,
+                    run_n_qr=2, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
@@ -61,11 +62,13 @@ params = Parameters(run_n=114,
                     read_n=None,
                     poly_qr=True)
 
+print('\n'+'*'*70+'\n'+'\t\t\t TRAINING RUN \n'+str(params)+'\n'+'*'*70)
+
 
 #****************************************#
 #           read in qcd data
 #****************************************#
-paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.run_n)})
+paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.run_n_vae)})
 
 if do_qr:
     # if datasets not yet prepared, prepare them, dump and return (same qcd train and testsample for all signals and all xsecs)
@@ -94,8 +97,8 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
     for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
         param_dict = {'$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
-        experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
-        result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
+        experiment = ex.Experiment(run_n=params.run_n_vae, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
+        result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n_vae), **param_dict}) # in selection paths new format with run_x, sig_x, ...
         
         # ************************************************************
         #                           QR
@@ -162,7 +165,7 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
         if do_bump_hunt:
             dijet_dir = '/eos/home-k/kiwoznia/dev/vae_dijet_fit/VAEDijetFit'
             runstr = "python run_dijetfit.py --run -n {} -i {} -M {} --sig {}.h5 --sigxsec {} --qcd {}.h5 --res {} --loss {}"
-            cmd = runstr.format(params.run_n, result_paths.base_dir, mass, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id], resonance, params.strategy_id)  
+            cmd = runstr.format(params.run_n_vae, result_paths.base_dir, mass, sdfr.path_dict['file_names'][params.sig_sample_id], xsec, sdfr.path_dict['file_names'][params.qcd_test_sample_id], resonance, params.strategy_id)  
             print("running ", cmd)
             subprocess.check_call('pwd && source setupenv.sh && ' + cmd, cwd=dijet_dir, shell=True, executable="/bin/bash")
             print('finished')

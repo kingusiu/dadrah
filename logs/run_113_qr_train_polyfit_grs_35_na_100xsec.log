@@ -1,0 +1,559 @@
+setGPU: Setting GPU to: 1
+
+**********************************************************************
+			 TRAINING RUN 
+Parameters(run_n_vae=113, qcd_sample_id='qcdSigReco', qcd_ext_sample_id='qcdSigExtReco', qcd_train_sample_id='qcdSigAllTrainReco', qcd_test_sample_id='qcdSigAllTestReco', sig_sample_id=None, strategy_id='rk5_05', epochs=100, read_n=None, poly_qr=True)
+**********************************************************************
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Train_signalregion_parts
+1917939 events read in 1 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Train_signalregion_parts
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_signalregion_parts
+7671759 events read in 1 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_signalregion_parts
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+531825 events read in 2 files in dir /eos/user/k/kiwoznia/data/VAE_results/events/run_113/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts
+training on 1535200 events, validating on 383800
+
+training <class 'dadrah.selection.discriminator.QRDiscriminatorPoly_KerasAPI'> QR for quantile 0.1
+Model: "functional_1"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None, 1)]          0                                            
+__________________________________________________________________________________________________
+Std_Normalize (StdNormalization (None, 1)            0           input_1[0][0]                    
+__________________________________________________________________________________________________
+lambda (Lambda)                 (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+concatenate (Concatenate)       (None, 3)            0           lambda[0][0]                     
+                                                                 lambda_1[0][0]                   
+                                                                 Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+dense (Dense)                   (None, 1)            4           concatenate[0][0]                
+==================================================================================================
+Total params: 4
+Trainable params: 4
+Non-trainable params: 0
+__________________________________________________________________________________________________
+Epoch 1/100
+5997/5997 - 4s - loss: 0.0833 - val_loss: 0.0238
+Epoch 2/100
+5997/5997 - 4s - loss: 0.0239 - val_loss: 0.0237
+Epoch 3/100
+5997/5997 - 4s - loss: 0.0240 - val_loss: 0.0238
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+5997/5997 - 4s - loss: 0.0239 - val_loss: 0.0238
+Epoch 5/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 6/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 8/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 9/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 11/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 12/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 14/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 15/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 17/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 18/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 20/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 21/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 23/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 24/100
+5997/5997 - 4s - loss: 0.0237 - val_loss: 0.0237
+Epoch 00024: early stopping
+saving model QRmodel_run_113_qnt_10_GtoWW35naReco_sigx_100_loss_rk5_05_20220303.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113
+predicting qcdSigAllTestReco
+predicting GtoWW35naReco
+training on 1535200 events, validating on 383800
+
+training <class 'dadrah.selection.discriminator.QRDiscriminatorPoly_KerasAPI'> QR for quantile 0.3
+Model: "functional_3"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_2 (InputLayer)            [(None, 1)]          0                                            
+__________________________________________________________________________________________________
+Std_Normalize (StdNormalization (None, 1)            0           input_2[0][0]                    
+__________________________________________________________________________________________________
+lambda_2 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+lambda_3 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 3)            0           lambda_2[0][0]                   
+                                                                 lambda_3[0][0]                   
+                                                                 Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 1)            4           concatenate_1[0][0]              
+==================================================================================================
+Total params: 4
+Trainable params: 4
+Non-trainable params: 0
+__________________________________________________________________________________________________
+Epoch 1/100
+5997/5997 - 4s - loss: 0.4185 - val_loss: 0.0469
+Epoch 2/100
+5997/5997 - 4s - loss: 0.0470 - val_loss: 0.0467
+Epoch 3/100
+5997/5997 - 4s - loss: 0.0470 - val_loss: 0.0467
+Epoch 4/100
+5997/5997 - 4s - loss: 0.0470 - val_loss: 0.0467
+Epoch 5/100
+
+Epoch 00005: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+5997/5997 - 4s - loss: 0.0470 - val_loss: 0.0467
+Epoch 6/100
+5997/5997 - 4s - loss: 0.0468 - val_loss: 0.0467
+Epoch 7/100
+5997/5997 - 4s - loss: 0.0468 - val_loss: 0.0467
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+5997/5997 - 4s - loss: 0.0468 - val_loss: 0.0467
+Epoch 9/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 10/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 12/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 13/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 15/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 16/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 18/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 19/100
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+5997/5997 - 4s - loss: 0.0467 - val_loss: 0.0467
+Epoch 21/100
+5997/5997 - 8s - loss: 0.0467 - val_loss: 0.0467
+Epoch 00021: early stopping
+saving model QRmodel_run_113_qnt_30_GtoWW35naReco_sigx_100_loss_rk5_05_20220303.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113
+predicting qcdSigAllTestReco
+predicting GtoWW35naReco
+training on 1535200 events, validating on 383800
+
+training <class 'dadrah.selection.discriminator.QRDiscriminatorPoly_KerasAPI'> QR for quantile 0.5
+Model: "functional_5"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_3 (InputLayer)            [(None, 1)]          0                                            
+__________________________________________________________________________________________________
+Std_Normalize (StdNormalization (None, 1)            0           input_3[0][0]                    
+__________________________________________________________________________________________________
+lambda_4 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+lambda_5 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 3)            0           lambda_4[0][0]                   
+                                                                 lambda_5[0][0]                   
+                                                                 Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 1)            4           concatenate_2[0][0]              
+==================================================================================================
+Total params: 4
+Trainable params: 4
+Non-trainable params: 0
+__________________________________________________________________________________________________
+Epoch 1/100
+5997/5997 - 10s - loss: 0.2482 - val_loss: 0.0541
+Epoch 2/100
+5997/5997 - 11s - loss: 0.0543 - val_loss: 0.0542
+Epoch 3/100
+5997/5997 - 10s - loss: 0.0543 - val_loss: 0.0542
+Epoch 4/100
+5997/5997 - 9s - loss: 0.0543 - val_loss: 0.0540
+Epoch 5/100
+5997/5997 - 11s - loss: 0.0543 - val_loss: 0.0540
+Epoch 6/100
+5997/5997 - 12s - loss: 0.0543 - val_loss: 0.0542
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+5997/5997 - 11s - loss: 0.0543 - val_loss: 0.0541
+Epoch 8/100
+5997/5997 - 9s - loss: 0.0541 - val_loss: 0.0540
+Epoch 9/100
+5997/5997 - 8s - loss: 0.0541 - val_loss: 0.0540
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+5997/5997 - 8s - loss: 0.0540 - val_loss: 0.0540
+Epoch 11/100
+5997/5997 - 12s - loss: 0.0540 - val_loss: 0.0540
+Epoch 12/100
+5997/5997 - 10s - loss: 0.0540 - val_loss: 0.0540
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+5997/5997 - 11s - loss: 0.0540 - val_loss: 0.0539
+Epoch 14/100
+5997/5997 - 4s - loss: 0.0540 - val_loss: 0.0539
+Epoch 15/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 17/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 18/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 20/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 21/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 22/100
+
+Epoch 00022: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 23/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 24/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 25/100
+
+Epoch 00025: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 26/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 27/100
+5997/5997 - 5s - loss: 0.0540 - val_loss: 0.0539
+Epoch 00027: early stopping
+saving model QRmodel_run_113_qnt_50_GtoWW35naReco_sigx_100_loss_rk5_05_20220303.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113
+predicting qcdSigAllTestReco
+predicting GtoWW35naReco
+training on 1535200 events, validating on 383800
+
+training <class 'dadrah.selection.discriminator.QRDiscriminatorPoly_KerasAPI'> QR for quantile 0.7
+Model: "functional_7"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_4 (InputLayer)            [(None, 1)]          0                                            
+__________________________________________________________________________________________________
+Std_Normalize (StdNormalization (None, 1)            0           input_4[0][0]                    
+__________________________________________________________________________________________________
+lambda_6 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+lambda_7 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 3)            0           lambda_6[0][0]                   
+                                                                 lambda_7[0][0]                   
+                                                                 Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 1)            4           concatenate_3[0][0]              
+==================================================================================================
+Total params: 4
+Trainable params: 4
+Non-trainable params: 0
+__________________________________________________________________________________________________
+Epoch 1/100
+5997/5997 - 5s - loss: 0.2852 - val_loss: 0.0480
+Epoch 2/100
+5997/5997 - 5s - loss: 0.0481 - val_loss: 0.0485
+Epoch 3/100
+5997/5997 - 5s - loss: 0.0482 - val_loss: 0.0483
+Epoch 4/100
+
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+5997/5997 - 5s - loss: 0.0481 - val_loss: 0.0479
+Epoch 5/100
+5997/5997 - 5s - loss: 0.0480 - val_loss: 0.0479
+Epoch 6/100
+5997/5997 - 4s - loss: 0.0479 - val_loss: 0.0479
+Epoch 7/100
+
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0480
+Epoch 8/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 9/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 10/100
+
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 11/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 12/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 13/100
+
+Epoch 00013: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+5997/5997 - 4s - loss: 0.0479 - val_loss: 0.0479
+Epoch 14/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 15/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 16/100
+
+Epoch 00016: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 17/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 18/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 19/100
+
+Epoch 00019: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+5997/5997 - 4s - loss: 0.0479 - val_loss: 0.0479
+Epoch 20/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 21/100
+5997/5997 - 5s - loss: 0.0479 - val_loss: 0.0479
+Epoch 00021: early stopping
+saving model QRmodel_run_113_qnt_70_GtoWW35naReco_sigx_100_loss_rk5_05_20220303.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113
+predicting qcdSigAllTestReco
+predicting GtoWW35naReco
+training on 1535200 events, validating on 383800
+
+training <class 'dadrah.selection.discriminator.QRDiscriminatorPoly_KerasAPI'> QR for quantile 0.9
+Model: "functional_9"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_5 (InputLayer)            [(None, 1)]          0                                            
+__________________________________________________________________________________________________
+Std_Normalize (StdNormalization (None, 1)            0           input_5[0][0]                    
+__________________________________________________________________________________________________
+lambda_8 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+lambda_9 (Lambda)               (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 3)            0           lambda_8[0][0]                   
+                                                                 lambda_9[0][0]                   
+                                                                 Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+dense_4 (Dense)                 (None, 1)            4           concatenate_4[0][0]              
+==================================================================================================
+Total params: 4
+Trainable params: 4
+Non-trainable params: 0
+__________________________________________________________________________________________________
+Epoch 1/100
+5997/5997 - 4s - loss: 0.2404 - val_loss: 0.0258
+Epoch 2/100
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0259
+Epoch 3/100
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0261
+Epoch 4/100
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0256
+Epoch 5/100
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0254
+Epoch 6/100
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0257
+Epoch 7/100
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0255
+Epoch 8/100
+
+Epoch 00008: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+5997/5997 - 4s - loss: 0.0255 - val_loss: 0.0254
+Epoch 9/100
+5997/5997 - 4s - loss: 0.0254 - val_loss: 0.0254
+Epoch 10/100
+5997/5997 - 4s - loss: 0.0254 - val_loss: 0.0254
+Epoch 11/100
+
+Epoch 00011: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+5997/5997 - 4s - loss: 0.0254 - val_loss: 0.0255
+Epoch 12/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 13/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 14/100
+
+Epoch 00014: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 15/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 16/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 17/100
+
+Epoch 00017: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 18/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 19/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 20/100
+
+Epoch 00020: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 21/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 22/100
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 23/100
+
+Epoch 00023: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+5997/5997 - 4s - loss: 0.0253 - val_loss: 0.0254
+Epoch 00023: early stopping
+saving model QRmodel_run_113_qnt_90_GtoWW35naReco_sigx_100_loss_rk5_05_20220303.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113
+predicting qcdSigAllTestReco
+predicting GtoWW35naReco
+training on 1535200 events, validating on 383800
+
+training <class 'dadrah.selection.discriminator.QRDiscriminatorPoly_KerasAPI'> QR for quantile 0.99
+Model: "functional_11"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_6 (InputLayer)            [(None, 1)]          0                                            
+__________________________________________________________________________________________________
+Std_Normalize (StdNormalization (None, 1)            0           input_6[0][0]                    
+__________________________________________________________________________________________________
+lambda_10 (Lambda)              (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+lambda_11 (Lambda)              (None, 1)            0           Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 3)            0           lambda_10[0][0]                  
+                                                                 lambda_11[0][0]                  
+                                                                 Std_Normalize[0][0]              
+__________________________________________________________________________________________________
+dense_5 (Dense)                 (None, 1)            4           concatenate_5[0][0]              
+==================================================================================================
+Total params: 4
+Trainable params: 4
+Non-trainable params: 0
+__________________________________________________________________________________________________
+Epoch 1/100
+5997/5997 - 4s - loss: 0.3987 - val_loss: 0.0110
+Epoch 2/100
+5997/5997 - 4s - loss: 0.0076 - val_loss: 0.0047
+Epoch 3/100
+5997/5997 - 4s - loss: 0.0044 - val_loss: 0.0044
+Epoch 4/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 5/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0044
+Epoch 6/100
+
+Epoch 00006: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 7/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 8/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 9/100
+
+Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.0000001899898055e-05.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 10/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 11/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 12/100
+
+Epoch 00012: ReduceLROnPlateau reducing learning rate to 8.000000525498762e-06.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 13/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 14/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 15/100
+
+Epoch 00015: ReduceLROnPlateau reducing learning rate to 1.6000001778593287e-06.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 16/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 17/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 18/100
+
+Epoch 00018: ReduceLROnPlateau reducing learning rate to 3.200000264769187e-07.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 19/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 20/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 21/100
+
+Epoch 00021: ReduceLROnPlateau reducing learning rate to 6.400000529538374e-08.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 22/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 23/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 24/100
+
+Epoch 00024: ReduceLROnPlateau reducing learning rate to 1.2800001059076749e-08.
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 25/100
+5997/5997 - 4s - loss: 0.0043 - val_loss: 0.0043
+Epoch 00025: early stopping
+saving model QRmodel_run_113_qnt_99_GtoWW35naReco_sigx_100_loss_rk5_05_20220303.h5 to /eos/home-k/kiwoznia/data/QR_models/run_113
+predicting qcdSigAllTestReco
+predicting GtoWW35naReco
+writing selections to  /eos/user/k/kiwoznia/data/QR_results/events/run_113/sig_GtoWW35naReco/xsec_100/loss_rk5_05
+written data sample to /eos/user/k/kiwoznia/data/QR_results/events/run_113/sig_GtoWW35naReco/xsec_100/loss_rk5_05/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_reco.h5
+written data sample to /eos/user/k/kiwoznia/data/QR_results/events/run_113/sig_GtoWW35naReco/xsec_100/loss_rk5_05/RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5
+loaded model  <tensorflow.python.keras.engine.functional.Functional object at 0x7f3498bceba8>
+loaded model  <tensorflow.python.keras.engine.functional.Functional object at 0x7f3498c0be10>
+loaded model  <tensorflow.python.keras.engine.functional.Functional object at 0x7f33a06cf470>
+loaded model  <tensorflow.python.keras.engine.functional.Functional object at 0x7f349d87de80>
+loaded model  <tensorflow.python.keras.engine.functional.Functional object at 0x7f349d813a90>
+loaded model  <tensorflow.python.keras.engine.functional.Functional object at 0x7f3498bdfc50>
+/afs/cern.ch/user/k/kiwoznia/.local/lib/python3.6/site-packages/matplotlib/colors.py:1207: RuntimeWarning: invalid value encountered in less_equal
+  mask |= resdat <= 0
+findfont: Font family ['cursive'] not found. Falling back to DejaVu Sans.
+'texgyreheros-regular.otf' can not be subsetted into a Type 3 font. The entire font will be embedded in the output.

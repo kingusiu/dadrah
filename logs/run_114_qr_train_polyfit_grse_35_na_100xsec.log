@@ -1,0 +1,16 @@
+setGPU: Setting GPU to: 1
+
+**********************************************************************
+			 TRAINING RUN 
+Parameters(run_n=114, qcd_sample_id='qcdSigReco', qcd_ext_sample_id='qcdSigExtReco', qcd_train_sample_id='qcdSigAllTrainReco', qcd_test_sample_id='qcdSigAllTestReco', sig_sample_id=None, strategy_id='rk5_05', epochs=100, read_n=None, poly_qr=True)
+**********************************************************************
+[DataReader] read_jet_features_from_dir(): reading all events from /eos/user/k/kiwoznia/data/VAE_results/events/run_114/qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Train_signalregion_parts
+Traceback (most recent call last):
+  File "main_bump_hunt.py", line 78, in <module>
+    qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id), read_n=params.read_n) 
+  File "/eos/home-k/kiwoznia/dev/physics_objects_for_anomaly_hunting/pofah/jet_sample.py", line 44, in from_input_dir
+    df, _ = dr.DataReader(path).read_jet_features_from_dir(read_n=read_n, features_to_df=True, **cuts)
+  File "/eos/home-k/kiwoznia/dev/sample_read_write_transform/sarewt/data_reader.py", line 237, in read_jet_features_from_dir
+    features_concat = np.concatenate(features_concat, axis=0)[:read_n]
+  File "<__array_function__ internals>", line 6, in concatenate
+ValueError: need at least one array to concatenate

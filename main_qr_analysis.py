@@ -53,7 +53,7 @@ if multi_discriminator_analysis:
 	discriminator_list = []
 
 	quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
-	date = '20210425'
+	date = '20220303'
 	models = [os.path.join(experiment.model_dir_qr, stco.make_qr_model_str(params.run_n, q, params.sig_sample_id, params.sig_xsec, strategy_id, date)) \
 				for q in quantiles]
 

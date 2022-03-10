@@ -11,10 +11,11 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
 
     # train QR on qcd-signal-injected sample and quantile q
 
-    discriminator_class = disc.QRDiscriminatorPoly_KerasAPI if poly_qr else disc.QRDiscriminator_KerasAPI
+    discriminator = disc.QRDiscriminatorPoly_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs) if poly_qr else \
+        disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs, n_layers=5, n_nodes=60)
     
-    print('\ntraining {} QR for quantile {}'.format(discriminator_class, quantile))    
-    discriminator = discriminator_class(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
+    print('\ntraining {} QR for quantile {}'.format(type(discriminator), quantile))    
+    
     losses_train, losses_valid = discriminator.fit(mixed_train_sample, mixed_valid_sample)
 
     if plot_loss:
