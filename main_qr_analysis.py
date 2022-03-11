@@ -63,7 +63,7 @@ if multi_discriminator_analysis:
 		discriminator_list.append(discriminator)
 
 	title_suffix = 'QR trained on QCD + '+params.sig_sample_id.replace('Reco','')+' at xsec '+str(int(params.sig_xsec)) + 'fb'
-	plot_name = 'multi_discr_cut_'+params.sig_sample_id.replace('Reco','')+'_x'+str(int(params.sig_xsec))+'_loss_'+strategy_id
+	plot_name = 'multi_discr_cut_'+params.sig_sample_id.replace('Reco','')+'_x'+str(int(params.sig_xsec))+'_loss_'+strategy_id+'_fullX'
 
 	andi.analyze_multi_quantile_discriminator_cut(discriminator_list, qcd_sig_sample, title_suffix=title_suffix, \
-												plot_name=plot_name, fig_dir=experiment.analysis_dir_qr_cuts, cut_xmax=True)
+												plot_name=plot_name, fig_dir=experiment.analysis_dir_qr_cuts, cut_xmax=False)

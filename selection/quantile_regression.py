@@ -64,3 +64,31 @@ class QuantileRegressionPoly():
 
         model.summary()
         return model
+
+
+class QuantileRegressionBernstein():
+
+    def __init__(self, quantile, x_mu_std=(0.,1.), optimizer='adam',  activation='linear'):
+        self.quantile = quantile
+        self.x_mu_std = x_mu_std
+        self.optimizer = optimizer
+        self.activation = activation
+
+    def build(self):
+
+        inputs = tf.keras.Input(shape=(1,))
+        normx = layers.StdNormalization(*self.x_mu_std)(inputs)
+
+        b03 = tf.keras.layers.Lambda(lambda x: 1 - 3*x + 3*x**2 - x**3)(normx)
+        b13 = tf.keras.layers.Lambda(lambda x: 3*x - 6*x**2 + 3*x**3)(normx)
+        b23 = tf.keras.layers.Lambda(lambda x: 3*x**2 - 3*x**3)(normx)
+        b33 = tf.keras.layers.Lambda(lambda x: x**3)(normx)
+
+        hidden = tf.keras.layers.Concatenate()([b03, b13, b23, b33])
+        outputs = tf.keras.layers.Dense(1, activation = self.activation)(hidden)
+
+        model = tf.keras.Model(inputs, outputs)
+        model.compile(loss=quantile_loss(self.quantile), optimizer=self.optimizer)
+
+        model.summary()
+        return model

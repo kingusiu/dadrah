@@ -23,7 +23,7 @@ class RunPaths():
                     'dir' : in_model_dir, # directory path
                     'names' : in_model_names, # dict with modelnames
                 },
-            }
+            },
 
             'out': {
                 'data': {
@@ -34,11 +34,11 @@ class RunPaths():
                     'dir' : out_model_dir,
                     'names' : out_model_names,
                 },
-            }
+            },
         }
 
-        for inout in self.path_dict:
-            for datmod in inout:
+        for inout in self.path_dict.values():
+            for datmod in inout.values():
                 if datmod['dir'] is not None:
                     pathlib.Path(datmod['dir']).mkdir(parents=True, exist_ok=True)
 
