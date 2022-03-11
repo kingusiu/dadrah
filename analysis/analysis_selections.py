@@ -1,6 +1,6 @@
-import pofah.path_constants.sample_dict_file_parts_selected as sdfs
 import dadrah.analysis.root_plotting_util as rpu
 import dadrah.util.run_paths as runpa
+import dadrah.util.string_constants_util as strc
 import pofah.util.sample_factory as sf
 import pofah.jet_sample as js
 import pofah.util.utility_fun as utfu
@@ -15,7 +15,7 @@ import argparse
 '''
 
 
-def plot_mjj_spectrum(sample, quantile, fig_dir='fig'):
+def plot_mjj_spectrum(sample, quantile, mjj_key='mJJ', fig_dir='fig'):
     inv_quant = round((1.-quantile),2)
     title = sample.name + ": BG like vs SIG like mjj distribution and ratio qnt {}".format(int(quantile*100))
     plot_name = 'mJJ_ratio_bg_vs_sig_' + sample.name + '_q' + str(int(quantile*100))
@@ -30,17 +30,23 @@ if __name__ == '__main__':
     parser.add_argument('-x', dest='sig_xsec', type=float, default=100., help='signal injection cross section')
     args = parser.parse_args()
 
-    run = 113
-    sample_ids = ['qcdSigAllTestReco', 'GtoWW35brReco']
+    ae_run_n = 113
+    qr_run_n = 2
+    sample_ids = ['qcdSigAllTestReco', 'GtoWW35naReco']
     quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
     # quantiles = [0.9]
-    mjj_key = 'mJJ'
-    param_dict = {'$run$': str(run), '$sig_name$': sample_ids[1], '$sig_xsec$': str(int(args.sig_xsec))}
+    path_ext_dict = {'ae_run': str(ae_run_n), 'qr_run': str(qr_run_n), 'sig': sample_ids[1], 'xsec': str(int(args.sig_xsec)), 'loss': 'rk5_05'}
 
-    input_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path(param_dict) # in selection paths new format with run_x, sig_x, ...
-    fig_dir = exp.Experiment(run_n=run, param_dict=param_dict).setup(analysis_dir_qr=True).analysis_dir_qr_mjj
+    ### paths ###
+
+    # data inputs: /eos/user/k/kiwoznia/data/QR_results/events/ae_run_113/qr_run_2/sig_GtoWW35naReco/xsec_100/loss_rk5_05
+    # data outputs (figures): /eos/user/k/kiwoznia/data/QR_results/analysis/run_113/sig_GtoWW35naReco/xsec_100/loss_rk5_05/mjj_spectra
+
+    paths = runpa.RunPaths(in_data_dir=strc.dir_path_dict['base_dir_qr_selections'], in_data_names=strc.file_name_path_dict, out_data_dir=strc.dir_path_dict['base_dir_qr_analysis'])
+    paths.extend_in_path_data(path_ext_dict)
+    paths.extend_out_path_data({**path_ext_dict, 'mjj_spectra': None})
 
     for sample_id in sample_ids:
         for quantile in quantiles:
-            sample = js.JetSample.from_input_file(sample_id, input_paths.sample_file_path(sample_id))
-            plot_mjj_spectrum(sample, quantile, fig_dir)
+            sample = js.JetSample.from_input_file(sample_id, paths.in_file_path(sample_id))
+            plot_mjj_spectrum(sample, quantile, fig_dir=paths.out_data_dir)
