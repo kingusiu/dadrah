@@ -24,11 +24,24 @@ import pofah.phase_space.cut_constants as cuts
 #           set runtime params
 #****************************************#
 
-signal_contamin = { ('na', 0): [[0]]*4,
-                    ('na', 100): [[1061], [1100], [1123], [1140]], # narrow signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
-                    ('br', 0): [[0]]*4,
-                    ('br', 100): [[1065], [1094], [1113], [1125]], # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
-                }
+grs_na_15_x10fb = 106.12 # number of expected events of g_rs narrow at 1.5TeV
+grs_na_25_x10fb = 110.06 # number of expected events of g_rs narrow at 2.5TeV
+grs_na_35_x10fb = 112.27 # number of expected events of g_rs narrow at 3.5TeV
+grs_na_45_x10fb = 113.98 # number of expected events of g_rs narrow at 4.5TeV
+
+signal_contamin = { 'GtoWW35naReco' : { 0: 0,
+                                        10: int(grs_na_35_x10fb),
+                                        20: int(grs_na_35_x10fb*2),
+                                        40: int(grs_na_35_x10fb*4),
+                                        60: int(grs_na_35_x10fb*6),
+                                        80: int(grs_na_35_x10fb*8),
+                                        100: 1123,
+                                      }, 
+                    'GtoWW35brReco' : { 
+                        0: 0,
+                        100: 1113, # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
+                                    }
+                    }
 
 # signals
 resonance = 'na'
@@ -37,8 +50,9 @@ signals = ['GtoWW35'+resonance+'Reco']
 #masses = [1500, 2500, 3500, 4500]
 masses = [3500]
 # xsecs = [100., 10., 1., 0.]
-xsecs = [100.]
-sig_in_training_nums_arr = signal_contamin[(resonance, xsecs[0])] # TODO: adapt to multiple xsecs
+xsecs = [100, 80, 60, 40, 20, 0]
+# xsecs = [100.]
+sig_in_training_nums_arr = [[signal_contamin[(resonance, xsec)] for xsec in xsecs] for sig in signals]
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
 
@@ -51,7 +65,7 @@ model_path_date = '20220303'
 
 Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, poly_qr')
 params = Parameters(run_n_vae=113,
-                    run_n_qr=2, 
+                    run_n_qr=4, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
@@ -64,11 +78,17 @@ params = Parameters(run_n_vae=113,
 
 print('\n'+'*'*70+'\n'+'\t\t\t TRAINING RUN \n'+str(params)+'\n'+'*'*70)
 
+### paths ###
+
+# data inputs: /eos/user/k/kiwoznia/data/VAE_results/events/run_$run_n_vae$ 
+# data outputs (selections): /eos/user/k/kiwoznia/data/QR_results/events/vae_run_$run_n_vae$/qr_run_$run_n_qr$/sig_GtoWW35naReco/xsec_100/loss_rk5_05
+# model outputs: /eos/home-k/kiwoznia/data/QR_models/vae_run_$run_n_vae$/qr_run_$run_n_qr$
 
 #****************************************#
 #           read in qcd data
 #****************************************#
 paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.run_n_vae)})
+print('reading samples from {}'.format(paths.base_dir))
 
 if do_qr:
     # if datasets not yet prepared, prepare them, dump and return (same qcd train and testsample for all signals and all xsecs)
@@ -96,10 +116,10 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
     # ************************************************************
     for xsec, sig_in_training_num in zip(xsecs, sig_in_training_nums):
 
-        param_dict = {'$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
+        param_dict = {'$run_n_vae$': str(params.run_n_vae), '$run_n_qr$': str(params.run_n_qr), '$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
         experiment = ex.Experiment(run_n=params.run_n_vae, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
-        result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n_vae), **param_dict}) # in selection paths new format with run_x, sig_x, ...
-        
+        result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path(param_dict) # in selection paths new format with run_x, sig_x, ...
+
         # ************************************************************
         #                           QR
         # ************************************************************

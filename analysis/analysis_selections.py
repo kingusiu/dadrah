@@ -21,6 +21,7 @@ def plot_mjj_spectrum(sample, quantile, mjj_key='mJJ', fig_dir='fig'):
     plot_name = 'mJJ_ratio_bg_vs_sig_' + sample.name + '_q' + str(int(quantile*100))
     print('plotting {} to {}'.format(plot_name, fig_dir))
     # selections saved as inverse quantiles because of code in dijet fit (i.e. if quantile = 0.90, s.t. 90% of points are BELOW threshold, this is saved as 0.1 or q10, meaning that 10% of points are ABOVE threshold = inv_quant)
+    # -> use 1-q in all own scripts
     rpu.make_bg_vs_sig_ratio_plot(sample.rejected(inv_quant, mjj_key), sample.accepted(inv_quant, mjj_key), target_value=inv_quant, n_bins=60, title=title, plot_name=plot_name, fig_dir=fig_dir)
 
 
@@ -50,3 +51,8 @@ if __name__ == '__main__':
         for quantile in quantiles:
             sample = js.JetSample.from_input_file(sample_id, paths.in_file_path(sample_id))
             plot_mjj_spectrum(sample, quantile, fig_dir=paths.out_data_dir)
+
+
+    # plot orthogonal quantile mjj spectra
+
+    paths.extend_out_path_data({'orthogonal': None})

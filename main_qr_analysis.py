@@ -54,10 +54,10 @@ if multi_discriminator_analysis:
 
 	quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 	date = '20220303'
-	models = [os.path.join(experiment.model_dir_qr, stco.make_qr_model_str(params.run_n, q, params.sig_sample_id, params.sig_xsec, strategy_id, date)) \
+	model_paths = [os.path.join(experiment.model_dir_qr, stco.make_qr_model_str(params.run_n, q, params.sig_sample_id, params.sig_xsec, strategy_id, date)) \
 				for q in quantiles]
 
-	for q, model_path in zip(quantiles,models):
+	for q, model_path in zip(quantiles,model_paths):
 		discriminator = disc.QRDiscriminator_KerasAPI(quantile=q, loss_strategy=params.strategy, batch_sz=256, n_layers=5, n_nodes=60)
 		discriminator.load(model_path)
 		discriminator_list.append(discriminator)
