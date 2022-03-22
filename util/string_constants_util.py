@@ -1,4 +1,5 @@
 import datetime
+import enum
 
 
 def make_qr_model_str(run_n_qr, run_n_vae, quantile, sig_id, sig_xsec, strategy_id, date=None):
@@ -20,3 +21,7 @@ file_name_path_dict = {
     'qcdSigAllTestReco' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_reco.h5',
     'GtoWW35naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5'
 }
+
+# 3 QR model option: regular dense QR, polynomial fit of 3rd degree, bernstein polynomial fit of 3rd degree
+QR_Model = Enum('QR_Model', 'DENSE POLY BERNSTEIN')
+

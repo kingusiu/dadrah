@@ -6,8 +6,14 @@ import dadrah.util.string_constants_util as stco
 import vande.training as train
 
 
+discriminator_dict = {
+    stco.QR_Model.DENSE : disc.QRDiscriminator_KerasAPI,    
+    stco.QR_Model.POLY : disc.QRDiscriminatorPoly_KerasAPI,
+    stco.QR_Model.BERNSTEIN : 
+}
 
-def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False, poly_qr=False):
+
+def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False, gr_model_t=stco.QR_Model.POLY):
 
     # train QR on qcd-signal-injected sample and quantile q
 

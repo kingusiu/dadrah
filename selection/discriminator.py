@@ -189,6 +189,15 @@ class QRDiscriminatorPoly_KerasAPI(QRDiscriminator_KerasAPI):
         self.model_class = qr.QuantileRegressionPoly
         
 
+class QRDiscriminatorPoly_KerasAPI(QRDiscriminator_KerasAPI):
+
+    """docstring for QRDiscriminator_KerasAPI"""
+
+    def __init__(self, **kwargs):
+        super(QRDiscriminator_KerasAPI, self).__init__(**kwargs)
+        self.model_class = qr.QuantileRegressionBernstein
+        
+
 class GBRDiscriminator(Discriminator):
 
     def fit(self, jet_sample):
