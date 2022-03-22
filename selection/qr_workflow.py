@@ -9,16 +9,18 @@ import vande.training as train
 discriminator_dict = {
     stco.QR_Model.DENSE : disc.QRDiscriminator_KerasAPI,    
     stco.QR_Model.POLY : disc.QRDiscriminatorPoly_KerasAPI,
-    stco.QR_Model.BERNSTEIN : 
+    stco.QR_Model.BERNSTEIN : disc.QRDiscriminatorBernstein_KerasAPI
 }
 
 
-def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False, gr_model_t=stco.QR_Model.POLY):
+def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss=False, qr_model_t=stco.QR_Model.POLY):
 
     # train QR on qcd-signal-injected sample and quantile q
 
-    discriminator = disc.QRDiscriminatorPoly_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs) if poly_qr else \
-        disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs, n_layers=5, n_nodes=60)
+    model_t = discriminator_dict[qr_model_t]
+
+    discriminator = model_t(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs, n_layers=5, n_nodes=60) if qr_model_t == stco.QR_Model.DENSE else \
+        model_t(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs)
     
     print('\ntraining {} QR for quantile {}'.format(type(discriminator), quantile))    
     

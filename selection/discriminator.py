@@ -189,7 +189,7 @@ class QRDiscriminatorPoly_KerasAPI(QRDiscriminator_KerasAPI):
         self.model_class = qr.QuantileRegressionPoly
         
 
-class QRDiscriminatorPoly_KerasAPI(QRDiscriminator_KerasAPI):
+class QRDiscriminatorBernstein_KerasAPI(QRDiscriminator_KerasAPI):
 
     """docstring for QRDiscriminator_KerasAPI"""
 
