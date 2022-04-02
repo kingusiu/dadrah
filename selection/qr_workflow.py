@@ -2,7 +2,7 @@ import os
 
 import dadrah.selection.discriminator as disc
 import dadrah.selection.loss_strategy as lost
-import dadrah.util.string_constants_util as stco
+import dadrah.util.string_constants as stco
 import vande.training as train
 
 

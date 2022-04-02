@@ -17,6 +17,10 @@ def divide_sample_into_orthogonal_quantiles(sample:jesa.JetSample, quantiles:Lis
 
     samples_ortho = []
 
+    # process bottom quantile (didn't make first cut, e.g. sel 0.9 == 0)
+    q_key = 'sel_q{:02}'.format(int(quantiles_inv[0]*100))
+    samples_ortho.append(sample.filter(~sample[q_key]))
+
     # process all quantiles except for last (tightest)
     for q_i, q_ii in zip(quantiles_inv[:-1], quantiles_inv[1:]):
 
@@ -25,9 +29,8 @@ def divide_sample_into_orthogonal_quantiles(sample:jesa.JetSample, quantiles:Lis
         sample_q_next = sample.filter(sample[q_i_key] & ~sample[q_ii_key])
         samples_ortho.append(sample_q_next)
 
-    # process last quantile
+    # process tightest quantile
     q_key = 'sel_q{:02}'.format(int(quantiles_inv[-1]*100))
     samples_ortho.append(sample.filter(sample[q_key]))
 
     return samples_ortho
-

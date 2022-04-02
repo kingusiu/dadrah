@@ -17,7 +17,7 @@ import dadrah.selection.loss_strategy as lost
 import dadrah.selection.qr_workflow as qrwf
 import analysis.analysis_discriminator as andi
 import dadrah.util.data_processing as dapr
-import dadrah.util.string_constants_util as stco
+import dadrah.util.string_constants as stco
 import pofah.phase_space.cut_constants as cuts
 
 
@@ -52,8 +52,8 @@ signals = ['GtoWW35'+resonance+'Reco']
 #masses = [1500, 2500, 3500, 4500]
 masses = [3500]
 # xsecs = [100., 10., 1., 0.]
-# xsecs = [100, 80, 60, 40, 20, 0]
-xsecs = [0.]
+xsecs = [100, 80, 60, 40, 20, 0]
+#xsecs = [0.]
 sig_in_training_nums_arr = [[signal_contamin[sig][xsec] for xsec in xsecs] for sig in signals]
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
@@ -67,7 +67,7 @@ model_path_date = '20220303'
 
 Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, qr_model_t')
 params = Parameters(run_n_vae=113,
-                    run_n_qr=5, 
+                    run_n_qr=6, # TODO: update 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
@@ -76,7 +76,7 @@ params = Parameters(run_n_vae=113,
                     strategy_id='rk5_05',
                     epochs=100,
                     read_n=None,
-                    qr_model_t=stco.QR_Model.BERNSTEIN)
+                    qr_model_t=stco.QR_Model.BERNSTEIN) # TODO: update
 
 print('\n'+'*'*70+'\n'+'\t\t\t TRAINING RUN \n'+str(params)+'\n'+'*'*70)
 

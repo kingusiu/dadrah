@@ -13,7 +13,7 @@ import mplhep as hep
 #import dadrah.analysis.root_plotting_util as ropl
 
 
-def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature_key='mJJ', title_suffix='', plot_name='multi_discr_cut', fig_dir=None, cut_xmax=True):
+def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature_key='mJJ', title_suffix='', plot_name='multi_discr_cut', fig_dir=None, cut_xmax=True, cut_ymax=True):
 
     # Load CMS style sheet
     plt.style.use(hep.style.CMS)
@@ -27,7 +27,8 @@ def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature
     else:
         x_max = np.max(sample[feature_key])
     loss = discriminator_list[0].loss_strategy(sample)
-    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), np.percentile(loss, 1e2*(1-1e-3)))), \
+    y_max = np.percentile(loss, 1e2*(1-1e-3)) if cut_ymax else np.max(loss)
+    plt.hist2d(sample[feature_key], loss, range=((x_min , x_max), (np.min(loss), y_max)), \
                 norm=LogNorm(), bins=200, cmap=cm.get_cmap('Greens'), cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
     for discriminator in discriminator_list:

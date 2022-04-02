@@ -2,10 +2,13 @@ import numpy as np
 import ROOT as rt
 import uuid
 import os
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import root_numpy as rtnp
 import mplhep as hep
 plt.style.use(hep.style.ROOT)
+from typing import List
 
 
 object_cache = []
@@ -18,7 +21,7 @@ hist_style = {
 }
 
 pad_style = {
-    "Grid": None,
+    #"Grid": None,
 }
 
 legend_style = {
@@ -62,6 +65,8 @@ def apply_properties(obj, props):
         #print('setting {} with val {}'.format(setter.__name__, value))
         if value is None:
             setter()
+        elif isinstance(value, tuple):
+            setter(*value)
         else:
             setter(value)
 
@@ -103,30 +108,36 @@ def clone_object(obj):
     object_cache.append(obj_clone)
     return obj_clone
 
-def create_hist(data, title, n_bins, min_bin, max_bin, props):
-    h = create_object("TH1D", title, n_bins, min_bin, max_bin)
+def create_hist(data, title, n_bins, *bin_args, props):
+    h = create_object("TH1D", title, n_bins, *bin_args)
+    h.Sumw2()
     rtnp.fill_hist(h, data)
     set_style(h, props=props)
-    #h.GetYaxis().SetLabelSize(15)
     return h
 
-def create_ratio_hist(h2, h1, target_value=1.):
+def create_ratio_hist(h1, h2, props={}):
     ''' creates histogram of h2 / h1 '''
-    h3 = clone_object(h2)
+    h3 = clone_object(h1)
     h3.Sumw2()
-    h3.Divide(h1)
-    line = create_object("TLine", h3.GetXaxis().GetXmin(), target_value, h3.GetXaxis().GetXmax(), target_value)
-    return h3, line
+    h3.Divide(h2)
+    h3.Scale(h2.Integral()/h1.Integral())
+    set_style(h3,props=props)
+    return h3
 
-def create_canvas_pads():
-    canv = create_object("TCanvas","canvas", 600, 700)
+def create_ratio_line(h, target_value=1.0):
+    line = create_object("TLine", h.GetXaxis().GetXmin(), target_value, h.GetXaxis().GetXmax(), target_value)
+    set_style(line,props={'LineColor': rt.kBlack, 'LineStyle': rt.kDashed})
+    return line
+
+
+def create_canvas_pads(pad_props={}):
+    canv = create_object("TCanvas","canvas", 700, 700)
     pad1 = create_object("TPad", "pad1", 0, 0.3, 1, 1.0)
     pad1.Draw()
-    set_style(pad1, props={'Logy': None}) # set mass hist pad to logscale 
+    set_style(pad1, props={**pad_props, 'Logy': None, 'BottomMargin': 0.001}) # set mass hist pad to logscale 
     canv.cd()
     pad2 = create_object("TPad", "pad2", 0, 0.0, 1, 0.3)
-    pad2.SetTopMargin(0.05)
-    pad2.SetBottomMargin(0.27)
+    set_style(pad2, props={**pad_props, 'TopMargin': 0.0, 'BottomMargin': 0.27, 'LeftMargin': 0.13})
     pad2.Draw()
     return canv, pad1, pad2
 
@@ -143,7 +154,8 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     # create H2 SIG hist
     h2 = create_hist(mjj_sig_like, "h2", n_bins, min_bin, max_bin, props={"LineColor": rt.kRed})
     # create H3 RATIO hist
-    h3, line = create_ratio_hist(h2, h1, target_value/(1.-target_value))
+    h3 = create_ratio_hist(h2, h1)
+    line = create_ratio_line(h3, target_value/(1.-target_value))
     set_style(h3, props={"LineColor": rt.kMagenta+3, "Title": '', "XTitle": 'M_{jj} [GeV]', "YTitle": "ratio SIG / BG"})
     set_style(line, props={"LineColor" : rt.kGreen-2})
     h3.GetYaxis().SetTitleSize(0.11)
@@ -156,8 +168,8 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     canv, pad1, pad2 = create_canvas_pads()
     legend = create_object("TLegend", 0.6, 0.7, 0.9, 0.9)
     set_style(legend)
-    legend.AddEntry(h1, "BG like")
-    legend.AddEntry(h2, "SIG like")
+    legend.AddEntry(h1, "Below cut threshold") # BG like
+    legend.AddEntry(h2, "Above cut threshold") # SIG like
     pad1.cd()
     h1.Draw()
     h2.Draw("Same")
@@ -169,6 +181,57 @@ def make_bg_vs_sig_ratio_plot(mjj_bg_like, mjj_sig_like, target_value, n_bins=50
     if fig_dir is not None:
         canv.SaveAs(os.path.join(fig_dir, plot_name + fig_format))
     return [h1, h2]
+
+
+def make_quantile_template_ratio_plot(mjj_vals:List[np.ndarray], quantiles:List, n_bins:int=50, plot_name='ortho_quantile_hist', fig_dir:str='fig', fig_format:str='.jpg'):
+
+    cmap = [mpl.colors.rgb2hex(c) for c in cm.get_cmap('viridis', len(mjj_vals)).colors]
+    quantiles_inv = [round((1.-q),2) for q in quantiles] # invert quantiles to [0.9, 0.7, 0.5, 0.3, 0.1, 0.01]
+    max_y = len(mjj_vals[0])
+    min_bin = min([np.min(mjj) for mjj in mjj_vals])
+    max_bin = max([np.max(mjj) for mjj in mjj_vals])
+
+    # create template (most BG like) hist
+    ht = create_hist(mjj_vals[0], 'q 0.9-1.0', n_bins, min_bin, max_bin, props={"Maximum": max_y, "LineColor": rt.kBlack, "YTitle": 'num events', "XTitle": "M_{jj} [GeV]"})
+    # create all other histograms
+    hh = [create_hist(mjj, 'q '+str(q), n_bins, min_bin, max_bin, props={"Maximum": max_y, "LineColor": rt.TColor.GetColor(c)}) for mjj,q,c in zip(mjj_vals[1:], quantiles_inv[1:], cmap)]
+
+
+    # create ratio histograms
+    hr = []
+    for h in hh:
+        r, l = create_ratio_hist(ht,h)
+        hr.append(r)
+    # hr = [r for h in hh for r, l in create_ratio_hist(ht, h)]
+    for r,c in zip(hr,cmap):
+        set_style(r, props={"LineColor": rt.TColor.GetColor(c), "Title": ''})
+    set_style(hr[0], props={ "XTitle": 'M_{jj} [GeV]', "YTitle": "ratio SIG / BG"})
+
+    canv, pad1, pad2 = create_canvas_pads()
+
+    legend = create_object("TLegend", 0.6, 0.7, 0.9, 0.9)
+    set_style(legend)
+
+    for h, q in zip([ht]+hh, ['q 0.9-1.0']+list(map(str,quantiles_inv))):
+        legend.AddEntry(h, q)
+    
+    # draw mjj histograms
+    pad1.cd()
+    ht.Draw() # template hist
+    for h in hh:
+        h.Draw("Same")
+
+    legend.Draw()
+
+    # draw ratios
+    pad2.cd()
+    for h in hr:
+        h.Draw("ep")
+
+    canv.Draw()
+    if fig_dir is not None:
+        canv.SaveAs(os.path.join(fig_dir, plot_name + fig_format))
+
 
 
 def create_TH1D(x, name='h', title=None, binning=[None, None, None], weights=None, h2clone=None, axis_title = ['',''], opt=''):
