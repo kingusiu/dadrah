@@ -67,7 +67,7 @@ model_path_date = '20220303'
 
 Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, qr_model_t')
 params = Parameters(run_n_vae=113,
-                    run_n_qr=6, # TODO: update 
+                    run_n_qr=7, #### **** TODO: update **** ####
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
@@ -76,7 +76,7 @@ params = Parameters(run_n_vae=113,
                     strategy_id='rk5_05',
                     epochs=100,
                     read_n=None,
-                    qr_model_t=stco.QR_Model.BERNSTEIN) # TODO: update
+                    qr_model_t=stco.QR_Model.DENSE) #### **** TODO: update **** ####
 
 print('\n'+'*'*70+'\n'+'\t\t\t TRAINING RUN \n'+str(params)+'\n'+'*'*70)
 

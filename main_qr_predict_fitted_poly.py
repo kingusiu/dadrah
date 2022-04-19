@@ -1,6 +1,7 @@
 import numpy as np
 from recordtype import recordtype
 import os
+import json
 
 import pofah.jet_sample as js
 import pofah.util.sample_factory as sf
@@ -10,6 +11,8 @@ import pofah.path_constants.sample_dict_file_parts_selected as sdfs
 import dadrah.selection.loss_strategy as lost
 import dadrah.util.data_processing as dapr
 import pofah.phase_space.cut_constants as cuts
+import dadrah.util.string_constants as stco
+
 
 
 
@@ -38,6 +41,33 @@ cut_polys_par5 = {
 }
 
 
+def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
+
+    ff = open(envelope_json)
+    envelope = json.load(ff)
+
+    bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
+
+    polynomials = {}
+
+    for qq in quantiles:
+
+        qq_key = 'q{}'.format(stco.inv_quantile_str(quantile))
+
+        x      = np.array([row[bin_idx] for row in envelope[qq_key]])
+        y      = np.array([row[mu_idx] for row in envelope[qq_key]])
+        y_down = np.fabs(y-np.array([row[min_idx] for row in envelope[qq_key]]))
+        y_up   = np.fabs(y-np.array([row[max_idx] for row in envelope[qq_key]]))
+
+        asymmetric_error = [y_down, y_up]
+
+        coeffs = np.polyfit(x, y, poly_order, w=1/(y_up+y_down))
+
+        polynomials[qq] = np.poly1d(coeffs)
+
+    return polynomials
+
+
 def fitted_selection(sample, strategy_id, quantile, params_n=5):
     loss_strategy = lost.loss_strategy_dict[strategy_id]
     loss = loss_strategy(sample)
@@ -52,11 +82,13 @@ def fitted_selection(sample, strategy_id, quantile, params_n=5):
 
 # signals
 resonance = 'na'
-signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
-masses = [1500, 2500, 3500, 4500]
+# signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
+signals = ['GtoWW35'+resonance+'Reco']
+#masses = [1500, 2500, 3500, 4500]
+masses [3500]
 xsec = 0.
 quantiles = [0.1, 0.9, 0.99, 0.3, 0.5, 0.7]
-params_n = 5
+poly_order = 5
 
 
 
@@ -82,12 +114,12 @@ for sample_id in [params.qcd_test_sample_id] + signals:
 
     sample = js.JetSample.from_input_dir(sample_id, paths.sample_dir_path(sample_id), **cuts.signalregion_cuts)
 
-    result_path = os.path.join('/eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05', 'param'+str(params_n))
+    result_path = os.path.join('/eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05', 'param'+str(poly_order))
 
     # param_dict = {'$sig_name$': sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
     # experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
     # result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
-    # result_paths = result_paths.extend_base_path('fitted_cut', 'param'+str(params_n))
+    # result_paths = result_paths.extend_base_path('fitted_cut', 'param'+str(poly_order))
 
     for quantile in quantiles:
 
@@ -95,7 +127,7 @@ for sample_id in [params.qcd_test_sample_id] + signals:
         inv_quant = round((1.-quantile),2)
 
         #print('predicting {}'.format(sample.name))
-        selection = fitted_selection(sample, params.strategy_id, quantile, params_n)
+        selection = fitted_selection(sample, params.strategy_id, quantile, poly_order)
         sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
 
     # write results for all quantiles

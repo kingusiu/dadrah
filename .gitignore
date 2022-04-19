@@ -5,6 +5,7 @@ plots/
 models/
 fig/
 data/
+logs/
 .sys.v#*
 .idea/
 tensorboard/

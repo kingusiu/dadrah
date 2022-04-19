@@ -9,6 +9,11 @@ def make_qr_model_str(run_n_qr, run_n_vae, quantile, sig_id, sig_xsec, strategy_
     return 'QRmodel_run_{}_vae_run_{}_qnt_{}_{}_sigx_{}_loss_{}_{}.h5'.format(run_n_qr, run_n_vae, str(int(quantile*100)), sig_id, int(sig_xsec), strategy_id, date)
 
 
+def inv_quantile_str(quantile):
+    inv_quant = round((1.-quantile),2)
+    return 'q{:02}'.format(int(inv_quant*100))
+
+
 dir_path_dict = {
     
     'base_dir_qr_selections' : '/eos/user/k/kiwoznia/data/QR_results/events/',
