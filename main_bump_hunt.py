@@ -57,9 +57,10 @@ xsecs = [100, 80, 60, 40, 20, 0]
 sig_in_training_nums_arr = [[signal_contamin[sig][xsec] for xsec in xsecs] for sig in signals]
 quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 # quantiles = [0.1, 0.99]
+train_split = 0.5 #### **** TODO: update **** ####
 
 # to run
-make_qcd_train_test_datasample = False
+make_qcd_train_test_datasample = True
 do_qr = True
 train_qr = True
 do_bump_hunt = False
@@ -67,11 +68,11 @@ model_path_date = '20220303'
 
 Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, qr_model_t')
 params = Parameters(run_n_vae=113,
-                    run_n_qr=7, #### **** TODO: update **** ####
+                    run_n_qr=9, #### **** TODO: update **** ####
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
-                    qcd_train_sample_id='qcdSigAllTrainReco', 
-                    qcd_test_sample_id='qcdSigAllTestReco',
+                    qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
+                    qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id=None, # set sig id later in loop
                     strategy_id='rk5_05',
                     epochs=100,
@@ -95,7 +96,7 @@ print('reading samples from {}'.format(paths.base_dir))
 if do_qr:
     # if datasets not yet prepared, prepare them, dump and return (same qcd train and testsample for all signals and all xsecs)
     if make_qcd_train_test_datasample:
-        qcd_train_sample, qcd_test_sample_ini = dapr.make_qcd_train_test_datasets(params, paths, **cuts.signalregion_cuts)
+        qcd_train_sample, qcd_test_sample_ini = dapr.make_qcd_train_test_datasets(params, paths, train_split=train_split, **cuts.signalregion_cuts)
     # else read from file
     else:
         qcd_train_sample = js.JetSample.from_input_dir(params.qcd_train_sample_id, paths.sample_dir_path(params.qcd_train_sample_id), read_n=params.read_n) 

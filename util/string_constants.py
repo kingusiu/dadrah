@@ -17,12 +17,15 @@ def inv_quantile_str(quantile):
 dir_path_dict = {
     
     'base_dir_qr_selections' : '/eos/user/k/kiwoznia/data/QR_results/events/',
+    'base_dir_qr_selections_poly_cut' : '/eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/',
     'base_dir_qr_analysis' : 'fig', #'/eos/user/k/kiwoznia/data/QR_results/analysis/'
 }
 
 file_name_path_dict = {
     
     'qcdSigAllTestReco' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_reco.h5',
+    'qcdSigAllTest30pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_30.h5',
+    'qcdSigAllTest50pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_50.h5',
     'GtoWW35naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5'
 }
 

@@ -2,6 +2,7 @@ import numpy as np
 from recordtype import recordtype
 import os
 import json
+import pathlib
 
 import pofah.jet_sample as js
 import pofah.util.sample_factory as sf
@@ -52,7 +53,7 @@ def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
 
     for qq in quantiles:
 
-        qq_key = 'q{}'.format(stco.inv_quantile_str(quantile))
+        qq_key = stco.inv_quantile_str(qq)
 
         x      = np.array([row[bin_idx] for row in envelope[qq_key]])
         y      = np.array([row[mu_idx] for row in envelope[qq_key]])
@@ -68,11 +69,26 @@ def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
     return polynomials
 
 
-def fitted_selection(sample, strategy_id, quantile, params_n=5):
+def fitted_selection(sample, strategy_id, quantile, polynomials):
     loss_strategy = lost.loss_strategy_dict[strategy_id]
     loss = loss_strategy(sample)
-    loss_cut = cut_polys_par5[quantile] if params_n == 5 else cut_polys_par3[quantile]
+    loss_cut = polynomials[quantile]
     return loss > loss_cut(sample['mJJ'])
+
+
+def inout_paths(params, sig_id, sig_xsec):
+
+    sig_id = sig_id[:-4]
+
+    envelope_json = '/eos/user/k/kiwoznia/data/QR_results/analysis/vae_run_{}/qr_run_{}/sig_{}/xsec_{}/loss_rk5_05/envelope/cut_stats_allQ_{}_xsec_{}.json'.format(
+                        params.run_n_vae, params.run_n_qr, sig_id, int(sig_xsec), sig_id, int(sig_xsec))
+
+    result_path = '/eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/vae_run_{}/qr_run_{}/sig_{}/xsec_{}/loss_rk5_05/order_{}'.format(
+                    params.run_n_vae, params.run_n_qr, sig_id, int(sig_xsec), params.poly_order)
+
+    pathlib.Path(result_path).mkdir(parents=True, exist_ok=True)
+
+    return envelope_json, result_path
 
 
 
@@ -85,54 +101,52 @@ resonance = 'na'
 # signals = ['GtoWW15'+resonance+'Reco', 'GtoWW25'+resonance+'Reco', 'GtoWW35'+resonance+'Reco', 'GtoWW45'+resonance+'Reco']
 signals = ['GtoWW35'+resonance+'Reco']
 #masses = [1500, 2500, 3500, 4500]
-masses [3500]
-xsec = 0.
-quantiles = [0.1, 0.9, 0.99, 0.3, 0.5, 0.7]
-poly_order = 5
+masses = [3500]
+sig_xsec = 0.
+quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
 
 
-
-Parameters = recordtype('Parameters','run_n, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, read_n')
-params = Parameters(run_n=113, 
+Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, read_n, poly_order')
+params = Parameters(run_n_vae=113,
+                    run_n_qr=7, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
                     qcd_test_sample_id='qcdSigAllTestReco',
                     sig_sample_id=None, # set sig id later in loop
                     strategy_id='rk5_05',
-                    read_n=None)
+                    read_n=None,
+                    poly_order=5)
 
 
-paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.run_n)})
+sample_paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.run_n_vae)})
 
 #****************************************#
 #      for qcd and each signal: 
 #   read data, make selection and dump
 #****************************************#
 
-for sample_id in [params.qcd_test_sample_id] + signals:
+for sig_id in signals: # different qr training for each signal injection
 
-    sample = js.JetSample.from_input_dir(sample_id, paths.sample_dir_path(sample_id), **cuts.signalregion_cuts)
+    envelope_json, result_path = inout_paths(params, sig_id, sig_xsec)
+    polynomials = fit_polynomial_from_envelope(envelope_json, quantiles, params.poly_order)
 
-    result_path = os.path.join('/eos/project/d/dshep/TOPCLASS/DijetAnomaly/QR_models/envelope/fitted_selections/run_113/xsec_0/loss_rk5_05', 'param'+str(poly_order))
+    for sample_id in [params.qcd_test_sample_id, sig_id]: # make prediction for qcd and matching signal sample
+        
+        sample = js.JetSample.from_input_dir(sample_id, sample_paths.sample_dir_path(sample_id), **cuts.signalregion_cuts)
 
-    # param_dict = {'$sig_name$': sample_id, '$sig_xsec$': str(int(xsec)), '$loss_strat$': params.strategy_id}
-    # experiment = ex.Experiment(run_n=params.run_n, param_dict=param_dict).setup(model_dir_qr=True, analysis_dir_qr=True)
-    # result_paths = sf.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run$': str(params.run_n), **param_dict}) # in selection paths new format with run_x, sig_x, ...
-    # result_paths = result_paths.extend_base_path('fitted_cut', 'param'+str(poly_order))
+        for quantile in quantiles:
 
-    for quantile in quantiles:
+            # using inverted quantile because of dijet fit code
+            inv_quant = round((1.-quantile),2)
 
-        # using inverted quantile because of dijet fit code
-        inv_quant = round((1.-quantile),2)
+            #print('predicting {}'.format(sample.name))
+            selection = fitted_selection(sample, params.strategy_id, quantile, polynomials)
+            sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
 
-        #print('predicting {}'.format(sample.name))
-        selection = fitted_selection(sample, params.strategy_id, quantile, poly_order)
-        sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
-
-    # write results for all quantiles
-    file_path = os.path.join(result_path, sdfr.path_dict['file_names'][sample_id]+'.h5')
-    sample.dump(file_path)
+        # write results for all quantiles
+        file_path = os.path.join(result_path, sdfr.path_dict['file_names'][sample_id]+'.h5')
+        sample.dump(file_path)
 
 
     
