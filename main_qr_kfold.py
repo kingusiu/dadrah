@@ -91,8 +91,7 @@ for quantile in quantiles:
     for k in range(params.kfold):
 
         # fetch k-th chunk of the inclusive SR dataset
-        qcd_train_sample, qcd_test_sample_ini = dapr.make_qcd_train_test_datasets_kfold(params, paths, which_fold=k, nfold=params.kfold, **cuts.signalregion_cuts)
-        # NB: test sample corresponds to the other N-1 folds. It will not be used in the following.
+        qcd_train_sample = dapr.make_qcd_qr_train_dataset(params, paths, which_fold=k, nfold=params.kfold, **cuts.signalregion_cuts)
 
         #****************************************#
         #      for each signal: QR
