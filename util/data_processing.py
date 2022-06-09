@@ -8,7 +8,6 @@ def merge_qcd_base_and_ext_datasets(params, paths, **cuts):
     # merge to combined jet sample and split into training and test parts
     return qcd_sr_sample.merge(qcd_sr_ext_sample) 
 
-
 def make_qcd_train_test_datasets(params, paths, train_split=0.2, **cuts):
     # merge to combined jet sample and split into training and test parts
     qcd_sr_all_sample = merge_qcd_base_and_ext_datasets(params, paths, **cuts) 
@@ -18,6 +17,10 @@ def make_qcd_train_test_datasets(params, paths, train_split=0.2, **cuts):
     qcd_test.dump(paths.sample_file_path(params.qcd_test_sample_id, mkdir=True))
     return qcd_train, qcd_test
 
+def make_qcd_qr_train_dataset(params, paths, which_fold=-1, nfold=-1, **cuts):
+    qcd_sr_sample = js.JetSample.from_input_dir(params.qcd_sample_id, paths.sample_dir_path(params.qcd_sample_id), read_n=params.read_n, **cuts)
+    qcd_train = js.get_kfold_jet_sample_train(qcd_sr_sample, new_name=params.qcd_sample_id+'_train_fold_%s'%str(which_fold), which_fold=which_fold, nfold=nfold)
+    return qcd_train
 
 def inject_signal(qcd_train_sample, sig_sample, sig_in_training_num, train_vs_valid_split=0.8):
     if sig_in_training_num == 0:
