@@ -118,7 +118,7 @@ for quantile in quantiles:
                 # ************************************************************
                 
                 sig_sample = copy.deepcopy(sig_sample_ini)
-                mixed_train_sample, mixed_valid_sample = dapr.inject_signal(qcd_train_sample, sig_sample_ini, sig_in_training_num, train_split = 0.66)
+                mixed_train_sample, mixed_valid_sample = dapr.inject_signal(qcd_train_sample, sig_sample_ini, sig_in_training_num, train_vs_valid_split=0.66)
 
                 if k == 0 and quantile == quantiles[0]:
                     signal_samples.append(sig_sample)
