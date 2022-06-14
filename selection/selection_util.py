@@ -33,4 +33,4 @@ def divide_sample_into_orthogonal_quantiles(sample:jesa.JetSample, quantiles:Lis
     q_key = 'sel_q{:02}'.format(int(quantiles_inv[-1]*100))
     samples_ortho.append(sample.filter(sample[q_key]))
 
-    return samples_ortho
+    return samples_ortho # return ordered [template_quantile, ... , tightest_quantile]
