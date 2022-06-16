@@ -43,15 +43,6 @@ cut_polys_par5 = {
 }
 
 
-
-
-def fitted_selection(sample, strategy_id, quantile, polynomials):
-    loss_strategy = lost.loss_strategy_dict[strategy_id]
-    loss = loss_strategy(sample)
-    loss_cut = polynomials[quantile]
-    return loss > loss_cut(sample['mJJ'])
-
-
 def inout_paths(params, sig_id, sig_xsec):
 
     sig_id = sig_id[:-4]

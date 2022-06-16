@@ -59,7 +59,7 @@ def predict_QR(discriminator, sample, inv_quant):
     return sample
 
 
-def fit_polynomial_from_envelope_json(envelope, quantiles, poly_order):
+def fit_polynomial_from_envelope(envelope, quantiles, poly_order):
 
     bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
 
@@ -67,7 +67,7 @@ def fit_polynomial_from_envelope_json(envelope, quantiles, poly_order):
 
     for qq in quantiles:
 
-        qq_key = stco.inv_quantile_str(qq)
+        qq_key = stco.quantile_str(qq)
 
         x      = np.array([row[bin_idx] for row in envelope[qq_key]])
         y      = np.array([row[mu_idx] for row in envelope[qq_key]])
@@ -83,9 +83,16 @@ def fit_polynomial_from_envelope_json(envelope, quantiles, poly_order):
     return polynomials
 
 
-def fit_polynomial_from_envelope_json(envelope_json_path, quantiles, poly_order):
+def fit_polynomial_from_envelope_json(envelope_json, quantiles, poly_order):
 
     ff = open(envelope_json)
     envelope = json.load(ff)
 
     return fit_polynomial_from_envelope(envelope, quantiles, poly_order)
+
+
+def fitted_selection(sample, strategy_id, quantile, polynomials):
+    loss_strategy = lost.loss_strategy_dict[strategy_id]
+    loss = loss_strategy(sample)
+    loss_cut = polynomials[quantile]
+    return loss > loss_cut(sample['mJJ'])

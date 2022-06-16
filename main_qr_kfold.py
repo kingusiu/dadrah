@@ -131,10 +131,10 @@ for k in range(params.kfold_n):
     mask = np.ones(len(cuts_all_models), dtype=bool)
     mask[k] = False
     envelopped_cuts = calc_cut_envelope(cuts_all_models[mask,...])
-    envelope_folds.update({'fold_{}'.format(k+1): envelopped_cuts.tolist()})
+    envelope_folds['fold_{}'.format(k+1)] = {stco.quantile_str(quantile): envelopped_cuts.tolist()}
 
 #+ 6th cut based on all folds for application to signal
-envelope_folds.update({'fold_{}'.format(params.kfold_n+1): calc_cut_envelope(cuts_all_models).tolist()})
+envelope_folds['fold_{}'.format(params.kfold_n+1)] = {stco.quantile_str(quantile): calc_cut_envelope(cuts_all_models).tolist()}
 
 # write out envelope
 json_path = os.path.join(envelope_dir, 'cut_stats_allQ_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
@@ -150,8 +150,8 @@ with open(json_path, 'w') as ff:
 polynomials_folds = {}
 for k in range(1,params.kfold_n+2):
 
-    polynomials = qrwf.fit_polynomial_from_envelope(envelope_folds, [quantile], params.poly_order)
-    polynomials_folds.update('fold_{}'.format(k), polynomials)
+    polynomials = qrwf.fit_polynomial_from_envelope(envelope_folds['fold_{}'.format(k)], [quantile], params.poly_order)
+    polynomials_folds['fold_{}'.format(k)] = polynomials
 
 
 #************************************************************#
