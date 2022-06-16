@@ -59,10 +59,7 @@ def predict_QR(discriminator, sample, inv_quant):
     return sample
 
 
-def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
-
-    ff = open(envelope_json)
-    envelope = json.load(ff)
+def fit_polynomial_from_envelope_json(envelope, quantiles, poly_order):
 
     bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
 
@@ -84,3 +81,11 @@ def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
         polynomials[qq] = np.poly1d(coeffs)
 
     return polynomials
+
+
+def fit_polynomial_from_envelope_json(envelope_json_path, quantiles, poly_order):
+
+    ff = open(envelope_json)
+    envelope = json.load(ff)
+
+    return fit_polynomial_from_envelope(envelope, quantiles, poly_order)
