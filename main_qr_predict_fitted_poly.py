@@ -13,6 +13,7 @@ import dadrah.selection.loss_strategy as lost
 import dadrah.util.data_processing as dapr
 import pofah.phase_space.cut_constants as cuts
 import dadrah.util.string_constants as stco
+import dadrah.selection.qr_workflow as qrwf
 
 
 
@@ -42,31 +43,6 @@ cut_polys_par5 = {
 }
 
 
-def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
-
-    ff = open(envelope_json)
-    envelope = json.load(ff)
-
-    bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
-
-    polynomials = {}
-
-    for qq in quantiles:
-
-        qq_key = stco.inv_quantile_str(qq)
-
-        x      = np.array([row[bin_idx] for row in envelope[qq_key]])
-        y      = np.array([row[mu_idx] for row in envelope[qq_key]])
-        y_down = np.fabs(y-np.array([row[min_idx] for row in envelope[qq_key]]))
-        y_up   = np.fabs(y-np.array([row[max_idx] for row in envelope[qq_key]]))
-
-        asymmetric_error = [y_down, y_up]
-
-        coeffs = np.polyfit(x, y, poly_order, w=1/(y_up+y_down))
-
-        polynomials[qq] = np.poly1d(coeffs)
-
-    return polynomials
 
 
 def fitted_selection(sample, strategy_id, quantile, polynomials):
@@ -129,7 +105,7 @@ sample_paths = sf.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$'
 for sig_id in signals: # different qr training for each signal injection
 
     envelope_json, result_path = inout_paths(params, sig_id, sig_xsec)
-    polynomials = fit_polynomial_from_envelope(envelope_json, quantiles, params.poly_order)
+    polynomials = qrwf.fit_polynomial_from_envelope(envelope_json, quantiles, params.poly_order)
 
     for sample_id in [params.qcd_test_sample_id, sig_id]: # make prediction for qcd and matching signal sample
         

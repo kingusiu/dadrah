@@ -1,4 +1,6 @@
 import os
+import json
+import numpy as np
 
 import dadrah.selection.discriminator as disc
 import dadrah.selection.loss_strategy as lost
@@ -33,12 +35,12 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
     return discriminator
 
 
-def save_QR(discriminator, params, experiment, quantile, xsec, model_str=None):
+def save_QR(discriminator, params, model_dir_qr, quantile, xsec, model_str=None):
     # save the model   
     model_str = model_str or stco.make_qr_model_str(params.run_n_qr, params.run_n_vae, quantile, params.sig_sample_id, xsec, params.strategy_id)
-    model_path = os.path.join(experiment.model_dir_qr, model_str)
+    model_path = os.path.join(model_dir_qr, model_str)
     discriminator.save(model_path)
-    print('saving model {} to {}'.format(model_str, experiment.model_dir_qr))
+    print('saving model {} to {}'.format(model_str, model_dir_qr))
     return model_path
 
 
@@ -56,3 +58,29 @@ def predict_QR(discriminator, sample, inv_quant):
     sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
     return sample
 
+
+def fit_polynomial_from_envelope(envelope_json, quantiles, poly_order):
+
+    ff = open(envelope_json)
+    envelope = json.load(ff)
+
+    bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
+
+    polynomials = {}
+
+    for qq in quantiles:
+
+        qq_key = stco.inv_quantile_str(qq)
+
+        x      = np.array([row[bin_idx] for row in envelope[qq_key]])
+        y      = np.array([row[mu_idx] for row in envelope[qq_key]])
+        y_down = np.fabs(y-np.array([row[min_idx] for row in envelope[qq_key]]))
+        y_up   = np.fabs(y-np.array([row[max_idx] for row in envelope[qq_key]]))
+
+        asymmetric_error = [y_down, y_up]
+
+        coeffs = np.polyfit(x, y, poly_order, w=1/(y_up+y_down))
+
+        polynomials[qq] = np.poly1d(coeffs)
+
+    return polynomials

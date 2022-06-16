@@ -152,7 +152,7 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
 
                     # train and save QR model
                     discriminator = qrwf.train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, qr_model_t=params.qr_model_t)
-                    discriminator_path = qrwf.save_QR(discriminator, params, experiment, quantile, xsec)
+                    discriminator_path = qrwf.save_QR(discriminator, params, experiment.model_dir_qr, quantile, xsec)
                     model_paths.append(discriminator_path)
 
                 else: # else load discriminators

@@ -126,7 +126,7 @@ for sig_xsec in xsecs:
             # save qr
             model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=params.vae_run_n, quantile=quantile, sig_id=signal_str, sig_xsec=sig_xsec, strategy_id=params.strategy_id)
             model_str = model_str[:-3] + '_' + model_n + model_str[-3:]
-            discriminator_path = qrwf.save_QR(discriminator, params, experiment, quantile, sig_xsec, model_str)
+            discriminator_path = qrwf.save_QR(discriminator, params, experiment.model_dir_qr, quantile, sig_xsec, model_str)
 
             # predict cut values per bin
             cuts_part = discriminator.predict(bin_centers)

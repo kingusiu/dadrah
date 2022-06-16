@@ -1,23 +1,11 @@
 import os
-import subprocess
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import setGPU
-import tensorflow as tf
 from recordtype import recordtype
 import pathlib
 import copy
 
-import pofah.jet_sample as js
 import pofah.util.sample_factory as sf
-import pofah.util.experiment as ex
 import pofah.path_constants.sample_dict_file_parts_reco as sdfr
-import pofah.path_constants.sample_dict_file_parts_selected as sdfs
-import dadrah.selection.discriminator as disc
-import dadrah.selection.loss_strategy as lost
-import dadrah.selection.qr_workflow as qrwf
-import analysis.analysis_discriminator as andi
 import dadrah.util.data_processing as dapr
-import dadrah.util.string_constants as stco
 import pofah.phase_space.cut_constants as cuts
 
 
