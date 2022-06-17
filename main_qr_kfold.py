@@ -16,6 +16,7 @@ import dadrah.util.string_constants as stco
 import dadrah.util.logging as log
 import dadrah.util.data_processing as dapr
 import dadrah.selection.qr_workflow as qrwf
+import dadrah.selection.loss_strategy as lost
 
 
 
@@ -37,9 +38,9 @@ def calc_cut_envelope(cuts):
 #           set runtime params
 #****************************************#
 
-# import ipdb; ipdb.set_trace()
+import ipdb; ipdb.set_trace()
 
-quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
+quantiles = [0.3, 0.5, 0.7, 0.9]
 resonance = 'na'
 sig_xsec = 0
 bin_edges = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
@@ -62,6 +63,8 @@ params = Parameters(vae_run_n=113,
                     kfold_n=5,
                     ) 
 
+loss_function = lost.loss_strategy_dict[params.strategy_id]
+
 # logging
 logger = log.get_logger(__name__)
 logger.info('\n'+'*'*70+'\n'+'\t\t\t TRAINING RUN \n'+str(params)+'\n'+'*'*70)
@@ -83,10 +86,11 @@ result_paths = safa.SamplePathDirFactory(sdfs.path_dict).update_base_path({'$run
 #****************************************#
 #           read in all qcd data
 #****************************************#
-paths = safa.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.vae_run_n)})
+input_paths = safa.SamplePathDirFactory(sdfr.path_dict).update_base_path({'$run$': 'run_'+str(params.vae_run_n)})
 
-qcd_sample_all = dapr.merge_qcd_base_and_ext_datasets(params, paths, **cuco.signalregion_cuts)
+qcd_sample_all = dapr.merge_qcd_base_and_ext_datasets(params, input_paths, **cuco.signalregion_cuts)
 logger.info('qcd all: min mjj = {}, max mjj = {}'.format(np.min(qcd_sample_all['mJJ']), np.max(qcd_sample_all['mJJ'])))
+logger.info('qcd all: min loss = {}, max loss = {}'.format(np.min(loss_function(qcd_sample_all)), np.max(loss_function(qcd_sample_all))))
 # split qcd data
 qcd_sample_parts = slice_datasample_n_parts(qcd_sample_all, params.kfold_n)
 
@@ -110,7 +114,7 @@ for k, qcd_sample_part in zip(range(1,params.kfold_n+1), qcd_sample_parts):
 
     # save qr
     model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=params.vae_run_n, quantile=quantile, sig_id=params.sig_sample_id, sig_xsec=sig_xsec, strategy_id=params.strategy_id)
-    model_str = model_str[:-3] + '_' + str(k) + model_str[-3:]
+    model_str = model_str[:-3] + '_fold' + str(k) + model_str[-3:]
     discriminator_path = qrwf.save_QR(discriminator, params, qr_model_dir, quantile, sig_xsec, model_str)
 
     # predict cut values per bin
@@ -128,6 +132,8 @@ envelope_folds = {}
 # compute average cut for each fold 
 for k in range(params.kfold_n):
 
+    # for all quantiles
+
     mask = np.ones(len(cuts_all_models), dtype=bool)
     mask[k] = False
     envelopped_cuts = calc_cut_envelope(cuts_all_models[mask,...])
@@ -140,7 +146,7 @@ envelope_folds['fold_{}'.format(params.kfold_n+1)] = {stco.quantile_str(quantile
 json_path = os.path.join(envelope_dir, 'cut_stats_allQ_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
 logger.info('writing envelope results to ' + json_path)
 with open(json_path, 'w') as ff:
-    json.dump(envelope_folds, ff)
+    json.dump(envelope_folds, ff) # do this separately for each fold (one envelope file per fold)
 
 
 #************************************************************#
@@ -161,11 +167,11 @@ for k in range(1,params.kfold_n+2):
 logger.info('applying discriminator cuts for selection')
 
 for k, qcd_sample_part in zip(range(1, params.kfold_n+1), qcd_sample_parts):
-    selection = fitted_selection(qcd_sample_part, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(k)])
+    selection = qrwf.fitted_selection(qcd_sample_part, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(k)])
     qcd_sample_part.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 
-sig_sample = jesa.JetSample.from_input_dir(sig_sample_id, paths.sample_dir_path(sig_sample_id), **cuco.signalregion_cuts)
-selection = fitted_selection(sig_sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(params.kfold_n+1)])
+sig_sample = jesa.JetSample.from_input_dir(params.sig_sample_id, input_paths.sample_dir_path(params.sig_sample_id), **cuco.signalregion_cuts)
+selection = qrwf.fitted_selection(sig_sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(params.kfold_n+1)])
 sig_sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 
 
@@ -174,7 +180,7 @@ sig_sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 #************************************************************#
 
 qcd_sample_results = qcd_sample_parts[0]
-for k in range(1, params.kfold):
+for k in range(1, params.kfold_n):
     qcd_sample_results = qcd_sample_results.merge(qcd_sample_parts[k])
 
 qcd_sample_results.dump(result_paths.sample_file_path(params.qcd_sample_id, mkdir=True))

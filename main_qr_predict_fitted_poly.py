@@ -108,7 +108,7 @@ for sig_id in signals: # different qr training for each signal injection
             inv_quant = round((1.-quantile),2)
 
             #print('predicting {}'.format(sample.name))
-            selection = fitted_selection(sample, params.strategy_id, quantile, polynomials)
+            selection = qrwf.fitted_selection(sample, params.strategy_id, quantile, polynomials)
             sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
 
         # write results for all quantiles
