@@ -30,6 +30,7 @@ file_name_path_dict = {
     'qcdSigAllTest50pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_50.h5',
     'qcdSigAllTest70pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_70.h5',
     'qcdSigAllTest80pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_80.h5',
+    'qcdSigAll' : 'qcd_sqrtshatTeV_13TeV_PU40_reco.h5',
     'GtoWW35naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_reco.h5'
 }
 

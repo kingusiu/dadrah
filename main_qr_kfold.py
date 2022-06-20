@@ -57,8 +57,8 @@ params = Parameters(vae_run_n=113,
                     qcd_ext_sample_id='qcdSigExtReco',
                     sig_sample_id='GtoWW35'+resonance+'Reco',
                     strategy_id='rk5_05',
-                    epochs=3,
-                    read_n=int(1e4),
+                    epochs=100,
+                    read_n=None,
                     qr_model_t=stco.QR_Model.DENSE, #### **** TODO: update **** ####
                     poly_order=5,
                     kfold_n=5,
@@ -162,7 +162,7 @@ for k in range(1,params.kfold_n+2):
 
 # write out polynomials to json file in same dir as envelope (1 file for all folds)
 polys_json_path = os.path.join(envelope_dir, 'polynomials_allQ_allFolds_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
-logger.info('writing envelope results to ' + polys_json_path)
+logger.info('writing polynomials to ' + polys_json_path)
 # import ipdb; ipdb.set_trace()
 polynomials_folds_serializable = {kk: {k: v.coef.tolist() for k, v in vv.items()} for kk, vv in polynomials_folds.items()} # transform to list for serialization
 with open(polys_json_path, 'w') as ff:
