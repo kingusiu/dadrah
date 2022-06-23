@@ -120,7 +120,7 @@ if train_discriminator:
 
             # predict cut values per bin
             cuts_per_bin = discriminator.predict(bin_centers)
-            cuts_all_models[stco.quantile_str(quantile)] = np.append(cuts_all_models[stco.quantile_str(quantile)], cuts_per_bin[np.newaxis,:], axis=0)
+            cuts_all_models[quantile] = np.append(cuts_all_models[quantile], cuts_per_bin[np.newaxis,:], axis=0)
 
         # end for each fold of k
     # end for each quantile
@@ -140,9 +140,9 @@ if train_discriminator:
 
         for quantile in quantiles:
 
-            cuts_all_models_fold = cuts_all_models[stco.quantile_str(quantile)]
+            cuts_all_models_fold = cuts_all_models[quantile]
             envelopped_cuts = calc_cut_envelope(cuts_all_models_fold[mask,...])
-            envelope_folds['fold_{}'.format(k+1)][stco.quantile_str(quantile)] = envelopped_cuts.tolist()
+            envelope_folds['fold_{}'.format(k+1)][quantile] = envelopped_cuts.tolist()
 
     # write out envelope for each fold
     for k in range(params.kfold_n+1):
