@@ -1,5 +1,8 @@
 import os
+import json
+import numpy as np
 import pofah.jet_sample as js
+
 
 def merge_qcd_base_and_ext_datasets(params, paths, **cuts):
     # read qcd & qcd ext
@@ -30,3 +33,22 @@ def inject_signal(qcd_train_sample, sig_sample, sig_in_training_num, train_vs_va
     mixed_sample_train, mixed_sample_valid = js.split_jet_sample_train_test(mixed_sample, train_vs_valid_split)
     return mixed_sample_train, mixed_sample_valid
 
+
+def read_polynomials_from_json(json_path, quantiles, kfold_n):
+
+    ff = open(json_path)
+    polys_json = json.load(ff)
+
+    polys_out = {}
+
+    for fold_key in ['fold_{}'.format(k) for k in range(1,kfold_n+2)]:
+
+        polys_json_fold = polys_json[fold_key]
+        polys_out_fold = {}
+
+        for qq in quantiles:
+            polys_out_fold[qq] = np.poly1d(polys_json_fold[str(qq)])
+
+        polys_out[fold_key] = polys_out_fold
+
+    return polys_out

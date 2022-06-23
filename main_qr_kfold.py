@@ -40,7 +40,7 @@ def calc_cut_envelope(cuts):
 #****************************************#
 
 # import ipdb; ipdb.set_trace()
-
+train_discriminator = False
 quantiles = [0.3, 0.5, 0.7, 0.9]
 resonance = 'na'
 sig_xsec = 0
@@ -80,7 +80,7 @@ qr_model_dir = '/eos/home-k/kiwoznia/data/QR_models/vae_run_'+str(params.vae_run
 pathlib.Path(qr_model_dir).mkdir(parents=True, exist_ok=True)
 envelope_dir = '/eos/user/k/kiwoznia/data/QR_results/analysis/vae_run_'+str(params.vae_run_n)+'/qr_run_'+str(params.qr_run_n)+'/sig_GtoWW35naReco/xsec_'+str(sig_xsec)+'/loss_rk5_05/envelope'
 pathlib.Path(envelope_dir).mkdir(parents=True, exist_ok=True)
-
+polys_json_path = os.path.join(envelope_dir, 'polynomials_allQ_allFolds_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
 param_dict = {'$vae_run_n$': str(params.vae_run_n), '$qr_run_n$': str(params.qr_run_n), '$sig_name$': params.sig_sample_id, '$sig_xsec$': str(int(sig_xsec)), '$loss_strat$': params.strategy_id}
 result_paths = safa.SamplePathDirFactory(sdfs.path_dict).update_base_path(param_dict) # in selection paths new format with run_x, sig_x, ...
 
@@ -99,74 +99,80 @@ qcd_sample_parts = slice_datasample_n_parts(qcd_sample_all, params.kfold_n)
 #             train 5 models
 #****************************************#
 
-cuts_all_models = defaultdict(lambda: np.empty([0, len(bin_centers)]))
+if train_discriminator:
 
-for quantile in quantiles:
-
-    for k, qcd_sample_part in zip(range(1,params.kfold_n+1), qcd_sample_parts):
-    
-        qcd_train, qcd_valid = jesa.split_jet_sample_train_test(qcd_sample_part, frac=0.7)
-
-        # train qr
-        logger.info('training fold no.{} on {} events, validating on {}'.format(k, len(qcd_train), len(qcd_valid)))
-        discriminator = qrwf.train_QR(quantile, qcd_train, qcd_valid, params, qr_model_t=params.qr_model_t)
-
-        # save qr
-        model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=params.vae_run_n, quantile=quantile, sig_id=params.sig_sample_id, sig_xsec=sig_xsec, strategy_id=params.strategy_id)
-        model_str = model_str[:-3] + '_fold' + str(k) + model_str[-3:]
-        discriminator_path = qrwf.save_QR(discriminator, params, qr_model_dir, quantile, sig_xsec, model_str)
-
-        # predict cut values per bin
-        cuts_per_bin = discriminator.predict(bin_centers)
-        cuts_all_models[stco.quantile_str(quantile)] = np.append(cuts_all_models[stco.quantile_str(quantile)], cuts_per_bin[np.newaxis,:], axis=0)
-
-    # end for each fold of k
-# end for each quantile
-
-#***********************************************************#
-#         compute envelope: mean, min, max, rms cuts
-#***********************************************************#
-
-envelope_folds = defaultdict(dict)
-
-# compute average cut for each fold 
-
-for k in range(params.kfold_n+1):
-
-    mask = np.ones(params.kfold_n, dtype=bool)
-    if k < params.kfold_n: mask[k] = False
+    cuts_all_models = defaultdict(lambda: np.empty([0, len(bin_centers)]))
 
     for quantile in quantiles:
 
-        cuts_all_models_fold = cuts_all_models[stco.quantile_str(quantile)]
-        envelopped_cuts = calc_cut_envelope(cuts_all_models_fold[mask,...])
-        envelope_folds['fold_{}'.format(k+1)][stco.quantile_str(quantile)] = envelopped_cuts.tolist()
+        for k, qcd_sample_part in zip(range(1,params.kfold_n+1), qcd_sample_parts):
+        
+            qcd_train, qcd_valid = jesa.split_jet_sample_train_test(qcd_sample_part, frac=0.7)
 
-# write out envelope for each fold
-for k in range(params.kfold_n+1):
-    envelope_json_path = os.path.join(envelope_dir, 'cut_stats_allQ_fold'+str(k+1)+'_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
-    logger.info('writing envelope results to ' + envelope_json_path)
-    with open(envelope_json_path, 'w') as ff:
-        json.dump(envelope_folds['fold_{}'.format(k+1)], ff) # do this separately for each fold (one envelope file per fold)
+            # train qr
+            logger.info('training fold no.{} on {} events, validating on {}'.format(k, len(qcd_train), len(qcd_valid)))
+            discriminator = qrwf.train_QR(quantile, qcd_train, qcd_valid, params, qr_model_t=params.qr_model_t)
+
+            # save qr
+            model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=params.vae_run_n, quantile=quantile, sig_id=params.sig_sample_id, sig_xsec=sig_xsec, strategy_id=params.strategy_id)
+            model_str = model_str[:-3] + '_fold' + str(k) + model_str[-3:]
+            discriminator_path = qrwf.save_QR(discriminator, params, qr_model_dir, quantile, sig_xsec, model_str)
+
+            # predict cut values per bin
+            cuts_per_bin = discriminator.predict(bin_centers)
+            cuts_all_models[stco.quantile_str(quantile)] = np.append(cuts_all_models[stco.quantile_str(quantile)], cuts_per_bin[np.newaxis,:], axis=0)
+
+        # end for each fold of k
+    # end for each quantile
+
+    #***********************************************************#
+    #         compute envelope: mean, min, max, rms cuts
+    #***********************************************************#
+
+    envelope_folds = defaultdict(dict)
+
+    # compute average cut for each fold 
+
+    for k in range(params.kfold_n+1):
+
+        mask = np.ones(params.kfold_n, dtype=bool)
+        if k < params.kfold_n: mask[k] = False
+
+        for quantile in quantiles:
+
+            cuts_all_models_fold = cuts_all_models[stco.quantile_str(quantile)]
+            envelopped_cuts = calc_cut_envelope(cuts_all_models_fold[mask,...])
+            envelope_folds['fold_{}'.format(k+1)][stco.quantile_str(quantile)] = envelopped_cuts.tolist()
+
+    # write out envelope for each fold
+    for k in range(params.kfold_n+1):
+        envelope_json_path = os.path.join(envelope_dir, 'cut_stats_allQ_fold'+str(k+1)+'_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
+        logger.info('writing envelope results to ' + envelope_json_path)
+        with open(envelope_json_path, 'w') as ff:
+            json.dump(envelope_folds['fold_{}'.format(k+1)], ff) # do this separately for each fold (one envelope file per fold)
 
 
-#************************************************************#
-#               fit polynomials from envelope
-#************************************************************#
+    #************************************************************#
+    #               fit polynomials from envelope
+    #************************************************************#
 
-polynomials_folds = {}
-for k in range(1,params.kfold_n+2):
+    polynomials_folds = {} # per kfold -> per quantile
+    for k in range(1,params.kfold_n+2):
 
-    polynomials = qrwf.fit_polynomial_from_envelope(envelope_folds['fold_{}'.format(k)], quantiles, params.poly_order)
-    polynomials_folds['fold_{}'.format(k)] = polynomials
+        polynomials = qrwf.fit_polynomial_from_envelope(envelope_folds['fold_{}'.format(k)], quantiles, params.poly_order)
+        polynomials_folds['fold_{}'.format(k)] = polynomials
 
-# write out polynomials to json file in same dir as envelope (1 file for all folds)
-polys_json_path = os.path.join(envelope_dir, 'polynomials_allQ_allFolds_'+ params.sig_sample_id + '_xsec_' + str(sig_xsec) + '.json')
-logger.info('writing polynomials to ' + polys_json_path)
-# import ipdb; ipdb.set_trace()
-polynomials_folds_serializable = {kk: {k: v.coef.tolist() for k, v in vv.items()} for kk, vv in polynomials_folds.items()} # transform to list for serialization
-with open(polys_json_path, 'w') as ff:
-    json.dump(polynomials_folds_serializable, ff)
+    # write out polynomials to json file in same dir as envelope (1 file for all folds)
+    logger.info('writing polynomials to ' + polys_json_path)
+    # import ipdb; ipdb.set_trace()
+    polynomials_folds_serializable = {kk: {k: v.coef.tolist() for k, v in vv.items()} for kk, vv in polynomials_folds.items()} # transform to list for serialization
+    with open(polys_json_path, 'w') as ff:
+        json.dump(polynomials_folds_serializable, ff)
+
+else: # else read polynomials from file
+
+    logger.info('reading polynomials from ' + polys_json_path)
+    polynomials_folds = dapr.read_polynomials_from_json(polys_json_path, quantiles, params.kfold_n)
 
 
 #************************************************************#
@@ -175,13 +181,12 @@ with open(polys_json_path, 'w') as ff:
 
 logger.info('applying discriminator cuts for selection')
 
-for k, qcd_sample_part in zip(range(1, params.kfold_n+1), qcd_sample_parts):
-    selection = qrwf.fitted_selection(qcd_sample_part, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(k)])
-    qcd_sample_part.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
-
 sig_sample = jesa.JetSample.from_input_dir(params.sig_sample_id, input_paths.sample_dir_path(params.sig_sample_id), read_n=params.read_n, **cuco.signalregion_cuts)
-selection = qrwf.fitted_selection(sig_sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(params.kfold_n+1)])
-sig_sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
+
+for k, sample in zip(range(1, params.kfold_n+2), qcd_sample_parts+[sig_sample]):
+    for quantile in quantiles:
+        selection = qrwf.fitted_selection(sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(k)])
+        sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 
 
 #************************************************************#
