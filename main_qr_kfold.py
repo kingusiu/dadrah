@@ -165,9 +165,7 @@ if train_discriminator:
     # write out polynomials to json file in same dir as envelope (1 file for all folds)
     logger.info('writing polynomials to ' + polys_json_path)
     # import ipdb; ipdb.set_trace()
-    polynomials_folds_serializable = {kk: {k: v.coef.tolist() for k, v in vv.items()} for kk, vv in polynomials_folds.items()} # transform to list for serialization
-    with open(polys_json_path, 'w') as ff:
-        json.dump(polynomials_folds_serializable, ff)
+    dapr.write_polynomials_to_json(polys_json_path, polynomials_folds)
 
 else: # else read polynomials from file
 

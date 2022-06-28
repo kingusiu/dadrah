@@ -52,3 +52,11 @@ def read_polynomials_from_json(json_path, quantiles, kfold_n):
         polys_out[fold_key] = polys_out_fold
 
     return polys_out
+
+
+def write_polynomials_to_json(json_path, polynomials):
+
+    polynomials_serializable = {kk: {k: v.coef.tolist() for k, v in vv.items()} for kk, vv in polynomials.items()} # transform to list for serialization
+
+    with open(json_path, 'w') as ff:
+        json.dump(polynomials_serializable, ff)

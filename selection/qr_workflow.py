@@ -67,12 +67,13 @@ def fit_polynomial_from_envelope(envelope, quantiles, poly_order):
 
     for qq in quantiles:
 
-        qq_key = stco.quantile_str(qq)
+        qq_key = str(qq)
+        env_qq = np.asarray(envelope[qq_key])
 
-        x      = np.array([row[bin_idx] for row in envelope[qq_key]])
-        y      = np.array([row[mu_idx] for row in envelope[qq_key]])
-        y_down = np.fabs(y-np.array([row[min_idx] for row in envelope[qq_key]]))
-        y_up   = np.fabs(y-np.array([row[max_idx] for row in envelope[qq_key]]))
+        x      = env_qq[:,bin_idx]
+        y      = env_qq[:,mu_idx]
+        y_down = np.fabs(y-env_qq[:,min_idx])
+        y_up   = np.fabs(y-env_qq[:,max_idx])
 
         asymmetric_error = [y_down, y_up]
 
