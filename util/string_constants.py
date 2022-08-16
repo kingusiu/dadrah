@@ -26,6 +26,7 @@ file_name_path_dict = {
     
     'qcdSigAllTestReco' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_reco.h5',
     'qcdSigAllTrain30pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Train_30.h5',
+    'qcdSigAllTrain50pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Train_50.h5',
     'qcdSigAllTest30pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_30.h5',
     'qcdSigAllTest50pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_50.h5',
     'qcdSigAllTest70pct' : 'qcd_sqrtshatTeV_13TeV_PU40_NEW_ALL_Test_70.h5',

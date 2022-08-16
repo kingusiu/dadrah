@@ -68,6 +68,15 @@ class QRDiscriminator(Discriminator):
         self.optimizer = optimizer() #optimizer(learning_rate)
         self.model_params = model_params
 
+    ''' not properly implemented! '''
+    @classmethod
+    def from_saved_model(model_path):
+        cls = type(self)
+        # need to read quantile and loss strategy here (like beta in vae)
+        instance = cls(quantile=0.5, loss_strategy=None) # dummy init values
+        instance.load(model_path)
+        return instance
+
     @tf.function
     def training_step(self, x_batch, y_batch):
         # Open a GradientTape to record the operations run in forward pass
@@ -142,6 +151,7 @@ class QRDiscriminator(Discriminator):
     def load(self, path):
         self.model = tf.keras.models.load_model(path, custom_objects={'StdNormalization': layers.StdNormalization, 'StdUnnormalization': layers.StdUnnormalization}, compile=False)
         print('loaded model ', self.model)
+        return self
 
     def predict(self, data):
         if isinstance(data, js.JetSample):
@@ -179,6 +189,7 @@ class QRDiscriminator_KerasAPI(QRDiscriminator):
         predicted = self.model.predict(xx).flatten() 
         # return self.unscale_output(predicted)
         return predicted
+
 
 class QRDiscriminatorPoly_KerasAPI(QRDiscriminator_KerasAPI):
 

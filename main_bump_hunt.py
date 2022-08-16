@@ -13,7 +13,7 @@ import pofah.util.experiment as ex
 import pofah.path_constants.sample_dict_file_parts_reco as sdfr
 import pofah.path_constants.sample_dict_file_parts_selected as sdfs
 import dadrah.selection.discriminator as disc
-import dadrah.selection.loss_strategy as lost
+import dadrah.selection.anomaly_score_strategy as ansc
 import dadrah.selection.qr_workflow as qrwf
 import analysis.analysis_discriminator as andi
 import dadrah.util.data_processing as dapr
@@ -174,7 +174,7 @@ for sig_sample_id, sig_in_training_nums, mass in zip(signals, sig_in_training_nu
             # plot results
             discriminator_list = []
             for q, model_path in zip(quantiles, model_paths):
-                discriminator = disc.QRDiscriminator_KerasAPI(quantile=q, loss_strategy=lost.loss_strategy_dict[params.strategy_id])
+                discriminator = disc.QRDiscriminator_KerasAPI(quantile=q, loss_strategy=ansc.anomaly_score_strategy_dict[params.strategy_id])
                 discriminator.load(model_path)
                 discriminator_list.append(discriminator)
 

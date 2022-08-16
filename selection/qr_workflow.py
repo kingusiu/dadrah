@@ -3,7 +3,7 @@ import json
 import numpy as np
 
 import dadrah.selection.discriminator as disc
-import dadrah.selection.loss_strategy as lost
+import dadrah.selection.anomaly_score_strategy as ansc
 import dadrah.util.string_constants as stco
 import vande.training as train
 
@@ -21,8 +21,8 @@ def train_QR(quantile, mixed_train_sample, mixed_valid_sample, params, plot_loss
 
     model_t = discriminator_dict[qr_model_t]
 
-    discriminator = model_t(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs, n_layers=5, n_nodes=60) if qr_model_t == stco.QR_Model.DENSE else \
-        model_t(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs)
+    discriminator = model_t(quantile=quantile, loss_strategy=ansc.an_score_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs, n_layers=5, n_nodes=60) if qr_model_t == stco.QR_Model.DENSE else \
+        model_t(quantile=quantile, loss_strategy=ansc.an_score_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs)
     
     print('\ntraining {} QR for quantile {}'.format(type(discriminator), quantile))    
     
@@ -44,10 +44,10 @@ def save_QR(discriminator, params, model_dir_qr, quantile, xsec, model_str=None)
     return model_path
 
 
-def load_QR(params, experiment, quantile, xsec, date, model_str=None):
-    model_str = model_str or stco.make_qr_model_str(experiment.run_n, quantile, params.sig_sample_id, sig_xsec=xsec, strategy_id=params.strategy_id, date=date)
-    model_path = os.path.join(experiment.model_dir_qr, model_str)
-    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=lost.loss_strategy_dict[params.strategy_id], batch_sz=256, epochs=params.epochs,  n_layers=5, n_nodes=60)
+def load_QR(params, model_dir_qr, quantile, xsec, model_str=None):
+    model_str = model_str or stco.make_qr_model_str(params.run_n_qr, params.run_n_vae, quantile, params.sig_sample_id, sig_xsec=xsec, strategy_id=params.strategy_id)
+    model_path = os.path.join(model_dir_qr, model_str)
+    discriminator = disc.QRDiscriminator_KerasAPI(quantile=quantile, loss_strategy=ansc.an_score_strategy_dict[params.strategy_id], batch_sz=256)
     discriminator.load(model_path)
     return discriminator
 
@@ -59,7 +59,17 @@ def predict_QR(discriminator, sample, inv_quant):
     return sample
 
 
-def fit_polynomial_from_envelope(envelope, quantiles, poly_order):
+def calc_cut_envelope(bin_centers, cuts):
+    # compute mean, RMS, min, max per bin center over all trained models
+    mu = np.mean(cuts, axis=0)
+    mi = np.min(cuts, axis=0)
+    ma = np.max(cuts, axis=0)
+    rmse = np.sqrt(np.mean(np.square(cuts-mu), axis=0))
+    return np.stack([bin_centers, mu, rmse, mi, ma], axis=1)
+
+
+
+def fit_polynomial_from_envelope(envelope, quantiles, poly_order): # -> dict(np.poly1d)
 
     bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
 
@@ -92,8 +102,8 @@ def fit_polynomial_from_envelope_json(envelope_json, quantiles, poly_order):
     return fit_polynomial_from_envelope(envelope, quantiles, poly_order)
 
 
-def fitted_selection(sample, strategy_id, quantile, polynomials):
-    loss_strategy = lost.loss_strategy_dict[strategy_id]
+def fitted_selection(sample, strategy_id, quantile, polynomials, xshift=0.):
+    loss_strategy = ansc.an_score_strategy_dict[strategy_id]
     loss = loss_strategy(sample)
     loss_cut = polynomials[quantile]
-    return loss > loss_cut(sample['mJJ'])
+    return loss > loss_cut(sample['mJJ']-xshift) # shift x by min mjj for bias fixed lmfits

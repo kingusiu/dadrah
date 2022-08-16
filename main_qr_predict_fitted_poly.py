@@ -70,12 +70,12 @@ signals = ['GtoWW35'+resonance+'Reco']
 #masses = [1500, 2500, 3500, 4500]
 masses = [3500]
 sig_xsec = 0.
-quantiles = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99]
+quantiles = [0.3, 0.5, 0.7, 0.9]
 
 
 Parameters = recordtype('Parameters','run_n_vae, run_n_qr, qcd_sample_id, qcd_ext_sample_id, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, read_n, poly_order')
 params = Parameters(run_n_vae=113,
-                    run_n_qr=7, 
+                    run_n_qr=32, 
                     qcd_sample_id='qcdSigReco', 
                     qcd_ext_sample_id='qcdSigExtReco',
                     qcd_train_sample_id='qcdSigAllTrainReco', 
@@ -104,12 +104,9 @@ for sig_id in signals: # different qr training for each signal injection
 
         for quantile in quantiles:
 
-            # using inverted quantile because of dijet fit code
-            inv_quant = round((1.-quantile),2)
-
             #print('predicting {}'.format(sample.name))
             selection = qrwf.fitted_selection(sample, params.strategy_id, quantile, polynomials)
-            sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
+            sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 
         # write results for all quantiles
         file_path = os.path.join(result_path, sdfr.path_dict['file_names'][sample_id]+'.h5')
