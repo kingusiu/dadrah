@@ -48,7 +48,7 @@ class quantile_accuracy_loss():
 
     def __init__(self, quantile, name='quantileAccLoss'):
         self.name=name
-        self.quantile = quantile
+        self.quantile = tf.constant(quantile)
 
     def __call__(self, inputs, targets, predictions):
         predictions = tf.squeeze(predictions)
@@ -66,7 +66,7 @@ class binned_quantile_accuracy_loss():
 
     def __init__(self, quantile, name='binnedQuantileAccLoss'):
         self.name=name
-        self.quantile = quantile
+        self.quantile = tf.constant(quantile)
 
     def __call__(self, inputs, targets, predictions):
         
@@ -84,11 +84,11 @@ class binned_quantile_accuracy_loss():
                 ratios.append(ratio)
         ratios = tf.convert_to_tensor(ratios)
 
-        return tf.reduce_sum(tf.math.square(tf.constant(self.quantile)-ratios)) # sum over 4 bins 
+        return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over 4 bins 
 
 ### accuracy metric 
 
-def quantile_accuracy_wrap(inputs, targets, predictions, bin_idx, part): 
+def quantile_accuracy_wrap(inputs, targets, predictions, bin_idx): 
 
     @tf.function
     def quantile_accuracy(inputs, targets, predictions): # [batch_size x 1, batch_size x 1, batch_size x 1]
@@ -101,14 +101,13 @@ def quantile_accuracy_wrap(inputs, targets, predictions, bin_idx, part):
         bins = tf.constant(accuracy_bins.astype('float32')) # instead of squeezing and reshaping expand dims of bins to (4,1)?
         bin_idcs = tf.searchsorted(bins,inputs)
         # bin_idcs = tf.reshape(bin_idcs, shape=(tf.shape(inputs)[0],1)) # reshape to batch size
+        # TODO: make tf style mask
+        #mask = tf.math.equal(bin_idcs, bin_idx)
 
         # import ipdb; ipdb.set_trace()
         # reduces to one value per batch (how many samples below/above cut in this batch)
         count_tot = tf.math.count_nonzero(inputs[bin_idcs==bin_idx])
-        if part == 'ab':
-            count = tf.math.count_nonzero(targets[bin_idcs==bin_idx] > predictions[bin_idcs==bin_idx])
-        else:
-            count = tf.math.count_nonzero(targets[bin_idcs==bin_idx] <= predictions[bin_idcs==bin_idx]) # check for security also below
+        count = tf.math.count_nonzero(targets[bin_idcs==bin_idx] > predictions[bin_idcs==bin_idx])
         # return share of total events per bin
         return count_tot, tf.math.divide_no_nan(tf.cast(count,tf.float32),tf.cast(count_tot,tf.float32))
 
@@ -132,14 +131,12 @@ class Custom_Train_Step_Model(tf.keras.Model):
 
         # add custom metrics
         self.custom_metric_means = {}
-
         self.custom_metric_funs = {}
         # do this for 4 bins, passing in bin idx to quantile accuracy, aggregation = mean of batches in each epoch
         for bin_idx in range(1,5):
-            for part in ['ab', 'bo']:
-                name = 'qacc_b'+str(bin_idx)+'_'+part
-                self.custom_metric_funs[name] = quantile_accuracy_wrap(inputs_mjj,targets,outputs,bin_idx=bin_idx,part=part)
-                self.custom_metric_means[name] = tf.keras.metrics.Mean(name) # collecting every batch result in mean (batches per epoch) aggregator
+            name = 'qacc_b'+str(bin_idx)
+            self.custom_metric_funs[name] = quantile_accuracy_wrap(inputs_mjj,targets,outputs,bin_idx=bin_idx)
+            self.custom_metric_means[name] = tf.keras.metrics.Mean(name) # collecting every batch result in mean (batches per epoch) aggregator
 
     
     def train_step(self, data):
@@ -152,22 +149,24 @@ class Custom_Train_Step_Model(tf.keras.Model):
             loss = quantile_loss
             if self.custom_loss is not None:
                 ratio_loss = self.custom_loss(inputs,targets,predictions) # one value per batch
-                self.custom_loss_mean.update_state(ratio_loss) # keeps track of mean over batches
                 loss += ratio_loss
-
+        
         trainable_variables = self.trainable_variables
         grads = tape.gradient(loss, trainable_variables)
         self.optimizer.apply_gradients(zip(grads, trainable_variables))
         
         # import ipdb; ipdb.set_trace()
+
         # update state of metrics
+        
         for name, metric_fun in self.custom_metric_funs.items():
             bin_count, metric_per_batch = metric_fun(inputs, targets, predictions)
             weight = 1 if bin_count > 0 else 0 # don't count metric if no events in that bin for this batch
-            self.custom_metric_means[name].update_state(metric_per_batch, weight)
+            self.custom_metric_means[name].update_state(metric_per_batch, weight) # call self.add_metric instead directly on value and let Keras keep track of means ?
 
         losses_and_metrics = {'loss':loss, **{metric.name: metric.result() for metric in self.custom_metric_means.values()}}
         if self.custom_loss is not None:
+            self.custom_loss_mean.update_state(ratio_loss) # keeps track of mean over batches
             losses_and_metrics['quantile_loss'] = quantile_loss
             losses_and_metrics['ratio_loss'] = self.custom_loss_mean.result()
         return losses_and_metrics
@@ -205,7 +204,7 @@ class Custom_Train_Step_Model(tf.keras.Model):
         return metrics
 
 
-def make_model(n_layers, n_nodes, initializer='glorot_uniform', regularizer=None, activation='relu', dr_rate=0., custom_train=False, custom_loss=None):
+def make_model(n_layers, n_nodes, initializer='glorot_uniform', regularizer=None, bias_regularizer=None, activation='relu', dr_rate=0., custom_train=False, custom_loss=None):
 
     inputs_mjj = tf.keras.Input(shape=(1,), name='inputs_mjj')
     targets = tf.keras.Input(shape=(1,), name='targets') # only needed for calculating metric because update() signature is limited to y & y_pred in keras.metrics class 
@@ -215,7 +214,7 @@ def make_model(n_layers, n_nodes, initializer='glorot_uniform', regularizer=None
         x = tf.keras.layers.Dense(n_nodes, kernel_initializer=initializer, kernel_regularizer=regularizer, activation=activation, name='dense'+str(i+1))(x)
     if dr_rate > 0: 
         x = tf.keras.layers.Dropout(dr_rate)(x)
-    outputs = tf.keras.layers.Dense(1, kernel_initializer=initializer, kernel_regularizer=None, bias_regularizer=tf.keras.regularizers.L2(1e-2), name='dense'+str(n_layers+1))(x)
+    outputs = tf.keras.layers.Dense(1, kernel_initializer=initializer, kernel_regularizer=None, bias_regularizer=bias_regularizer, name='dense'+str(n_layers+1))(x)
 
     if custom_train:
         model = Custom_Train_Step_Model(name='QR', inputs=[inputs_mjj,targets], outputs=outputs, custom_loss=custom_loss)
@@ -325,18 +324,18 @@ if __name__ == '__main__':
     Parameters = recordtype('Parameters','vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, qr_model_t, l2_coeff, dr_rate, learn_rate, batch_sz')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=159,
+                    qr_run_n=161,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
                     epochs=20,
-                    read_n=int(5e5),
+                    read_n=int(1e4),
                     qr_model_t=stco.QR_Model.DENSE,
                     l2_coeff=1e-5,
                     dr_rate=0.,
                     learn_rate=1e-4,
-                    batch_sz=512
+                    batch_sz=256
                     )
 
     # logging
