@@ -25,13 +25,6 @@ import dadrah.selection.qr_workflow as qrwf
 #           quantile regression loss           #
 # ******************************************** #
 
-def quantile_loss_fun(quantile):
-    @tf.function
-    def loss(target, pred):
-        err = tf.subtract(target, pred)
-        return tf.where(err>=0, quantile*err, (quantile-1)*err)
-    return loss
-
 class quantile_loss(tf.keras.losses.Loss):
 
     def __init__(self, quantile, name='quantileLoss'):
@@ -44,9 +37,9 @@ class quantile_loss(tf.keras.losses.Loss):
 
 
 # deviance of global (unbinned) ratio of below/above number of events from quantile (1 value for full batch)
-class quantile_accuracy_loss():
+class quantile_dev_loss():
 
-    def __init__(self, quantile, name='quantileAccLoss'):
+    def __init__(self, quantile, name='quantileDevLoss'):
         self.name=name
         self.quantile = tf.constant(quantile)
 
@@ -62,9 +55,9 @@ class quantile_accuracy_loss():
 accuracy_bins = np.array([1199.,2000.,3000.,4000.]) # min-max normalized below!
 
 # deviance of binned ratio of below/above number of events from quantile (1 value for full batch)
-class binned_quantile_accuracy_loss():
+class binned_quantile_dev_loss():
 
-    def __init__(self, quantile, name='binnedQuantileAccLoss'):
+    def __init__(self, quantile, name='binnedQuantileDevLoss'):
         self.name=name
         self.quantile = tf.constant(quantile)
 
@@ -120,14 +113,21 @@ class Custom_Train_Step_Model(tf.keras.Model):
 
         # pop arguments not expected by keras.Model class. Not the nicest solution -> TODO: nice up
         self.custom_loss = kwargs.pop('custom_loss', None)
+        self.regularizer = kwargs.pop('regularizer', None)
 
         super().__init__(*args, **kwargs)
 
         inputs_mjj, targets = kwargs['inputs']
         outputs = kwargs['outputs']
 
+        # set up loss tracking
+        self.total_loss_mean = tf.keras.metrics.Mean('total_loss') # main quantile loss
+        self.quant_loss_mean = tf.keras.metrics.Mean('quant_loss') # main quantile loss
         if self.custom_loss is not None:
-            self.custom_loss_mean = tf.keras.metrics.Mean(custom_loss.name)
+            self.custom_loss_mean = tf.keras.metrics.Mean(custom_loss.name) # ratio loss
+        if self.regularizer is not None:
+            self.reg_loss_mean = tf.keras.metrics.Mean('reg_loss')
+
 
         # add custom metrics
         self.custom_metric_means = {}
@@ -143,50 +143,78 @@ class Custom_Train_Step_Model(tf.keras.Model):
 
         inputs, targets = data
 
-        with tf.GradientTape() as tape:
-            predictions = self([inputs,targets], training=True)
-            quantile_loss = self.compiled_loss(targets, predictions, regularization_losses=self.losses)
-            loss = quantile_loss
-            if self.custom_loss is not None:
-                ratio_loss = self.custom_loss(inputs,targets,predictions) # one value per batch
-                loss += ratio_loss
-        
-        trainable_variables = self.trainable_variables
-        grads = tape.gradient(loss, trainable_variables)
-        self.optimizer.apply_gradients(zip(grads, trainable_variables))
-        
         # import ipdb; ipdb.set_trace()
 
-        # update state of metrics
+        with tf.GradientTape() as tape:
+            predictions = self([inputs,targets], training=True)
+            # main loss
+            quant_loss = self.compiled_loss(targets, predictions, regularization_losses=self.losses)
+            total_loss = quant_loss
+            # ratio loss
+            if self.custom_loss is not None:
+                ratio_loss = self.custom_loss(inputs,targets,predictions) # one value per batch
+                total_loss += ratio_loss
+            # regularization loss
+            if self.regularizer is not None:
+                reg_loss = tf.math.add_n(model.losses)
+                total_loss += reg_loss
+
+        trainable_variables = self.trainable_variables
+        grads = tape.gradient(total_loss, trainable_variables)
+        self.optimizer.apply_gradients(zip(grads, trainable_variables))
+        
+        # update loss trackers
+        self.total_loss_mean.update_state(total_loss)
+        self.quant_loss_mean.update_state(quant_loss)
+        losses_and_metrics = {'total_loss': self.total_loss_mean.result(), 'quant_loss': self.quant_loss_mean.result()}
+        if self.ratio_loss_fn is not None:
+            self.ratio_loss_mean.update_state(ratio_loss)
+            losses_and_metrics['ratio_loss'] = self.ratio_loss_mean.result()
+        if self.regularizer is not None:
+            self.reg_loss_mean.update_state(reg_loss)
+            losses_and_metrics['reg_loss'] = self.reg_loss_mean.result() 
+
+        # update metric trackers
         
         for name, metric_fun in self.custom_metric_funs.items():
             bin_count, metric_per_batch = metric_fun(inputs, targets, predictions)
             weight = 1 if bin_count > 0 else 0 # don't count metric if no events in that bin for this batch
             self.custom_metric_means[name].update_state(metric_per_batch, weight) # call self.add_metric instead directly on value and let Keras keep track of means ?
 
-        losses_and_metrics = {'loss':loss, **{metric.name: metric.result() for metric in self.custom_metric_means.values()}}
-        if self.custom_loss is not None:
-            self.custom_loss_mean.update_state(ratio_loss) # keeps track of mean over batches
-            losses_and_metrics['quantile_loss'] = quantile_loss
-            losses_and_metrics['ratio_loss'] = self.custom_loss_mean.result()
+        losses_and_metrics.update({metric.name: metric.result() for metric in self.custom_metric_means.values()})
+        
         return losses_and_metrics
 
 
     def test_step(self, data):
 
         inputs, targets = data
-        predictions = self([inputs,targets], training=False)
-        quantile_loss = self.compiled_loss(targets, predictions, regularization_losses=self.losses)
-        loss = quantile_loss
+        predictions = self([inputs,targets], training=True)
+        # main loss
+        quant_loss = self.compiled_loss(targets, predictions, regularization_losses=self.losses)
+        loss = quant_loss
+        # ratio loss
         if self.custom_loss is not None:
-            ratio_loss = self.custom_loss(inputs,targets,predictions)
-            self.custom_loss_mean.update_state(ratio_loss)
+            ratio_loss = self.custom_loss(inputs,targets,predictions) # one value per batch
             loss += ratio_loss
+        
+        # update loss trackers
+        self.total_loss_mean.update_state(total_loss)
+        self.quant_loss_mean.update_state(quant_loss)
+        losses_and_metrics = {'total_loss': self.total_loss_mean.result(), 'quant_loss': self.quant_loss_mean.result()}
+        if self.ratio_loss_fn is not None:
+            self.ratio_loss_mean.update_state(ratio_loss)
+            losses_and_metrics['ratio_loss'] = self.ratio_loss_mean.result()
 
-        losses_and_metrics = {'loss': loss}
-        if self.custom_loss is not None:
-            losses_and_metrics['quantile_loss'] = quantile_loss
-            losses_and_metrics['ratio_loss'] = self.custom_loss_mean.result()
+        # update metric trackers
+        
+        for name, metric_fun in self.custom_metric_funs.items():
+            bin_count, metric_per_batch = metric_fun(inputs, targets, predictions)
+            weight = 1 if bin_count > 0 else 0 # don't count metric if no events in that bin for this batch
+            self.custom_metric_means[name].update_state(metric_per_batch, weight) # call self.add_metric instead directly on value and let Keras keep track of means ?
+
+        losses_and_metrics.update({metric.name: metric.result() for metric in self.custom_metric_means.values()})
+        
         return losses_and_metrics
 
     @property
@@ -197,10 +225,12 @@ class Custom_Train_Step_Model(tf.keras.Model):
         # If you don't implement this property, you have to call
         # `reset_states()` yourself at the time of your choosing.
         metrics = super().metrics
-        for custom_metric in self.custom_metric_means.values():
-            metrics.append(custom_metric)
-        if self.custom_loss is not None:
-            metrics.append(self.custom_loss_mean)
+        metrics.append(self.total_loss_mean)
+        metrics.append(self.quant_loss_mean)
+        if self.ratio_loss_fn is not None:
+            metrics.append(self.ratio_loss_mean)
+        if self.regularizer is not None:
+            metrics.append(self.reg_loss_mean)
         return metrics
 
 
@@ -217,7 +247,7 @@ def make_model(n_layers, n_nodes, initializer='glorot_uniform', regularizer=None
     outputs = tf.keras.layers.Dense(1, kernel_initializer=initializer, kernel_regularizer=None, bias_regularizer=bias_regularizer, name='dense'+str(n_layers+1))(x)
 
     if custom_train:
-        model = Custom_Train_Step_Model(name='QR', inputs=[inputs_mjj,targets], outputs=outputs, custom_loss=custom_loss)
+        model = Custom_Train_Step_Model(name='QR', inputs=[inputs_mjj,targets], outputs=outputs, custom_loss=custom_loss, regularizer=regularizer)
     else:
         model = tf.keras.Model(name='QR', inputs=[inputs_mjj,targets], outputs=outputs)
 
@@ -324,7 +354,7 @@ if __name__ == '__main__':
     Parameters = recordtype('Parameters','vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, qr_model_t, l2_coeff, dr_rate, learn_rate, batch_sz')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=161,
+                    qr_run_n=170,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
@@ -411,12 +441,12 @@ if __name__ == '__main__':
     quantile = 0.5
     optimizer = tf.keras.optimizers.Adam(learning_rate=params.learn_rate) 
     initializer = 'he_uniform'
-    regularizer = tf.keras.regularizers.l2(l2=params.l2_coeff)
+    regularizer = None #tf.keras.regularizers.l2(l2=params.l2_coeff)
     activation = 'elu'
-    loss_fun = quantile_loss(quantile)
-    custom_loss = binned_quantile_accuracy_loss(quantile) #None
+    quant_loss = quantile_loss(quantile)
+    dev_loss = None #quantile_dev_loss(quantile) #None
 
-    model = make_model(layers_n, nodes_n, initializer=initializer, regularizer=regularizer, activation=activation, dr_rate=params.dr_rate, custom_train=custom_train, custom_loss=custom_loss)
+    model = make_model(layers_n, nodes_n, initializer=initializer, regularizer=regularizer, activation=activation, dr_rate=params.dr_rate, custom_train=custom_train, custom_loss=dev_loss)
     model.summary()
 
     if keras_fit:
@@ -424,7 +454,7 @@ if __name__ == '__main__':
         train_dataset = train_dataset.repeat()
         test_dataset = test_dataset.repeat()
 
-        model.compile(optimizer=optimizer, loss=loss_fun, run_eagerly=True)
+        model.compile(optimizer=optimizer, loss=quant_loss, run_eagerly=True)
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=tensorboard_log_dir, histogram_freq=1)
 
         # import ipdb; ipdb.set_trace()
