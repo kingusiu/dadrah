@@ -22,62 +22,66 @@ import dadrah.selection.qr_workflow as qrwf
 
 
 # ******************************************** #
-#           quantile regression loss           #
+#             loss functions                   #
 # ******************************************** #
 
 class quantile_loss(tf.keras.losses.Loss):
 
     def __init__(self, quantile, name='quantileLoss'):
         super().__init__(name=name)
-        self.quantile = quantile
+        self.quantile = tf.constant(quantile)
 
-    def call(self, target, pred):
-        err = tf.subtract(target, pred)
-        return tf.where(err>=0, self.quantile*err, (self.quantile-1)*err)
+    @tf.function
+    def call(self, targets, predictions):
+        targets = tf.squeeze(targets)
+        predictions = tf.squeeze(predictions)
+        err = tf.subtract(targets, predictions)
+        return tf.reduce_mean(tf.where(err>=0, self.quantile*err, (self.quantile-1)*err)) # return mean over samples in batch
 
 
-# deviance of global (unbinned) ratio of below/above number of events from quantile (1 value for full batch)
+# deviance of global (unbinned) ratio of above/below number of events from quantile (1 value for full batch)
 class quantile_dev_loss():
 
-    def __init__(self, quantile, name='quantileDevLoss'):
+    def __init__(self, quantile, name='quantileAccLoss'):
         self.name=name
         self.quantile = tf.constant(quantile)
 
+    @tf.function
     def __call__(self, inputs, targets, predictions):
         predictions = tf.squeeze(predictions)
         count_tot = tf.shape(inputs)[0] # get batch size
-        count_above = tf.math.count_nonzero(targets > predictions)
+        count_above = tf.math.count_nonzero(tf.math.greater(targets,predictions))
         ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
         return tf.math.square(self.quantile-ratio)
 
 
-# accuracy_bins = np.array([1199.,2200.,3200.,4200.]) # min-max normalized below!
-accuracy_bins = np.array([1199.,2000.,3000.,4000.]) # min-max normalized below!
-
 # deviance of binned ratio of below/above number of events from quantile (1 value for full batch)
 class binned_quantile_dev_loss():
 
-    def __init__(self, quantile, name='binnedQuantileDevLoss'):
+    def __init__(self, quantile, bins, name='binnedQuantileDevLoss'):
         self.name=name
         self.quantile = tf.constant(quantile)
+        self.bins_n = len(bins)
+        self.bins = tf.constant(bins.astype('float32')) # instead of squeezing and reshaping expand dims of bins to (4,1)?
 
+    # @tf.function
     def __call__(self, inputs, targets, predictions):
-        
+        # import ipdb; ipdb.set_trace()
         predictions = tf.squeeze(predictions)
-        bins = tf.constant(accuracy_bins.astype('float32')) # instead of squeezing and reshaping expand dims of bins to (4,1)?
-        bin_idcs = tf.searchsorted(bins,inputs)
+        bin_idcs = tf.searchsorted(self.bins,inputs)
 
-        ratios = []
-        for bin_idx in range(1,len(accuracy_bins)+1):
-            count_tot = tf.math.count_nonzero(inputs[bin_idcs==bin_idx])
-            # sum only when count_tot > 0!
+        ratios = tf.Variable([self.quantile]*self.bins_n)
+        for bin_idx in range(1,self.bins_n+1):
+            bin_mask = tf.math.equal(bin_idcs, bin_idx)
+            count_tot = tf.math.count_nonzero(bin_mask)
+            # sum only when count_tot > 0! (TODO: or > 1 s.t. a ratio is even computable?)
             if count_tot > 0:
-                count_above = tf.math.count_nonzero(targets[bin_idcs==bin_idx] > predictions[bin_idcs==bin_idx])
+                count_above = tf.math.count_nonzero(targets[bin_mask] > predictions[bin_mask])
                 ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
-                ratios.append(ratio)
-        ratios = tf.convert_to_tensor(ratios)
+                ratios[bin_idx-1].assign(ratio)
 
-        return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over 4 bins 
+        return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over m bins 
+
 
 ### accuracy metric 
 

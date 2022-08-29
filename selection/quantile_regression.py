@@ -6,12 +6,62 @@ import vande.vae.layers as layers
 #           quantile regression loss           #
 # ******************************************** #
 
-def quantile_loss(quantile):
+class quantile_loss(tf.keras.losses.Loss):
+
+    def __init__(self, quantile, name='quantileLoss'):
+        super().__init__(name=name)
+        self.quantile = tf.constant(quantile)
+
     @tf.function
-    def loss(target, pred):
-        err = target - pred
-        return tf.where(err>=0, quantile*err, (quantile-1)*err)
-    return loss
+    def call(self, targets, predictions):
+        targets = tf.squeeze(targets)
+        predictions = tf.squeeze(predictions)
+        err = tf.subtract(targets, predictions)
+        return tf.reduce_mean(tf.where(err>=0, self.quantile*err, (self.quantile-1)*err)) # return mean over samples in batch
+
+
+# deviance of global (unbinned) ratio of above/below number of events from quantile (1 value for full batch)
+class quantile_dev_loss():
+
+    def __init__(self, quantile, name='quantileAccLoss'):
+        self.name=name
+        self.quantile = tf.constant(quantile)
+
+    @tf.function
+    def __call__(self, inputs, targets, predictions):
+        predictions = tf.squeeze(predictions)
+        count_tot = tf.shape(inputs)[0] # get batch size
+        count_above = tf.math.count_nonzero(tf.math.greater(targets,predictions))
+        ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
+        return tf.math.square(self.quantile-ratio)
+
+
+# deviance of binned ratio of below/above number of events from quantile (1 value for full batch)
+class binned_quantile_dev_loss():
+
+    def __init__(self, quantile, bins, name='binnedQuantileDevLoss'):
+        self.name=name
+        self.quantile = tf.constant(quantile)
+        self.bins_n = len(bins)
+        self.bins = tf.constant(bins.astype('float32')) # instead of squeezing and reshaping expand dims of bins to (4,1)?
+
+    # @tf.function
+    def __call__(self, inputs, targets, predictions):
+        # import ipdb; ipdb.set_trace()
+        predictions = tf.squeeze(predictions)
+        bin_idcs = tf.searchsorted(self.bins,inputs)
+
+        ratios = tf.Variable([self.quantile]*self.bins_n)
+        for bin_idx in range(1,self.bins_n+1):
+            bin_mask = tf.math.equal(bin_idcs, bin_idx)
+            count_tot = tf.math.count_nonzero(bin_mask)
+            # sum only when count_tot > 0! (TODO: or > 1 s.t. a ratio is even computable?)
+            if count_tot > 0:
+                count_above = tf.math.count_nonzero(targets[bin_mask] > predictions[bin_mask])
+                ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
+                ratios[bin_idx-1].assign(ratio)
+
+        return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over m bins 
 
 # ******************************************** #
 #           quantile regression models         #

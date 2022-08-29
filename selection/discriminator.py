@@ -9,7 +9,7 @@ import vande.training as train
 import vande.vae.layers as layers
 
 
-class Discriminator(metaclass=ABCMeta):
+class Discriminator():
 
     def __init__(self, quantile, loss_strategy):
         self.loss_strategy = loss_strategy
