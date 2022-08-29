@@ -67,6 +67,112 @@ class binned_quantile_dev_loss():
 #           quantile regression models         #
 # ******************************************** #
 
+### custom train and test step model with optional quantile-ratio-deviation loss term
+
+class QrModel(tf.keras.Model):
+
+    def __init__(self, *args, **kwargs):
+
+        self.regularizer = kwargs.pop('regularizer', None)
+        
+        super().__init__(*args, **kwargs)
+
+    def compile(self, optimizer, quant_loss, ratio_loss=None, run_eagerly=True):
+
+        super().compile(optimizer=optimizer,run_eagerly=run_eagerly)
+
+        self.quant_loss_fn = quant_loss
+        self.ratio_loss_fn = ratio_loss
+
+        # set up loss tracking (track scalar metric value with Mean)
+        self.total_loss_mean = tf.keras.metrics.Mean('total_loss') # main quantile loss
+        self.quant_loss_mean = tf.keras.metrics.Mean(self.quant_loss_fn.name)
+        if self.ratio_loss_fn is not None:
+            self.ratio_loss_mean = tf.keras.metrics.Mean(self.ratio_loss_fn.name)
+        if self.regularizer is not None:
+            self.reg_loss_mean = tf.keras.metrics.Mean('reg_loss')
+
+
+    def train_step(self, data):
+
+        inputs, targets = data
+        # import ipdb; ipdb.set_trace()
+
+        with tf.GradientTape() as tape:
+            # predict
+            predictions = self([inputs,targets], training=True)
+            # quantile loss
+            quant_loss = self.quant_loss_fn(targets, predictions)
+            total_loss = quant_loss
+            # regularization loss
+            if self.losses:
+                reg_loss = tf.math.add_n(self.losses)
+                total_loss += reg_loss
+            # additional optional ratio loss
+            if self.ratio_loss_fn is not None:
+                ratio_loss = self.ratio_loss_fn(inputs,targets,predictions) # one value per batch
+                total_loss += ratio_loss
+        
+        trainable_variables = self.trainable_variables
+        grads = tape.gradient(total_loss, trainable_variables)
+        self.optimizer.apply_gradients(zip(grads, trainable_variables))
+
+        # update state of metrics for each batch
+        self.total_loss_mean.update_state(total_loss)
+        self.quant_loss_mean.update_state(quant_loss)
+        losses = {'total_loss': self.total_loss_mean.result(), 'quant_loss': self.quant_loss_mean.result()}
+        if self.ratio_loss_fn is not None:
+            self.ratio_loss_mean.update_state(ratio_loss)
+            losses['ratio_loss'] = self.ratio_loss_mean.result()
+        if self.regularizer is not None:
+            self.reg_loss_mean.update_state(reg_loss)
+            losses['reg_loss'] = self.reg_loss_mean.result() 
+        
+        return losses
+
+
+    def test_step(self, data):
+
+        inputs, targets = data
+        predictions = self([inputs,targets], training=False)
+        # quantile loss
+        quant_loss = self.quant_loss_fn(targets, predictions)
+        total_loss = quant_loss
+        # additional optional ratio loss
+        if self.ratio_loss_fn is not None:
+            ratio_loss = self.ratio_loss_fn(inputs,targets,predictions) # one value per batch
+            total_loss += ratio_loss
+
+        # update state of metrics
+        self.quant_loss_mean.update_state(quant_loss)
+        self.total_loss_mean.update_state(total_loss)
+        losses = {'total_loss': self.total_loss_mean.result(), 'quant_loss': self.quant_loss_mean.result()}
+        if self.ratio_loss_fn is not None:
+            self.ratio_loss_mean.update_state(ratio_loss)
+            losses['ratio_loss'] = self.ratio_loss_mean.result()
+
+        return losses
+
+
+    @property
+    def metrics(self):
+        # We list our `Metric` objects here so that `reset_states()` can be
+        # called automatically at the start of each epoch
+        # or at the start of `evaluate()`.
+        # If you don't implement this property, you have to call
+        # `reset_states()` yourself at the time of your choosing.
+        metrics = super().metrics
+        metrics.append(self.total_loss_mean)
+        metrics.append(self.quant_loss_mean)
+        if self.ratio_loss_fn is not None:
+            metrics.append(self.ratio_loss_mean)
+        if self.regularizer is not None:
+            metrics.append(self.reg_loss_mean)
+        return metrics
+
+
+
+
 
 class QuantileRegression():
 
