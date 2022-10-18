@@ -81,7 +81,7 @@ class scnd_fini_diff_metric():
         pred_delta_minus = tf.squeeze(pred_delta_minus)
         
         # 2nd finite diff
-        fini_diff2 = tf.math.divide_no_nan((pred_delta_plus - 2*pred + pred_delta_minus),tf.math.square(self.delta))  
+        fini_diff2 = tf.math.divide_no_nan((pred_delta_plus - tf.cast(tf.constant(2.0),tf.float32)*pred + pred_delta_minus),tf.math.square(self.delta))  
 
         return tf.reduce_mean(tf.math.square(fini_diff2)) # mean per batch
 
@@ -138,6 +138,7 @@ class QrModel(tf.keras.Model):
             delta = self.ratio_metric_fn.delta
             pred_delta_plus = self([inputs+delta, targets], training=False)
             pred_delta_minus = self([inputs-delta, targets], training=False)
+            import ipdb; ipdb.set_trace()
             metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, predictions_delta_minus)
 
         else:
@@ -202,7 +203,7 @@ def plot_log_transformed_results(model, x_train, y_train, fig_dir):
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(x_transformed)
     x_max = np.max(x_transformed)
-    plt.hist2d(x_transformed, y_train, range=((x_min * 0.9, np.percentile(x_transformed, 99.99900000000001)), (np.min(y_train), np.percentile(y_train, 99.99))),
+    plt.hist2d(x_transformed, y_train, range=((x_min * 0.9, np.percentile(x_transformed, 99.999)), (np.min(y_train), np.percentile(y_train, 99.99))),
       norm=(LogNorm()),bins=100)
     xs = np.arange(np.min(x_train), np.max(x_train), 0.001 * (np.max(x_train) - np.min(x_train)))
     xs_transformed = model.get_layer('Normalization')(xs).numpy()
@@ -270,9 +271,9 @@ if __name__ == '__main__':
                       sig_sample_id='GtoWW35naReco',
                       strategy_id='rk5_05',
                       epochs=15,
-                      read_n=(int(1e4)),
+                      read_n=(int(1e5)),
                       lr_ini=0.0001,
-                      batch_sz=256,
+                      batch_sz=64,
                       quantile=0.9,
                       norm='std')
 
