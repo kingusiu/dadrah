@@ -16,6 +16,7 @@ import pathlib
 import dadrah.playground.playground_util as pgut
 import dadrah.selection.anomaly_score_strategy as ansc
 import dadrah.util.logging as log
+import vande.vae.layers as layers
 
 
 
@@ -74,8 +75,8 @@ class binned_quantile_dev_loss():
             count_tot = tf.math.count_nonzero(bin_mask)
             # sum only when count_tot > 0! (TODO: or > 1 s.t. a ratio is even computable?)
             if count_tot > 0:
-                count_above = tf.math.count_nonzero(targets[bin_mask] > predictions[bin_mask])
-                ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
+                count_bel = tf.math.count_nonzero(targets[bin_mask] < predictions[bin_mask])
+                ratio = tf.math.divide_no_nan(tf.cast(count_bel,tf.float32),tf.cast(count_tot,tf.float32))
                 ratios[bin_idx-1].assign(ratio)
 
         return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over m bins 
@@ -85,29 +86,22 @@ class binned_quantile_dev_loss():
 #                    model                     #
 # ******************************************** #
 
-
 class QrModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
-
-        self.regularizer = kwargs.pop('regularizer', None)
         
         super().__init__(*args, **kwargs)
 
-    def compile(self, optimizer, quant_loss, ratio_loss=None, run_eagerly=True):
+    def compile(self, loss, ratio_metric, optimizer, run_eagerly=True):
 
         super().compile(optimizer=optimizer,run_eagerly=run_eagerly)
 
-        self.quant_loss_fn = quant_loss
-        self.ratio_loss_fn = ratio_loss
+        self.quant_loss_fn = loss
+        self.ratio_metric_fn = ratio_metric
 
         # set up loss tracking (track scalar metric value with Mean)
-        self.total_loss_mean = tf.keras.metrics.Mean('total_loss') # main quantile loss
-        self.quant_loss_mean = tf.keras.metrics.Mean(self.quant_loss_fn.name)
-        if self.ratio_loss_fn is not None:
-            self.ratio_loss_mean = tf.keras.metrics.Mean(self.ratio_loss_fn.name)
-        if self.regularizer is not None:
-            self.reg_loss_mean = tf.keras.metrics.Mean('reg_loss')
+        self.loss_mean = tf.keras.metrics.Mean('loss') # main quantile loss
+        self.ratio_metric_mean = tf.keras.metrics.Mean(self.ratio_metric_fn.name)
 
 
     def train_step(self, data):
@@ -119,33 +113,21 @@ class QrModel(tf.keras.Model):
             # predict
             predictions = self([inputs,targets], training=True)
             # quantile loss
-            quant_loss = self.quant_loss_fn(targets, predictions)
-            total_loss = quant_loss
-            # regularization loss
-            if self.losses:
-                reg_loss = tf.math.add_n(self.losses)
-                total_loss += reg_loss
-            # additional optional ratio loss
-            if self.ratio_loss_fn is not None:
-                ratio_loss = self.ratio_loss_fn(inputs,targets,predictions) # one value per batch
-                total_loss += ratio_loss
-        
+            loss = self.quant_loss_fn(targets, predictions)
+            
         trainable_variables = self.trainable_variables
-        grads = tape.gradient(total_loss, trainable_variables)
+        grads = tape.gradient(loss, trainable_variables)
         self.optimizer.apply_gradients(zip(grads, trainable_variables))
 
+        #ratio metric
+        inputs_norm = self.get_layer('Std_Normalize')(inputs) # normalize inputs
+        ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
+
         # update state of metrics for each batch
-        self.total_loss_mean.update_state(total_loss)
-        self.quant_loss_mean.update_state(quant_loss)
-        losses = {'total_loss': self.total_loss_mean.result(), 'quant_loss': self.quant_loss_mean.result()}
-        if self.ratio_loss_fn is not None:
-            self.ratio_loss_mean.update_state(ratio_loss)
-            losses['ratio_loss'] = self.ratio_loss_mean.result()
-        if self.regularizer is not None:
-            self.reg_loss_mean.update_state(reg_loss)
-            losses['reg_loss'] = self.reg_loss_mean.result() 
+        self.loss_mean.update_state(loss)
+        self.ratio_metric_mean.update_state(ratio_acc)
         
-        return losses
+        return {'loss': self.loss_mean.result(), 'ratio_acc' : self.ratio_metric_mean.result()}
 
 
     def test_step(self, data):
@@ -153,22 +135,15 @@ class QrModel(tf.keras.Model):
         inputs, targets = data
         predictions = self([inputs,targets], training=False)
         # quantile loss
-        quant_loss = self.quant_loss_fn(targets, predictions)
-        total_loss = quant_loss
-        # additional optional ratio loss
-        if self.ratio_loss_fn is not None:
-            ratio_loss = self.ratio_loss_fn(inputs,targets,predictions) # one value per batch
-            total_loss += ratio_loss
+        loss = self.quant_loss_fn(targets, predictions)
 
         # update state of metrics
-        self.quant_loss_mean.update_state(quant_loss)
-        self.total_loss_mean.update_state(total_loss)
-        losses = {'total_loss': self.total_loss_mean.result(), 'quant_loss': self.quant_loss_mean.result()}
-        if self.ratio_loss_fn is not None:
-            self.ratio_loss_mean.update_state(ratio_loss)
-            losses['ratio_loss'] = self.ratio_loss_mean.result()
-
-        return losses
+        inputs_norm = self.get_layer('Std_Normalize')(inputs) # normalize inputs
+        ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
+        self.loss_mean.update_state(loss)
+        self.ratio_metric_mean.update_state(ratio_acc)
+        
+        return {'loss': self.loss_mean.result(), 'ratio_acc': self.ratio_metric_mean.result()}
 
 
     @property
@@ -179,29 +154,30 @@ class QrModel(tf.keras.Model):
         # If you don't implement this property, you have to call
         # `reset_states()` yourself at the time of your choosing.
         metrics = super().metrics
-        metrics.append(self.total_loss_mean)
-        metrics.append(self.quant_loss_mean)
-        if self.ratio_loss_fn is not None:
-            metrics.append(self.ratio_loss_mean)
-        if self.regularizer is not None:
-            metrics.append(self.reg_loss_mean)
+        metrics.append(self.loss_mean)
+        metrics.append(self.ratio_metric_mean)
+
         return metrics
 
 
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
 
-def build_model_with_hp(hp, quant_loss, ratio_loss, initializer='glorot_uniform', regularizer=None,
-                        bias_regularizer=None, activation='relu', dr_rate=0.):
+
+
+def build_model_with_hp(hp, quantile_loss, ratio_metric, x_mu_std=(0.,1.), initializer='glorot_uniform'):
 
     # sample hyperparameters
     layers_n = hp.Int(name='layers_n',min_value=1,max_value=6)
     nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=16)
     # optimizer = hp.Choice("optimizer", values=["sgd", "adam"])
     lr_ini = hp.Float('learning_rate', min_value=1e-5, max_value=1e-2, sampling='log')
-    wd_ini = hp.Float('weight_decay',min_value=1e-6,max_value=1e-3, sampling='log')
+    # wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
     # lr_schedule = tf.optimizers.schedules.ExponentialDecay(lr_ini, 10000, 0.97)
     # wd_schedule = tf.optimizers.schedules.ExponentialDecay(wd_ini, 10000, 0.97)
     # optimizer = tfa.optimizers.AdamW(learning_rate=lr_schedule, weight_decay=lambda:None)
-    optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
+    # optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
     # optimizer.weight_decay = lambda : wd_schedule(optimizer.iterations)
     # if optimizer == "sgd":
     #     optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.9) # todo: add momentum
@@ -210,38 +186,36 @@ def build_model_with_hp(hp, quant_loss, ratio_loss, initializer='glorot_uniform'
     # else:
     #     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
     #     regularizer = None
+    optimizer = tf.keras.optimizers.Adam(learning_rate=lr_ini)
     activation = hp.Choice('activation', values=['elu', 'swish'])
 
     # model architecture
     inputs_mjj = tf.keras.Input(shape=(1,), name='inputs_mjj')
     targets = tf.keras.Input(shape=(1,), name='targets') # only needed for calculating metric because update() signature is limited to y & y_pred in keras.metrics class 
     x = inputs_mjj
-
-    for i in range(layers_n):
-        x = tf.keras.layers.Dense(nodes_n, kernel_initializer=initializer, kernel_regularizer=regularizer, activation=activation, name='dense'+str(i+1))(x)
-    if dr_rate > 0: 
-        x = tf.keras.layers.Dropout(dr_rate)(x)
-    outputs = tf.keras.layers.Dense(1, kernel_initializer=initializer, kernel_regularizer=None, bias_regularizer=bias_regularizer, name='dense'+str(layers_n+1))(x)
-
-    model = QrModel(name='QR', inputs=[inputs_mjj,targets], outputs=outputs, regularizer=regularizer)
-
-    model.compile(optimizer=optimizer, quant_loss=quant_loss, ratio_loss=ratio_loss, run_eagerly=True)
+    x = layers.StdNormalization(*x_mu_std)(x)
+    for _ in range(layers_n):
+        x = tf.keras.layers.Dense(nodes_n, kernel_initializer=initializer, activation=activation)(x)
+    outputs = tf.keras.layers.Dense(1, kernel_initializer=initializer)(x)
+    model = QrModel(inputs=[inputs_mjj,targets], outputs=outputs)
+    model.compile(loss=quantile_loss, ratio_metric=ratio_metric, optimizer=optimizer) # Adam(lr=1e-3) TODO: add learning rate
 
     return model
 
 
 class QrHyperparamModel(kt.HyperModel):
 
-    def __init__(self, quant_loss, ratio_loss):
-        self.quant_loss = quant_loss
-        self.ratio_loss = ratio_loss
+    def __init__(self, quantile_loss, ratio_metric, x_mu_std):
+        self.quantile_loss = quantile_loss
+        self.ratio_metric = ratio_metric
+        self.x_mu_std = x_mu_std
 
     def build(self, hp):
-        return build_model_with_hp(hp, self.quant_loss, self.ratio_loss)
+        return build_model_with_hp(hp, self.quantile_loss, self.ratio_metric, self.x_mu_std)
 
     def fit(self, hp, model, x, y, **kwargs):
         # import ipdb; ipdb.set_trace()
-        batch_sz = hp.Choice(name='batch_sz',values=[32,256,1024,2048,4096])
+        batch_sz = hp.Choice(name='batch_sz',values=[32,128,256,512,1024,2048,4096])
         print('batch_sz: ' + str(batch_sz))
         return model.fit(x, y, batch_size=batch_sz, **kwargs)
 
@@ -252,7 +226,8 @@ class PrintLearningRate(tf.keras.callbacks.Callback):
         pass
 
     def on_epoch_begin(self, epoch, logs=None):
-        lr = self.model.optimizer.lr(self.model.optimizer.iterations)
+        lr = self.model.optimizer.lr.numpy()
+        # lr = self.model.optimizer.lr(self.model.optimizer.iterations)
         print("\nLearning rate at epoch {} is {:.3e}".format(epoch, lr))
 
 
@@ -280,35 +255,50 @@ class WeightDecayLogger(tf.keras.callbacks.Callback):
 #       discriminator analysis plots           #
 # ******************************************** #
 
-def plot_discriminator_cut(discriminator, sample, score_strategy, norm_x, norm_y, feature_key='mJJ', plot_name='discr_cut', fig_dir=None):
+def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix=''):
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key]) #norm_x.data_min_[0] #
     x_max = np.max(sample[feature_key]) #norm_x.data_max_[0] #
     an_score = score_strategy(sample)
     plt.hist2d(sample[feature_key], an_score,
-           range=((x_min*0.9 , np.percentile(sample[feature_key], 99.99)), (np.min(an_score), np.percentile(an_score, 1e2*(1-1e-4)))), 
+           range=((x_min*0.9 , np.percentile(sample[feature_key], 1e2*(1-1e-5))), (np.min(an_score), np.percentile(an_score, 1e2*(1-1e-4)))), 
            norm=LogNorm(), bins=100)
 
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
-    xs_t = norm_x.transform(xs.reshape(-1,1)).squeeze()
     #import ipdb; ipdb.set_trace()
-    y_hat = discriminator.predict([xs_t,xs_t]) # passing in dummy target
-    plt.plot(xs, norm_y.inverse_transform(y_hat.reshape(-1,1)).squeeze() , '-', color='m', lw=2.5, label='selection cut')
+    plt.plot(xs, discriminator.predict([xs,xs]) , '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 & L2 > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.colorbar()
     plt.legend(loc='best')
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
+    if fig_dir:
+        plt.savefig(fig_dir+'/discriminator_cut'+plot_suffix+'.png')
     plt.close(fig)
     buf.seek(0)
     image = tf.image.decode_png(buf.getvalue(), channels=4)
     # Add the batch dimension
     image = tf.expand_dims(image, 0)
-    if fig_dir:
-        plt.savefig(fig_dir+'/discriminator_cut.png')
-    plt.close(fig)
     return image
+
+
+class PlotCutCallback(tf.keras.callbacks.Callback):
+
+    def __init__(self, tb_plot_dir, qcd_sample, score_strategy):
+        super(PlotCutCallback, self).__init__()
+        self.tb_plot_dir = tb_plot_dir
+        self.img_file_writer = tf.summary.create_file_writer(tb_plot_dir)
+        self.qcd_sample = qcd_sample
+        self.score_strategy = score_strategy
+
+
+    def on_epoch_end(self, epoch, logs=None):
+        img = plot_discriminator_cut(self.model, self.qcd_sample, self.score_strategy)
+        with self.img_file_writer.as_default():
+            tf.summary.image("Training data and cut", img, step=epoch)
+        self.img_file_writer.flush()
+
 
 
 
@@ -324,18 +314,20 @@ if __name__ == '__main__':
     # tf.random.set_seed(42)
     # tf.keras.utils.set_random_seed(42) # also sets python and numpy random seeds
 
-    Parameters = recordtype('Parameters','vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, dr_rate, objective')
+    Parameters = recordtype('Parameters','vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, \
+        sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=190,
+                    qr_run_n=210,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
-                    epochs=70,
-                    read_n=int(1e6),
-                    dr_rate=0.,
-                    objective='val_ratio_loss'
+                    epochs=50,
+                    read_n=int(5e5),
+                    objective='val_ratio_acc',
+                    max_trials=20,
+                    quantile=0.5
                     )
 
     # logging
@@ -346,8 +338,6 @@ if __name__ == '__main__':
     # remove previous tensorboard logs
     os.system('rm -rf '+tensorboard_log_dir)
 
-    quantiles = [0.3, 0.5, 0.7, 0.9]
-    # quantiles = [0.9]
     sig_xsec = 0.
 
     ### paths ###
@@ -358,6 +348,9 @@ if __name__ == '__main__':
 
     qr_model_dir = '/eos/home-k/kiwoznia/data/QR_models/vae_run_'+str(params.vae_run_n)+'/qr_run_'+str(params.qr_run_n)
     pathlib.Path(qr_model_dir).mkdir(parents=True, exist_ok=True)
+    fig_dir = 'fig/qr_run_'+str(params.qr_run_n)
+    pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
+
 
     #****************************************#
     #           read in qcd data
@@ -374,11 +367,11 @@ if __name__ == '__main__':
     y_train, y_test = score_strategy(qcd_train_sample), score_strategy(qcd_test_sample) 
 
     # set up min max normalizations
-    norm_x_mima = preprocessing.MinMaxScaler()
-    norm_y_mima = preprocessing.MinMaxScaler()
+    # norm_x_mima = preprocessing.MinMaxScaler()
+    # norm_y_mima = preprocessing.MinMaxScaler()
 
-    x_train_mima, x_test_mima = norm_x_mima.fit_transform(x_train.reshape(-1,1)).squeeze(), norm_x_mima.transform(x_test.reshape(-1,1)).squeeze()
-    y_train_mima, y_test_mima = norm_y_mima.fit_transform(y_train.reshape(-1,1)).squeeze(), norm_y_mima.transform(y_test.reshape(-1,1)).squeeze()
+    # x_train_mima, x_test_mima = norm_x_mima.fit_transform(x_train.reshape(-1,1)).squeeze(), norm_x_mima.transform(x_test.reshape(-1,1)).squeeze()
+    # y_train_mima, y_test_mima = norm_y_mima.fit_transform(y_train.reshape(-1,1)).squeeze(), norm_y_mima.transform(y_test.reshape(-1,1)).squeeze()
 
     # train_dataset = tf.data.Dataset.from_tensor_slices((x_train_mima, y_train_mima))
     # test_dataset = tf.data.Dataset.from_tensor_slices((x_test_mima, y_test_mima))
@@ -393,7 +386,10 @@ if __name__ == '__main__':
     accuracy_bins = np.array([1199., 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
                         2305, 2406, 2512, 2620, 2733, 2849, 2969, 3093, 3221, 3353, 3490, 3632, 3778, 3928]).astype('float')
 
-    accuracy_bins = norm_x_mima.transform(accuracy_bins.reshape(-1,1)).squeeze()
+    x_mu_std = (np.mean(x_train), np.std(x_train))
+    accuracy_bins = (accuracy_bins-x_mu_std[0])/x_mu_std[1]
+
+    # accuracy_bins = norm_x_mima.transform(accuracy_bins.reshape(-1,1)).squeeze()
 
     # import ipdb; ipdb.set_trace()
 
@@ -401,37 +397,39 @@ if __name__ == '__main__':
     #           build model
     #****************************************#
 
-    quantile = 0.5
     initializer = 'he_uniform'
-    quant_loss = quantile_loss(quantile)
-    ratio_loss = quantile_dev_loss(quantile) # quantile_dev_loss(quantile) # #None
+    quant_loss = quantile_loss(params.quantile)
+    ratio_metric = binned_quantile_dev_loss(params.quantile, accuracy_bins)
 
-    logger.info('ratio_loss: '+str(ratio_loss))
+    logger.info('ratio_metric: '+str(ratio_metric))
     logger.info('accuracy_bins ' + ','.join(f'{a:.3f}' for a in accuracy_bins))
 
     # hyperparams tuner
-    max_trials = 25
     objective = kt.Objective(name=params.objective, direction='min')
-    tuner = kt.BayesianOptimization(QrHyperparamModel(quant_loss, ratio_loss), 
-                            objective=objective, max_trials=max_trials, overwrite=True, 
+    tuner = kt.BayesianOptimization(QrHyperparamModel(quant_loss, ratio_metric, x_mu_std=x_mu_std), 
+                            objective=objective, max_trials=params.max_trials, overwrite=True, 
                             directory='logs',project_name='bayes_tune_'+str(params.qr_run_n))
 
     tensorboard_callb = tf.keras.callbacks.TensorBoard(log_dir=tuner.project_dir+'/tensorboard', histogram_freq=1)
-    es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_total_loss", patience=7)
-    #reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_total_loss', factor=0.2, patience=5, min_lr=1e-6) # only with sgd!
+    es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=6)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-9) # only with sgd!?
 
-    tuner.search(x=x_train_mima, y=y_train_mima, epochs=params.epochs, 
-            validation_data=(x_test_mima, y_test_mima), callbacks=[tensorboard_callb, es_callb, WeightDecayLogger()])
+    tuner.search(x=x_train, y=y_train, epochs=params.epochs, shuffle=False,
+            validation_data=(x_test, y_test), callbacks=[tensorboard_callb, es_callb, reduce_lr, PrintLearningRate()])
 
-    top_model = tuner.get_best_models(num_models=1)[0]
 
-    best_trial = tuner.oracle.get_best_trials(num_trials=1)[0]
-    best_trial.summary()
+    best_trials = tuner.oracle.get_best_trials(num_trials=3)
+    for best_trial in best_trials:
+        best_trial.summary()
 
-    # print image to tensorboard
+    top_models = tuner.get_best_models(num_models=3)
     img_log_dir = tuner.project_dir+'/tensorboard/plots'
     os.system('rm -rf '+img_log_dir+'/*')
     img_file_writer = tf.summary.create_file_writer(img_log_dir)
-    img = plot_discriminator_cut(top_model, qcd_test_sample, score_strategy, norm_x_mima, norm_y_mima)
-    with img_file_writer.as_default():
-        tf.summary.image("Training data and cut", img, step=0)
+    for i, top_model in enumerate(top_models):
+        # print image to tensorboard
+        img = plot_discriminator_cut(top_model, qcd_test_sample, score_strategy, fig_dir=fig_dir, plot_suffix='_model'+str(i))
+        with img_file_writer.as_default():
+            tf.summary.image("Training data and cut model " +str(i), img, step=1000)
+        img_file_writer.flush() 
+    img_file_writer.close()

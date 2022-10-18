@@ -380,7 +380,7 @@ if __name__ == '__main__':
     # remove previous tensorboard logs
     os.system('rm -rf '+tensorboard_log_dir)
 
-    tf.debugging.experimental.enable_dump_debug_info(tensorboard_log_dir+'/debug', tensor_debug_mode="FULL_HEALTH", circular_buffer_size=-1)
+    #tf.debugging.experimental.enable_dump_debug_info(tensorboard_log_dir+'/debug', tensor_debug_mode="FULL_HEALTH", circular_buffer_size=-1)
 
     quantiles = [0.3, 0.5, 0.7, 0.9]
     # quantiles = [0.9]
