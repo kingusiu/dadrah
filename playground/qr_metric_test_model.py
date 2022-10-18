@@ -133,8 +133,17 @@ class QrModel(tf.keras.Model):
         predictions = self([inputs, targets], training=False)
 
         loss = self.quant_loss_fn(targets, predictions)
-        inputs_norm = self.get_layer('Normalization')(inputs)
-        metric_val = self.ratio_metric_fn(inputs_norm, targets, predictions)
+
+        if self.ratio_metric_fn.name == 'smooth':
+            delta = self.ratio_metric_fn.delta
+            pred_delta_plus = self([inputs+delta, targets], training=False)
+            pred_delta_minus = self([inputs-delta, targets], training=False)
+            metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, predictions_delta_minus)
+
+        else:
+            inputs_norm = self.get_layer('Normalization')(inputs)
+            metric_val = self.ratio_metric_fn(inputs_norm, targets, predictions)
+
         self.loss_mean.update_state(loss)
         self.ratio_metric_mean.update_state(metric_val)
         
@@ -164,7 +173,7 @@ class LogTransform(tf.keras.layers.Layer):
 
 
 def build_model(quantile_loss, ratio_metric, layers_n, nodes_n, lr_ini, wd_ini, activation, x_mu_std=(0.0, 1.0), x_min=0.0, norm='std', initializer='glorot_uniform'):
-    
+
     optimizer = tf.keras.optimizers.Adam(learning_rate=lr_ini)
     inputs_mjj = tf.keras.Input(shape=(1, ), name='inputs_mjj')
     targets = tf.keras.Input(shape=(1, ), name='targets')
@@ -255,15 +264,15 @@ if __name__ == '__main__':
     train_split = 0.3
     Parameters = recordtype('Parameters', 'vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id,                             sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm')
     params = Parameters(vae_run_n=113,
-                      qr_run_n=222,
+                      qr_run_n=227,
                       qcd_train_sample_id=('qcdSigAllTrain' + str(int(train_split * 100)) + 'pct'),
                       qcd_test_sample_id=('qcdSigAllTest' + str(int((1 - train_split) * 100)) + 'pct'),
                       sig_sample_id='GtoWW35naReco',
                       strategy_id='rk5_05',
-                      epochs=70,
-                      read_n=(int(100000.0)),
+                      epochs=15,
+                      read_n=(int(1e4)),
                       lr_ini=0.0001,
-                      batch_sz=4096,
+                      batch_sz=256,
                       quantile=0.9,
                       norm='std')
 
