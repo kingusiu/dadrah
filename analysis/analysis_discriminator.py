@@ -6,6 +6,8 @@ import numpy as np
 #import root_numpy as rtnp
 import os
 from prettytable import PrettyTable
+import dadrah.selection.anomaly_score_strategy as ansc
+
 
 import anpofah.util.plotting_util as pu
 import mplhep as hep
@@ -32,7 +34,7 @@ def analyze_multi_quantile_discriminator_cut(discriminator_list, sample, feature
                 norm=LogNorm(), bins=200, cmap=cm.get_cmap('Greens'), cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
     for discriminator in discriminator_list:
-        plt.plot(xs, discriminator.predict( xs ) , '-', lw=2.5, label='Q '+str(discriminator.quantile*100)+'%', color=next(colors))
+        plt.plot(xs, discriminator.predict(xs), '-', lw=2.5, label='Q '+str(discriminator.quantile*100)+'%', color=next(colors))
     plt.ylabel('min(L1,L2)')
     plt.xlabel('$M_{jj}$ [GeV]')
     #plt.title('quantile cuts' + title_suffix)
@@ -64,6 +66,53 @@ def analyze_discriminator_cut(discriminator, sample, feature_key='mJJ', plot_nam
     if fig_dir:
         fig.savefig(os.path.join(fig_dir, plot_name + '.png'), bbox_inches='tight')
     plt.close(fig)
+
+
+def analyze_multi_quantile_ensemble_cut(model_ensemble, sample, quantiles, kfold_n, strategy_id, norm_x, norm_y, plot_name='multi_discr_cut', fig_dir=None, cut_xmax=True, cut_ymax=True):
+
+    # style setup
+    plt.style.use(hep.style.CMS)
+    jet= plt.get_cmap('gnuplot')
+    colors = iter(jet(np.linspace(0,1,6)))
+
+    feature_key = 'mJJ'
+    # input sample data
+    x_min = np.min(sample[feature_key]) #norm_x.data_min_[0] #
+    score_strategy = ansc.an_score_strategy_dict[strategy_id]
+    an_score = score_strategy(sample)
+
+    # plot sample distribution
+    fig = plt.figure(figsize=(8, 8))
+    plt.hist2d(sample[feature_key], an_score,
+           range=((x_min*0.9 , np.percentile(sample[feature_key], 99.99)), (np.min(an_score), np.percentile(an_score, 1e2*(1-1e-4)))), 
+           norm=LogNorm(), bins=100)
+
+    # dummy input for ensemble cut prediction
+    if cut_xmax:
+        x_max = np.percentile(sample[feature_key], 1e2*(1-1e-4))
+    else:
+        x_max = np.max(sample[feature_key])
+
+    # plot quantile cuts from model ensemble
+    xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
+    xs_t = norm_x.transform(xs.reshape(-1,1)).squeeze()
+    #import ipdb; ipdb.set_trace()
+
+    for quantile in quantiles:
+        an_score_cut = np.zeros(len(xs_t))
+        for j in range(1, kfold_n+1):
+            an_score_cut += model_ensemble[str(quantile)]['fold_{}'.format(j)].predict([xs_t,xs_t]).flatten()
+        an_score_cut /= kfold_n
+        plt.plot(xs, norm_y.inverse_transform(an_score_cut.reshape(-1,1)).squeeze(), '-', lw=2.5, label='q '+str(quantile*100)+'%', color=next(colors))
+    
+    plt.ylabel('L1 & L2 > LT')
+    plt.xlabel('$M_{jj}$ [GeV]')
+    plt.colorbar()
+    plt.legend(loc='best')
+    if fig_dir:
+        plt.savefig(fig_dir+'/discriminator_cut.png')
+    plt.close(fig)
+
 
 
 def print_discriminator_efficiency_table(sample_dict):

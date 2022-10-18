@@ -39,8 +39,8 @@ def save_QR(discriminator, params, model_dir_qr, quantile, xsec, model_str=None)
     # save the model   
     model_str = model_str or stco.make_qr_model_str(params.run_n_qr, params.run_n_vae, quantile, params.sig_sample_id, xsec, params.strategy_id)
     model_path = os.path.join(model_dir_qr, model_str)
-    discriminator.save(model_path)
     print('saving model {} to {}'.format(model_str, model_dir_qr))
+    discriminator.save(model_path, include_optimizer=False) # TODO: problems saving adamw
     return model_path
 
 
@@ -52,10 +52,10 @@ def load_QR(params, model_dir_qr, quantile, xsec, model_str=None):
     return discriminator
 
 
-def predict_QR(discriminator, sample, inv_quant):
+def predict_QR(discriminator, sample, quantile):
     print('predicting {}'.format(sample.name))
     selection = discriminator.select(sample)
-    sample.add_feature('sel_q{:02}'.format(int(inv_quant*100)), selection)
+    sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
     return sample
 
 
@@ -107,3 +107,21 @@ def fitted_selection(sample, strategy_id, quantile, polynomials, xshift=0.):
     loss = loss_strategy(sample)
     loss_cut = polynomials[quantile]
     return loss > loss_cut(sample['mJJ']-xshift) # shift x by min mjj for bias fixed lmfits
+
+
+def ensemble_selection(sample, strategy_id, quantile, model_ensemble, fold_i, kfold_n, norm_x, norm_y):
+
+    voting_n = kfold_n-1 if fold_i < kfold_n else kfold_n # signal fold = dummy fold no kfold_n+1 -> all kfold_n models voting
+    mjj = norm_x.transform(sample['mJJ'].reshape(-1,1)).squeeze()
+    score_strategy = ansc.an_score_strategy_dict[strategy_id]
+    an_score = score_strategy(sample)
+    an_score = norm_y.transform(an_score.reshape(-1,1)).squeeze()
+
+    an_score_cut = np.zeros(len(sample))
+    for j in range(1, kfold_n+1):
+        if j != fold_i:
+            an_score_cut += model_ensemble['fold_{}'.format(j)].predict([mjj,an_score]).flatten()
+    an_score_cut /= voting_n
+
+    return an_score > an_score_cut
+

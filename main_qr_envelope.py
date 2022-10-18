@@ -147,7 +147,7 @@ for sig_xsec in xsecs:
         # store cut values in dict
         cut_results.update({stco.inv_quantile_str(quantile): cuts_for_quantile.tolist()})
 
-        # plot quantile cut bands
+        # plot quantile cut bands (1 quantile, 5 models)
         title_suffix = ' 5 models trained qcd SR ' + signal_str + ' q ' + 'q{:02}'.format(int(quantile*100))
         plot_name = 'multi_discr_cut_' + signal_str + '_xsec_'+str(sig_xsec) + '_5models_' + 'q{:02}'.format(int(quantile*100))
         andi.analyze_multi_quantile_discriminator_cut(models, dat_valid, title_suffix=title_suffix, plot_name=plot_name, fig_dir=result_dir)
