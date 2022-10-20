@@ -15,6 +15,12 @@ import matplotlib.cm as cm
 from sklearn import preprocessing
 import pathlib, dadrah.playground.playground_util as pgut, dadrah.selection.anomaly_score_strategy as ansc, dadrah.util.logging as log, dadrah.util.string_constants as stco, vande.vae.layers as layers
 
+
+# ******************************************** #
+#         loss and metric functions            #
+# ******************************************** #
+
+
 class quantile_loss(tf.keras.losses.Loss):
 
     def __init__(self, quantile, name='quantileLoss'):
@@ -27,6 +33,25 @@ class quantile_loss(tf.keras.losses.Loss):
         predictions = tf.squeeze(predictions)
         err = tf.subtract(targets, predictions)
         return tf.reduce_mean(tf.where(err >= 0, self.quantile * err, (self.quantile - 1) * err))
+
+
+class quantile_loss_smooth(tf.keras.losses.Loss):
+    ''' S. Zheng, “Gradient descent algorithms for quantile regression with
+    smooth approximation,” International Journal of Machine Learning and
+    Cybernetics, vol. 2, no. 3, p. 191, 2011. '''
+
+    def __init__(self, quantile, name='quantileLossSmooth'):
+        super().__init__(name=name)
+        self.quantile = tf.constant(quantile)
+        self.beta = tf.constant(0.2) # smoothing constant
+
+    @tf.function
+    def call(self, targets, predictions):
+        targets = tf.squeeze(targets)
+        predictions = tf.squeeze(predictions)
+        err = tf.subtract(targets, predictions)
+        return tf.reduce_mean(self.quantile * err + self.beta * tf.math.log(1. + tf.math.exp(-tf.math.divide_no_nan(err,self.beta)))) # return mean over samples in batch
+
 
 
 class quantile_dev_loss:
@@ -69,9 +94,9 @@ class binned_quantile_dev_loss:
 
 class scnd_fini_diff_metric():
 
-    def __init__(self, delta=1e-2, name='smooth'):
+    def __init__(self, delta=1.0, name='2ndDiff'):
         self.name=name
-        self.delta = tf.constant(delta) # delta to approximate second derivative
+        self.delta = tf.constant(delta) # delta to approximate second derivative, applied before normalization -> to O(1K)
 
     # @tf.function
     def __call__(self, pred, pred_delta_plus, pred_delta_minus): # for integration in regular TF -> compute predictions for delta-shifted inputs in outside train/test step
@@ -110,11 +135,13 @@ class QrModel(tf.keras.Model):
         grads = tape.gradient(loss, trainable_variables)
         self.optimizer.apply_gradients(zip(grads, trainable_variables))
         
-        if self.ratio_metric_fn.name == 'smooth':
+        if self.ratio_metric_fn.name == '2ndDiff':
             delta = self.ratio_metric_fn.delta
+            # import ipdb; ipdb.set_trace()
+            pred = self([inputs, targets], training=False) # compute new predictions after backpropagation step
             pred_delta_plus = self([inputs+delta, targets], training=False)
             pred_delta_minus = self([inputs-delta, targets], training=False)
-            metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, predictions_delta_minus)
+            metric_val = self.ratio_metric_fn(pred, pred_delta_plus, pred_delta_minus)
 
         else:
             inputs_norm = self.get_layer('Normalization')(inputs)
@@ -134,12 +161,12 @@ class QrModel(tf.keras.Model):
 
         loss = self.quant_loss_fn(targets, predictions)
 
-        if self.ratio_metric_fn.name == 'smooth':
+        if self.ratio_metric_fn.name == '2ndDiff':
             delta = self.ratio_metric_fn.delta
+            # import ipdb; ipdb.set_trace()
             pred_delta_plus = self([inputs+delta, targets], training=False)
             pred_delta_minus = self([inputs-delta, targets], training=False)
-            import ipdb; ipdb.set_trace()
-            metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, predictions_delta_minus)
+            metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, pred_delta_minus)
 
         else:
             inputs_norm = self.get_layer('Normalization')(inputs)
@@ -213,16 +240,14 @@ def plot_log_transformed_results(model, x_train, y_train, fig_dir):
     plt.close()
 
 
-def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix=''):
+def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix='',xlim=True):
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])
     x_max = np.max(sample[feature_key])
     an_score = score_strategy(sample)
-    plt.hist2d((sample[feature_key]), an_score, range=(
-     (
-      x_min * 0.9, np.percentile(sample[feature_key], 99.99900000000001)), (np.min(an_score), np.percentile(an_score, 99.99))),
-      norm=(LogNorm()),
-      bins=100)
+    x_top = np.percentile(sample[feature_key], 99.999) if xlim else x_max
+    x_range = ((x_min * 0.9,x_top), (np.min(an_score), np.percentile(an_score, 99.99)))
+    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()),bins=100)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 & L2 > LT')
@@ -250,7 +275,7 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
         self.score_strategy = score_strategy
 
     def on_epoch_end(self, epoch, logs=None):
-        img = plot_discriminator_cut(self.model, self.qcd_sample, self.score_strategy)
+        img = plot_discriminator_cut(self.model, self.qcd_sample, self.score_strategy,xlim=False)
         with self.img_file_writer.as_default():
             tf.summary.image('Training data and cut', img, step=epoch)
         self.img_file_writer.flush()
@@ -263,18 +288,18 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
 if __name__ == '__main__':
 
     train_split = 0.3
-    Parameters = recordtype('Parameters', 'vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id,                             sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm')
+    Parameters = recordtype('Parameters', 'vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm')
     params = Parameters(vae_run_n=113,
-                      qr_run_n=227,
+                      qr_run_n=233,
                       qcd_train_sample_id=('qcdSigAllTrain' + str(int(train_split * 100)) + 'pct'),
                       qcd_test_sample_id=('qcdSigAllTest' + str(int((1 - train_split) * 100)) + 'pct'),
                       sig_sample_id='GtoWW35naReco',
                       strategy_id='rk5_05',
-                      epochs=15,
+                      epochs=20,
                       read_n=(int(1e5)),
                       lr_ini=0.0001,
                       batch_sz=64,
-                      quantile=0.9,
+                      quantile=0.3,
                       norm='std')
 
     logger = log.get_logger(__name__)
@@ -315,8 +340,10 @@ if __name__ == '__main__':
     activation = 'swish'
     lr_ini = 0.001
     wd_ini = 0.0001
-    quant_loss = quantile_loss(params.quantile)
+    quant_loss = quantile_loss_smooth(params.quantile) #quantile_loss(params.quantile)
     ratio_metric = scnd_fini_diff_metric() #binned_quantile_dev_loss(params.quantile, accuracy_bins)
+
+    logger.info('loss fun ' + quant_loss.name + ', metric fun ' + ratio_metric.name)
 
     model = build_model(quant_loss, ratio_metric, layers_n, nodes_n, lr_ini=lr_ini, wd_ini=wd_ini, activation=activation, x_mu_std=x_mu_std, x_min=x_min, initializer=initializer, norm=(params.norm))
     model.summary()
@@ -339,13 +366,13 @@ if __name__ == '__main__':
     ### save model
     
     model_str = stco.make_qr_model_str(run_n_qr=(params.qr_run_n), run_n_vae=(params.vae_run_n), quantile=(params.quantile), sig_id=(params.sig_sample_id), sig_xsec=0, strategy_id=(params.strategy_id))
-    log.info('saving model to ' + model_str)
+    logger.info('saving model to ' + model_str)
     model.save(os.path.join(qr_model_dir, model_str))
 
     ### write final cut plot
 
     img_file_writer = tf.summary.create_file_writer(img_log_dir)
-    img = plot_discriminator_cut(model, qcd_test_sample, score_strategy, fig_dir=fig_dir)
+    img = plot_discriminator_cut(model, qcd_test_sample, score_strategy, fig_dir=fig_dir,xlim=False)
     with img_file_writer.as_default():
         tf.summary.image('Training data and cut', img, step=1000)
 # okay decompiling qr_playground_model.cpython-36.pyc

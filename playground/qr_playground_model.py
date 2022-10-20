@@ -46,13 +46,12 @@ class quantile_dev_loss():
         self.name=name
         self.quantile = tf.constant(quantile)
 
-    #@tf.function
+    @tf.function
     def __call__(self, inputs, targets, predictions):
-        import ipdb; ipdb.set_trace()
         predictions = tf.squeeze(predictions)
         count_tot = tf.shape(inputs)[0] # get batch size
-        count_bel = tf.math.count_nonzero(tf.math.less(targets,predictions))
-        ratio = tf.math.divide_no_nan(tf.cast(count_bel,tf.float32),tf.cast(count_tot,tf.float32))
+        count_above = tf.math.count_nonzero(tf.math.greater(targets,predictions))
+        ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
         return tf.math.square(self.quantile-ratio)
 
 
@@ -67,7 +66,7 @@ class binned_quantile_dev_loss():
 
     # @tf.function
     def __call__(self, inputs, targets, predictions):
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
         predictions = tf.squeeze(predictions)
         bin_idcs = tf.searchsorted(self.bins,inputs)
 
@@ -84,26 +83,6 @@ class binned_quantile_dev_loss():
         return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over m bins 
 
 
-
-class scnd_fini_diff_metric():
-
-    def __init__(self, delta=1e-2, name='scndFiniteDiffLoss'):
-        self.name=name
-        self.delta = tf.constant(delta) # delta to approximate second derivative
-
-    # @tf.function
-    def __call__(self, pred, pred_delta_plus, pred_delta_minus): # for integration in regular TF -> compute predictions for delta-shifted inputs in outside train/test step
-        # import ipdb; ipdb.set_trace()
-        pred = tf.squeeze(pred)
-        pred_delta_plus = tf.squeeze(pred_delta_plus) # targets input not used in prediction
-        pred_delta_minus = tf.squeeze(pred_delta_minus)
-        
-        # 2nd finite diff
-        fini_diff2 = tf.math.divide_no_nan((pred_delta_plus - 2*pred + pred_delta_minus),tf.math.square(self.delta))  
-
-        return tf.reduce_mean(tf.math.abs(fini_diff2)) # mean per batch (-> independent of batch-size)
-
-
 # ******************************************** #
 #                    model                     #
 # ******************************************** #
@@ -114,11 +93,10 @@ class QrModel(tf.keras.Model):
         
         super().__init__(*args, **kwargs)
 
-    def compile(self, loss, ratio_metric, optimizer, delta=1e-2, run_eagerly=True, **kwargs):
+    def compile(self, loss, ratio_metric, optimizer, run_eagerly=True, **kwargs):
 
         super().compile(optimizer=optimizer,run_eagerly=run_eagerly, **kwargs)
 
-        self.delta = delta
         self.quant_loss_fn = loss
         self.ratio_metric_fn = ratio_metric
 
@@ -142,19 +120,14 @@ class QrModel(tf.keras.Model):
         self.optimizer.apply_gradients(zip(grads, trainable_variables))
 
         #ratio metric
-        if self.ratio_metric_fn.name == 'scndFiniteDiffLoss': # 2nd finite difference metric
-            pred_delta_plus = self([inputs+self.delta,targets]) # targets input not used in prediction
-            pred_delta_minus = self([inputs-self.delta,targets])
-            ratio_acc = self.ratio_metric_fn(predictions,pred_delta_plus,pred_delta_minus)
-        else: # ratio deviation metric
-            inputs_norm = self.get_layer('Normalization')(inputs) # normalize inputs
-            ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
+        inputs_norm = self.get_layer('Normalization')(inputs) # normalize inputs
+        ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
 
         # update state of metrics for each batch
         self.loss_mean.update_state(loss)
         self.ratio_metric_mean.update_state(ratio_acc)
         
-        return {'loss': self.loss_mean.result(), 'smooth' : self.ratio_metric_mean.result()}
+        return {'loss': self.loss_mean.result(), 'ratio_acc' : self.ratio_metric_mean.result()}
 
 
     def test_step(self, data):
@@ -165,19 +138,12 @@ class QrModel(tf.keras.Model):
         loss = self.quant_loss_fn(targets, predictions)
 
         # update state of metrics
-        #ratio metric
-        if self.ratio_metric_fn.name == 'scndFiniteDiffLoss': # 2nd finite difference metric
-            #import ipdb; ipdb.set_trace()
-            pred_delta_plus = self([inputs+self.delta,targets],training=False) # targets input not used in prediction
-            pred_delta_minus = self([inputs-self.delta,targets],training=False)
-            ratio_acc = self.ratio_metric_fn(predictions,pred_delta_plus,pred_delta_minus)
-        else: # ratio deviation metric
-            inputs_norm = self.get_layer('Normalization')(inputs) # normalize inputs
-            ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
+        inputs_norm = self.get_layer('Normalization')(inputs) # normalize inputs
+        ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
         self.loss_mean.update_state(loss)
         self.ratio_metric_mean.update_state(ratio_acc)
         
-        return {'loss': self.loss_mean.result(), 'smooth': self.ratio_metric_mean.result()}
+        return {'loss': self.loss_mean.result(), 'ratio_acc': self.ratio_metric_mean.result()}
 
 
     @property
@@ -316,21 +282,20 @@ if __name__ == '__main__':
     # tf.keras.utils.set_random_seed(42) # also sets python and numpy random seeds
 
     Parameters = recordtype('Parameters','vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, \
-                            sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm, shuffle')
+                            sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=226,
+                    qr_run_n=228,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
-                    epochs=10,
+                    epochs=70,
                     read_n=int(1e5),
                     lr_ini=1e-4,
-                    batch_sz=128,
+                    batch_sz=4096,
                     quantile=0.9,
-                    norm='std',
-                    shuffle=True
+                    norm='std'
                     )
 
     # logging
@@ -407,7 +372,7 @@ if __name__ == '__main__':
     lr_ini = 1e-3
     wd_ini = 1e-4
     quant_loss = quantile_loss(params.quantile)
-    ratio_metric = scnd_fini_diff_metric() #quantile_dev_loss(params.quantile) # binned_quantile_dev_loss(params.quantile, accuracy_bins) #None # 
+    ratio_metric = binned_quantile_dev_loss(params.quantile, accuracy_bins) #None # quantile_dev_loss(params.quantile)
 
     model = build_model(quant_loss, ratio_metric, layers_n, nodes_n, lr_ini=lr_ini, wd_ini=wd_ini, 
         activation=activation, x_mu_std=x_mu_std, x_min=x_min, initializer=initializer, norm=params.norm)
@@ -422,14 +387,14 @@ if __name__ == '__main__':
 
 
     # import ipdb; ipdb.set_trace()
-    model.fit(x=x_train, y=y_train, batch_size=params.batch_sz, epochs=params.epochs, shuffle=params.shuffle,
+    model.fit(x=x_train, y=y_train, batch_size=params.batch_sz, epochs=params.epochs, shuffle=True,
         validation_data=(x_test, y_test), callbacks=[tensorboard_callb, es_callb, reduce_lr, plot_cb])
     
     plot_log_transformed_results(model, x_train, y_train, fig_dir)
 
     # save qr
     model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=params.vae_run_n, quantile=params.quantile, sig_id=params.sig_sample_id, sig_xsec=0, strategy_id=params.strategy_id)
-    logger.info('saving model to ' + model_str)
+    log.info('saving model to ' + model_str)
     model.save(os.path.join(qr_model_dir, model_str))
 
     # print final image to tensorboard
