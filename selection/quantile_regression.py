@@ -3,73 +3,92 @@ import vande.vae.layers as layers
 
 
 # ******************************************** #
-#           quantile regression loss           #
-# ******************************************** #
-
-class quantile_loss(tf.keras.losses.Loss):
-
-    def __init__(self, quantile, name='quantileLoss'):
-        super().__init__(name=name)
-        self.quantile = tf.constant(quantile)
-
-    @tf.function
-    def call(self, targets, predictions):
-        targets = tf.squeeze(targets)
-        predictions = tf.squeeze(predictions)
-        err = tf.subtract(targets, predictions)
-        return tf.reduce_mean(tf.where(err>=0, self.quantile*err, (self.quantile-1)*err)) # return mean over samples in batch
-
-
-# deviance of global (unbinned) ratio of above/below number of events from quantile (1 value for full batch)
-class quantile_dev_loss():
-
-    def __init__(self, quantile, name='quantileAccLoss'):
-        self.name=name
-        self.quantile = tf.constant(quantile)
-
-    @tf.function
-    def __call__(self, inputs, targets, predictions):
-        predictions = tf.squeeze(predictions)
-        count_tot = tf.shape(inputs)[0] # get batch size
-        count_above = tf.math.count_nonzero(tf.math.greater(targets,predictions))
-        ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
-        return tf.math.square(self.quantile-ratio)
-
-
-# deviance of binned ratio of below/above number of events from quantile (1 value for full batch)
-class binned_quantile_dev_loss():
-
-    def __init__(self, quantile, bins, name='binnedQuantileDevLoss'):
-        self.name=name
-        self.quantile = tf.constant(quantile)
-        self.bins_n = len(bins)
-        self.bins = tf.constant(bins.astype('float32')) # instead of squeezing and reshaping expand dims of bins to (4,1)?
-
-    # @tf.function
-    def __call__(self, inputs, targets, predictions):
-        # import ipdb; ipdb.set_trace()
-        predictions = tf.squeeze(predictions)
-        bin_idcs = tf.searchsorted(self.bins,inputs)
-
-        ratios = tf.Variable([self.quantile]*self.bins_n)
-        for bin_idx in range(1,self.bins_n+1):
-            bin_mask = tf.math.equal(bin_idcs, bin_idx)
-            count_tot = tf.math.count_nonzero(bin_mask)
-            # sum only when count_tot > 0! (TODO: or > 1 s.t. a ratio is even computable?)
-            if count_tot > 0:
-                count_above = tf.math.count_nonzero(targets[bin_mask] > predictions[bin_mask])
-                ratio = tf.math.divide_no_nan(tf.cast(count_above,tf.float32),tf.cast(count_tot,tf.float32))
-                ratios[bin_idx-1].assign(ratio)
-
-        return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over m bins 
-
-# ******************************************** #
 #           quantile regression models         #
 # ******************************************** #
 
-### custom train and test step model with optional quantile-ratio-deviation loss term
+
+# state of the art model set up for 2nd finite difference smoothness metric
+
 
 class QrModel(tf.keras.Model):
+
+    def __init__(self, *args, **kwargs):
+        (super().__init__)(*args, **kwargs)
+
+    def compile(self, loss, metric_fn, optimizer, run_eagerly=True, **kwargs):
+        (super().compile)(optimizer=optimizer, run_eagerly=run_eagerly, **kwargs)
+        self.quant_loss_fn = loss
+        self.metric_fn = metric_fn
+        self.loss_mean = tf.keras.metrics.Mean('loss')
+        self.metric_mean = tf.keras.metrics.Mean(self.metric_fn.name)
+
+    def train_step(self, data):
+
+        inputs, targets = data
+        
+        with tf.GradientTape() as (tape):
+            predictions = self([inputs, targets], training=True)
+            loss = self.quant_loss_fn(targets, predictions)
+        
+        trainable_variables = self.trainable_variables
+        grads = tape.gradient(loss, trainable_variables)
+        self.optimizer.apply_gradients(zip(grads, trainable_variables))
+        
+        delta = self.metric_fn.delta
+        # import ipdb; ipdb.set_trace()
+        pred = self([inputs, targets], training=False) # compute new predictions after backpropagation step
+        pred_delta_plus = self([inputs+delta, targets], training=False)
+        pred_delta_minus = self([inputs-delta, targets], training=False)
+        norm_delta = tf.math.divide_no_nan(delta,self.get_layer('Normalization').std_x) # scale delta like inputs
+        metric_val = self.metric_fn(pred, pred_delta_plus, pred_delta_minus, norm_delta)
+
+        self.loss_mean.update_state(loss)
+        self.metric_mean.update_state(metric_val)
+
+        return {'loss':self.loss_mean.result(), self.metric_fn.name : self.metric_mean.result()}
+
+
+    def test_step(self, data):
+
+        inputs, targets = data
+
+        predictions = self([inputs, targets], training=False)
+
+        loss = self.quant_loss_fn(targets, predictions)
+
+        delta = self.metric_fn.delta
+        # import ipdb; ipdb.set_trace()
+        pred_delta_plus = self([inputs+delta, targets], training=False)
+        pred_delta_minus = self([inputs-delta, targets], training=False)
+        norm_delta = tf.math.divide_no_nan(delta,self.get_layer('Normalization').std_x)
+        metric_val = self.metric_fn(predictions, pred_delta_plus, pred_delta_minus, norm_delta)
+
+
+        self.loss_mean.update_state(loss)
+        self.metric_mean.update_state(metric_val)
+        
+        return {'loss':self.loss_mean.result(), self.metric_fn.name : self.metric_mean.result()}
+
+    @property
+    def metrics(self):
+        metrics = super().metrics
+        metrics.append(self.loss_mean)
+        metrics.append(self.metric_mean)
+        return metrics
+
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+
+
+
+
+
+### custom train and test step model with optional quantile-ratio-deviation loss term
+
+class QrModelRatios(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
 

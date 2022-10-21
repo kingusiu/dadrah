@@ -99,14 +99,14 @@ class scnd_fini_diff_metric():
         self.delta = tf.constant(delta) # delta to approximate second derivative, applied before normalization -> to O(1K)
 
     # @tf.function
-    def __call__(self, pred, pred_delta_plus, pred_delta_minus): # for integration in regular TF -> compute predictions for delta-shifted inputs in outside train/test step
+    def __call__(self, pred, pred_delta_plus, pred_delta_minus, delta): # for integration in regular TF -> compute predictions for delta-shifted inputs in outside train/test step
         # import ipdb; ipdb.set_trace()
         pred = tf.squeeze(pred)
         pred_delta_plus = tf.squeeze(pred_delta_plus) # targets input not used in prediction
         pred_delta_minus = tf.squeeze(pred_delta_minus)
         
         # 2nd finite diff
-        fini_diff2 = tf.math.divide_no_nan((pred_delta_plus - tf.cast(tf.constant(2.0),tf.float32)*pred + pred_delta_minus),tf.math.square(self.delta))  
+        fini_diff2 = tf.math.divide_no_nan((pred_delta_plus - tf.cast(tf.constant(2.0),tf.float32)*pred + pred_delta_minus),tf.math.square(delta)) # using scaled delta here  
 
         return tf.reduce_mean(tf.math.square(fini_diff2)) # mean per batch
 
@@ -141,7 +141,8 @@ class QrModel(tf.keras.Model):
             pred = self([inputs, targets], training=False) # compute new predictions after backpropagation step
             pred_delta_plus = self([inputs+delta, targets], training=False)
             pred_delta_minus = self([inputs-delta, targets], training=False)
-            metric_val = self.ratio_metric_fn(pred, pred_delta_plus, pred_delta_minus)
+            norm_delta = tf.math.divide_no_nan(delta,self.get_layer('Normalization').std_x) # scale delta like inputs
+            metric_val = self.ratio_metric_fn(pred, pred_delta_plus, pred_delta_minus, norm_delta)
 
         else:
             inputs_norm = self.get_layer('Normalization')(inputs)
@@ -166,7 +167,8 @@ class QrModel(tf.keras.Model):
             # import ipdb; ipdb.set_trace()
             pred_delta_plus = self([inputs+delta, targets], training=False)
             pred_delta_minus = self([inputs-delta, targets], training=False)
-            metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, pred_delta_minus)
+            norm_delta = tf.math.divide_no_nan(delta,self.get_layer('Normalization').std_x)
+            metric_val = self.ratio_metric_fn(predictions, pred_delta_plus, pred_delta_minus, norm_delta)
 
         else:
             inputs_norm = self.get_layer('Normalization')(inputs)
@@ -207,7 +209,7 @@ def build_model(quantile_loss, ratio_metric, layers_n, nodes_n, lr_ini, wd_ini, 
     targets = tf.keras.Input(shape=(1, ), name='targets')
     x = inputs_mjj
     if norm == 'std':
-        x = (layers.StdNormalization)(*x_mu_std, **{'name': 'Normalization'})(x)
+        x = layers.StdNormalization(*x_mu_std, name='Normalization')(x)
     else:
         x = LogTransform(x_min, name='Normalization')(x)
     for _ in range(layers_n):
@@ -290,15 +292,15 @@ if __name__ == '__main__':
     train_split = 0.3
     Parameters = recordtype('Parameters', 'vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm')
     params = Parameters(vae_run_n=113,
-                      qr_run_n=233,
+                      qr_run_n=236,
                       qcd_train_sample_id=('qcdSigAllTrain' + str(int(train_split * 100)) + 'pct'),
                       qcd_test_sample_id=('qcdSigAllTest' + str(int((1 - train_split) * 100)) + 'pct'),
                       sig_sample_id='GtoWW35naReco',
                       strategy_id='rk5_05',
-                      epochs=20,
-                      read_n=(int(1e5)),
+                      epochs=30,
+                      read_n=(int(5e5)),
                       lr_ini=0.0001,
-                      batch_sz=64,
+                      batch_sz=256,
                       quantile=0.3,
                       norm='std')
 
@@ -359,7 +361,7 @@ if __name__ == '__main__':
     
     ### fit model
 
-    model.fit(x=x_train, y=y_train, batch_size=(params.batch_sz), epochs=(params.epochs), shuffle=True, validation_data=(x_test, y_test),callbacks=[tensorboard_callb, es_callb, reduce_lr, plot_cb])
+    model.fit(x=x_train, y=y_train, batch_size=params.batch_sz, epochs=params.epochs, shuffle=True, validation_data=(x_test, y_test),callbacks=[tensorboard_callb, es_callb, reduce_lr, plot_cb])
     
     plot_log_transformed_results(model, x_train, y_train, fig_dir)
 

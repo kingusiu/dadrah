@@ -169,8 +169,11 @@ else: # else if not train discriminator: read polynomials from file => READ one 
 
 
 #************************************************************#
-#      predict: make selections from fitted polynomials
+#      predict & write: make selections from fitted polynomials
 #************************************************************#
+
+
+### predict and write qcd
 
 predict_qcd = False
 
@@ -187,10 +190,8 @@ if predict_qcd:
 
     qcd_sample_results.dump(result_paths.sample_file_path(params.qcd_sample_id, mkdir=True))
 
-#************************************************************#
-#                   write selection results
-#************************************************************#
-# predict and write signals
+
+#### predict and write signals
 
 sig_kfold_n = params.kfold_n+1
 

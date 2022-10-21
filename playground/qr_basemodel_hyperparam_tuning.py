@@ -38,6 +38,25 @@ class quantile_loss(tf.keras.losses.Loss):
         return tf.reduce_mean(tf.where(err>=0, self.quantile*err, (self.quantile-1)*err)) # return mean over samples in batch
 
 
+class quantile_loss_smooth(tf.keras.losses.Loss):
+    ''' S. Zheng, “Gradient descent algorithms for quantile regression with
+    smooth approximation,” International Journal of Machine Learning and
+    Cybernetics, vol. 2, no. 3, p. 191, 2011. '''
+
+    def __init__(self, quantile, name='quantileLossSmooth'):
+        super().__init__(name=name)
+        self.quantile = tf.constant(quantile)
+        self.beta = tf.constant(0.2) # smoothing constant
+
+    @tf.function
+    def call(self, targets, predictions):
+        targets = tf.squeeze(targets)
+        predictions = tf.squeeze(predictions)
+        err = tf.subtract(targets, predictions)
+        return tf.reduce_mean(self.quantile * err + self.beta * tf.math.log(1. + tf.math.exp(-tf.math.divide_no_nan(err,self.beta)))) # return mean over samples in batch
+
+
+
 # deviance of global (unbinned) ratio of above/below number of events from quantile (1 value for full batch)
 class quantile_dev_loss():
 
@@ -82,6 +101,26 @@ class binned_quantile_dev_loss():
         return tf.reduce_sum(tf.math.square(ratios-self.quantile)) # sum over m bins 
 
 
+class scnd_fini_diff_metric():
+
+    def __init__(self, delta=1.0, name='2ndDiff'):
+        self.name=name
+        self.delta = tf.constant(delta) # delta to approximate second derivative, applied before normalization -> to O(1K)
+
+    # @tf.function
+    def __call__(self, pred, pred_delta_plus, pred_delta_minus, delta): # for integration in regular TF -> compute predictions for delta-shifted inputs in outside train/test step
+        # import ipdb; ipdb.set_trace()
+        pred = tf.squeeze(pred)
+        pred_delta_plus = tf.squeeze(pred_delta_plus) # targets input not used in prediction
+        pred_delta_minus = tf.squeeze(pred_delta_minus)
+        
+        # 2nd finite diff
+        fini_diff2 = tf.math.divide_no_nan((pred_delta_plus - tf.cast(tf.constant(2.0),tf.float32)*pred + pred_delta_minus),tf.math.square(delta)) # using scaled delta here  
+
+        return tf.reduce_mean(tf.math.square(fini_diff2)) # mean per batch
+
+
+
 # ******************************************** #
 #                    model                     #
 # ******************************************** #
@@ -89,74 +128,76 @@ class binned_quantile_dev_loss():
 class QrModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
-        
-        super().__init__(*args, **kwargs)
+        (super().__init__)(*args, **kwargs)
 
-    def compile(self, loss, ratio_metric, optimizer, run_eagerly=True):
-
-        super().compile(optimizer=optimizer,run_eagerly=run_eagerly)
-
+    def compile(self, loss, metric_fn, optimizer, run_eagerly=True, **kwargs):
+        (super().compile)(optimizer=optimizer, run_eagerly=run_eagerly, **kwargs)
         self.quant_loss_fn = loss
-        self.ratio_metric_fn = ratio_metric
-
-        # set up loss tracking (track scalar metric value with Mean)
-        self.loss_mean = tf.keras.metrics.Mean('loss') # main quantile loss
-        self.ratio_metric_mean = tf.keras.metrics.Mean(self.ratio_metric_fn.name)
-
+        self.metric_fn = metric_fn
+        self.loss_mean = tf.keras.metrics.Mean('loss')
+        self.ratio_metric_mean = tf.keras.metrics.Mean(self.metric_fn.name)
 
     def train_step(self, data):
 
         inputs, targets = data
-        # import ipdb; ipdb.set_trace()
-
-        with tf.GradientTape() as tape:
-            # predict
-            predictions = self([inputs,targets], training=True)
-            # quantile loss
+        
+        with tf.GradientTape() as (tape):
+            predictions = self([inputs, targets], training=True)
             loss = self.quant_loss_fn(targets, predictions)
-            
+        
         trainable_variables = self.trainable_variables
         grads = tape.gradient(loss, trainable_variables)
         self.optimizer.apply_gradients(zip(grads, trainable_variables))
-
-        #ratio metric
-        inputs_norm = self.get_layer('Std_Normalize')(inputs) # normalize inputs
-        ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
-
-        # update state of metrics for each batch
-        self.loss_mean.update_state(loss)
-        self.ratio_metric_mean.update_state(ratio_acc)
         
-        return {'loss': self.loss_mean.result(), 'ratio_acc' : self.ratio_metric_mean.result()}
+        if self.metric_fn.name == '2ndDiff':
+            delta = self.metric_fn.delta
+            # import ipdb; ipdb.set_trace()
+            pred = self([inputs, targets], training=False) # compute new predictions after backpropagation step
+            pred_delta_plus = self([inputs+delta, targets], training=False)
+            pred_delta_minus = self([inputs-delta, targets], training=False)
+            norm_delta = tf.math.divide_no_nan(delta,self.get_layer('Normalization').std_x) # scale delta like inputs
+            metric_val = self.metric_fn(pred, pred_delta_plus, pred_delta_minus, norm_delta)
+
+        else:
+            inputs_norm = self.get_layer('Normalization')(inputs)
+            metric_val = self.metric_fn(inputs_norm, targets, predictions)
+
+        self.loss_mean.update_state(loss)
+        self.ratio_metric_mean.update_state(metric_val)
+
+        return {'loss':self.loss_mean.result(), self.metric_fn.name : self.ratio_metric_mean.result()}
 
 
     def test_step(self, data):
 
         inputs, targets = data
-        predictions = self([inputs,targets], training=False)
-        # quantile loss
+
+        predictions = self([inputs, targets], training=False)
+
         loss = self.quant_loss_fn(targets, predictions)
 
-        # update state of metrics
-        inputs_norm = self.get_layer('Std_Normalize')(inputs) # normalize inputs
-        ratio_acc = self.ratio_metric_fn(inputs_norm,targets,predictions) # one value per batch
-        self.loss_mean.update_state(loss)
-        self.ratio_metric_mean.update_state(ratio_acc)
-        
-        return {'loss': self.loss_mean.result(), 'ratio_acc': self.ratio_metric_mean.result()}
+        if self.metric_fn.name == '2ndDiff':
+            delta = self.metric_fn.delta
+            # import ipdb; ipdb.set_trace()
+            pred_delta_plus = self([inputs+delta, targets], training=False)
+            pred_delta_minus = self([inputs-delta, targets], training=False)
+            norm_delta = tf.math.divide_no_nan(delta,self.get_layer('Normalization').std_x)
+            metric_val = self.metric_fn(predictions, pred_delta_plus, pred_delta_minus, norm_delta)
 
+        else:
+            inputs_norm = self.get_layer('Normalization')(inputs)
+            metric_val = self.metric_fn(inputs_norm, targets, predictions)
+
+        self.loss_mean.update_state(loss)
+        self.ratio_metric_mean.update_state(metric_val)
+        
+        return {'loss':self.loss_mean.result(), self.metric_fn.name : self.ratio_metric_mean.result()}
 
     @property
     def metrics(self):
-        # We list our `Metric` objects here so that `reset_states()` can be
-        # called automatically at the start of each epoch
-        # or at the start of `evaluate()`.
-        # If you don't implement this property, you have to call
-        # `reset_states()` yourself at the time of your choosing.
         metrics = super().metrics
         metrics.append(self.loss_mean)
         metrics.append(self.ratio_metric_mean)
-
         return metrics
 
 
@@ -166,7 +207,7 @@ class QrModel(tf.keras.Model):
 
 
 
-def build_model_with_hp(hp, quantile_loss, ratio_metric, x_mu_std=(0.,1.), initializer='glorot_uniform'):
+def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initializer='glorot_uniform'):
 
     # sample hyperparameters
     layers_n = hp.Int(name='layers_n',min_value=1,max_value=6)
@@ -193,25 +234,25 @@ def build_model_with_hp(hp, quantile_loss, ratio_metric, x_mu_std=(0.,1.), initi
     inputs_mjj = tf.keras.Input(shape=(1,), name='inputs_mjj')
     targets = tf.keras.Input(shape=(1,), name='targets') # only needed for calculating metric because update() signature is limited to y & y_pred in keras.metrics class 
     x = inputs_mjj
-    x = layers.StdNormalization(*x_mu_std)(x)
+    x = layers.StdNormalization(*x_mu_std,name='Normalization')(x)
     for _ in range(layers_n):
         x = tf.keras.layers.Dense(nodes_n, kernel_initializer=initializer, activation=activation)(x)
     outputs = tf.keras.layers.Dense(1, kernel_initializer=initializer)(x)
     model = QrModel(inputs=[inputs_mjj,targets], outputs=outputs)
-    model.compile(loss=quantile_loss, ratio_metric=ratio_metric, optimizer=optimizer) # Adam(lr=1e-3) TODO: add learning rate
+    model.compile(loss=quantile_loss, metric_fn=metric_fn, optimizer=optimizer) # Adam(lr=1e-3) TODO: add learning rate
 
     return model
 
 
 class QrHyperparamModel(kt.HyperModel):
 
-    def __init__(self, quantile_loss, ratio_metric, x_mu_std):
+    def __init__(self, quantile_loss, metric_fn, x_mu_std):
         self.quantile_loss = quantile_loss
-        self.ratio_metric = ratio_metric
+        self.metric_fn = metric_fn
         self.x_mu_std = x_mu_std
 
     def build(self, hp):
-        return build_model_with_hp(hp, self.quantile_loss, self.ratio_metric, self.x_mu_std)
+        return build_model_with_hp(hp, self.quantile_loss, self.metric_fn, self.x_mu_std)
 
     def fit(self, hp, model, x, y, **kwargs):
         # import ipdb; ipdb.set_trace()
@@ -255,18 +296,16 @@ class WeightDecayLogger(tf.keras.callbacks.Callback):
 #       discriminator analysis plots           #
 # ******************************************** #
 
-def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix=''):
+def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix='',xlim=True):
     fig = plt.figure(figsize=(8, 8))
-    x_min = np.min(sample[feature_key]) #norm_x.data_min_[0] #
-    x_max = np.max(sample[feature_key]) #norm_x.data_max_[0] #
+    x_min = np.min(sample[feature_key])
+    x_max = np.max(sample[feature_key])
     an_score = score_strategy(sample)
-    plt.hist2d(sample[feature_key], an_score,
-           range=((x_min*0.9 , np.percentile(sample[feature_key], 1e2*(1-1e-5))), (np.min(an_score), np.percentile(an_score, 1e2*(1-1e-4)))), 
-           norm=LogNorm(), bins=100)
-
-    xs = np.arange(x_min, x_max, 0.001*(x_max-x_min))
-    #import ipdb; ipdb.set_trace()
-    plt.plot(xs, discriminator.predict([xs,xs]) , '-', color='m', lw=2.5, label='selection cut')
+    x_top = np.percentile(sample[feature_key], 99.999) if xlim else x_max
+    x_range = ((x_min * 0.9,x_top), (np.min(an_score), np.percentile(an_score, 99.99)))
+    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()),bins=100)
+    xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
+    plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 & L2 > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.colorbar()
@@ -274,11 +313,10 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     if fig_dir:
-        plt.savefig(fig_dir+'/discriminator_cut'+plot_suffix+'.png')
+        plt.savefig(fig_dir + '/discriminator_cut' + plot_suffix + '.png')
     plt.close(fig)
     buf.seek(0)
-    image = tf.image.decode_png(buf.getvalue(), channels=4)
-    # Add the batch dimension
+    image = tf.image.decode_png((buf.getvalue()), channels=4)
     image = tf.expand_dims(image, 0)
     return image
 
@@ -301,8 +339,6 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
 
 
 
-
-
 # ******************************************** #
 #                    main                      #
 # ******************************************** #
@@ -318,14 +354,14 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=210,
+                    qr_run_n=237,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
                     epochs=50,
                     read_n=int(5e5),
-                    objective='val_ratio_acc',
+                    objective='val_2ndDiff',
                     max_trials=20,
                     quantile=0.5
                     )
@@ -398,15 +434,14 @@ if __name__ == '__main__':
     #****************************************#
 
     initializer = 'he_uniform'
-    quant_loss = quantile_loss(params.quantile)
-    ratio_metric = binned_quantile_dev_loss(params.quantile, accuracy_bins)
+    quant_loss = quantile_loss_smooth(params.quantile) #quantile_loss(params.quantile)
+    metric_fn = scnd_fini_diff_metric() #binned_quantile_dev_loss(params.quantile, accuracy_bins)
 
-    logger.info('ratio_metric: '+str(ratio_metric))
-    logger.info('accuracy_bins ' + ','.join(f'{a:.3f}' for a in accuracy_bins))
+    logger.info('loss fun ' + quant_loss.name + ', metric fun ' + metric_fn.name)
 
     # hyperparams tuner
     objective = kt.Objective(name=params.objective, direction='min')
-    tuner = kt.BayesianOptimization(QrHyperparamModel(quant_loss, ratio_metric, x_mu_std=x_mu_std), 
+    tuner = kt.BayesianOptimization(QrHyperparamModel(quant_loss, metric_fn, x_mu_std=x_mu_std), 
                             objective=objective, max_trials=params.max_trials, overwrite=True, 
                             directory='logs',project_name='bayes_tune_'+str(params.qr_run_n))
 
@@ -414,7 +449,7 @@ if __name__ == '__main__':
     es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=6)
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-9) # only with sgd!?
 
-    tuner.search(x=x_train, y=y_train, epochs=params.epochs, shuffle=False,
+    tuner.search(x=x_train, y=y_train, epochs=params.epochs, shuffle=True,
             validation_data=(x_test, y_test), callbacks=[tensorboard_callb, es_callb, reduce_lr, PrintLearningRate()])
 
 
