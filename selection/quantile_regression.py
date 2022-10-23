@@ -84,8 +84,6 @@ class QrModel(tf.keras.Model):
 
 
 
-
-
 ### custom train and test step model with optional quantile-ratio-deviation loss term
 
 class QrModelRatios(tf.keras.Model):

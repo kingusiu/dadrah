@@ -210,8 +210,8 @@ class QrModel(tf.keras.Model):
 def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initializer='glorot_uniform'):
 
     # sample hyperparameters
-    layers_n = hp.Int(name='layers_n',min_value=1,max_value=6)
-    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=16)
+    layers_n = hp.Int(name='layers_n',min_value=1,max_value=5)
+    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=14)
     # optimizer = hp.Choice("optimizer", values=["sgd", "adam"])
     lr_ini = hp.Float('learning_rate', min_value=1e-5, max_value=1e-2, sampling='log')
     # wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
@@ -256,7 +256,7 @@ class QrHyperparamModel(kt.HyperModel):
 
     def fit(self, hp, model, x, y, **kwargs):
         # import ipdb; ipdb.set_trace()
-        batch_sz = hp.Choice(name='batch_sz',values=[32,128,256,512,1024,2048,4096])
+        batch_sz = hp.Choice(name='batch_sz',values=[16,32,128,256,512,1024,2048,4096])
         print('batch_sz: ' + str(batch_sz))
         return model.fit(x, y, batch_size=batch_sz, **kwargs)
 
@@ -330,13 +330,32 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
         self.qcd_sample = qcd_sample
         self.score_strategy = score_strategy
 
-
     def on_epoch_end(self, epoch, logs=None):
-        img = plot_discriminator_cut(self.model, self.qcd_sample, self.score_strategy)
+        img = plot_discriminator_cut(self.model, self.qcd_sample, self.score_strategy, xlim=False)
         with self.img_file_writer.as_default():
             tf.summary.image("Training data and cut", img, step=epoch)
         self.img_file_writer.flush()
 
+
+# tuner wrapper for printing cut images at trial end
+
+class CustomTuner(kt.BayesianOptimization):
+
+    def __init__(self, qcd_sample, score_strategy, *args, **kwargs):
+        super(CustomTuner, self).__init__(**kwargs)
+        self.qcd_sample = qcd_sample
+        self.score_strategy = score_strategy
+
+    def on_trial_end(self,trial):
+        super(CustomTuner,self).on_trial_end(trial)
+        tb_plot_dir = self._get_tensorboard_dir(self.project_dir+'/tensorboard', trial.trial_id, execution=0)
+        img_file_writer = tf.summary.create_file_writer(tb_plot_dir)
+        model = self.load_model(trial)
+        img = plot_discriminator_cut(model, self.qcd_sample, self.score_strategy, xlim=False)
+        # import ipdb; ipdb.set_trace()
+        with img_file_writer.as_default():
+            tf.summary.image("Training data and cut", img, step=int(trial.trial_id))
+        img_file_writer.flush()
 
 
 # ******************************************** #
@@ -354,7 +373,7 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=237,
+                    qr_run_n=239,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
@@ -362,7 +381,7 @@ if __name__ == '__main__':
                     epochs=50,
                     read_n=int(5e5),
                     objective='val_2ndDiff',
-                    max_trials=20,
+                    max_trials=22,
                     quantile=0.5
                     )
 
@@ -441,9 +460,10 @@ if __name__ == '__main__':
 
     # hyperparams tuner
     objective = kt.Objective(name=params.objective, direction='min')
-    tuner = kt.BayesianOptimization(QrHyperparamModel(quant_loss, metric_fn, x_mu_std=x_mu_std), 
+    # tuner = kt.BayesianOptimization(...)
+    tuner = CustomTuner(hypermodel=QrHyperparamModel(quant_loss, metric_fn, x_mu_std=x_mu_std), 
                             objective=objective, max_trials=params.max_trials, overwrite=True, 
-                            directory='logs',project_name='bayes_tune_'+str(params.qr_run_n))
+                            directory='logs',project_name='bayes_tune_'+str(params.qr_run_n),qcd_sample=qcd_test_sample, score_strategy=score_strategy)
 
     tensorboard_callb = tf.keras.callbacks.TensorBoard(log_dir=tuner.project_dir+'/tensorboard', histogram_freq=1)
     es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=6)
