@@ -337,14 +337,20 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
         self.img_file_writer.flush()
 
 
-# tuner wrapper for printing cut images at trial end
+# tuner wrapper for printing cut images at trial end and observing a warum phase before looking at 2nd finite difference objective
 
 class CustomTuner(kt.BayesianOptimization):
 
-    def __init__(self, qcd_sample, score_strategy, *args, **kwargs):
+    def __init__(self, qcd_sample, score_strategy, *args, warmup=5, **kwargs):
         super(CustomTuner, self).__init__(**kwargs)
         self.qcd_sample = qcd_sample
         self.score_strategy = score_strategy
+        self.warmup = warmup
+
+    def on_epoch_end(self, trial, model, epoch, logs=None): 
+        if epoch < self.warmup: # neglect objective value when in warmup-phase
+            logs['val_2ndDiff'] = 1.0
+        super(CustomTuner,self).on_epoch_end(trial, model, epoch, logs)
 
     def on_trial_end(self,trial):
         super(CustomTuner,self).on_trial_end(trial)
@@ -373,7 +379,7 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=239,
+                    qr_run_n=241,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
@@ -381,7 +387,7 @@ if __name__ == '__main__':
                     epochs=50,
                     read_n=int(5e5),
                     objective='val_2ndDiff',
-                    max_trials=22,
+                    max_trials=23,
                     quantile=0.5
                     )
 
@@ -469,8 +475,8 @@ if __name__ == '__main__':
     es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=6)
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-9) # only with sgd!?
 
-    tuner.search(x=x_train, y=y_train, epochs=params.epochs, shuffle=True,
-            validation_data=(x_test, y_test), callbacks=[tensorboard_callb, es_callb, reduce_lr, PrintLearningRate()])
+    tuner.search(x=x_train, y=y_train, epochs=params.epochs, shuffle=True, validation_data=(x_test, y_test), 
+            callbacks=[tensorboard_callb, es_callb, reduce_lr, PrintLearningRate()], verbose=2)
 
 
     best_trials = tuner.oracle.get_best_trials(num_trials=3)

@@ -23,6 +23,6 @@ if __name__ == '__main__':
 
     # models written to: /eos/home-k/kiwoznia/data/QR_models/vae_run_113/qr_run_$run_n_qr$
     
-    ktrain.train_k_models(params)
+    ktrain.train_k_models(params) # return model paths?
 
     
