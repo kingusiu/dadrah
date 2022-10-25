@@ -131,7 +131,7 @@ def train_k_models(params, qr_model_dir, fig_dir, tb_base_dir, score_strategy_id
     #             train and save 5 models
     #****************************************#
         
-    model_paths = defaultdict(dict)
+    model_paths = kutil.get_model_paths(qr_model_dir, params)
 
     for quantile in params.quantiles:
 
@@ -149,11 +149,8 @@ def train_k_models(params, qr_model_dir, fig_dir, tb_base_dir, score_strategy_id
             model = train_model(params, quantile, qcd_train, qcd_valid, score_strategy=score_strategy, k=k, tb_dir=tb_dir)
 
             # save qr
-            model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=kstco.vae_run_n, quantile=quantile, sig_id=params.sig_sample_id, sig_xsec=0, strategy_id=score_strategy_id)
-            model_str = model_str[:-3] + '_fold' + str(k) + model_str[-3:]
-            logger.info('saving model to ' + model_str)
-            model_full_path = os.path.join(qr_model_dir, model_str)
-            model_paths[q_str]['fold' + str(k)] = model_full_path
+            model_full_path = model_paths[q_str]['fold' + str(k)]
+            logger.info('saving model to ' + model_full_path)
             model.save(model_full_path)
 
             ### write final cut plot

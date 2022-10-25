@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
 import pofah.jet_sample as jesa
+import dadrah.util.string_constants as stco
 
 
 def read_kfold_datasets(path, kfold_n, read_n=None): # -> list(jesa.JetSample)
@@ -37,3 +38,22 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     image = tf.image.decode_png((buf.getvalue()), channels=4)
     image = tf.expand_dims(image, 0)
     return image
+
+
+def get_model_paths(qr_model_dir, params):
+
+    model_paths = defaultdict(dict)
+
+    for quantile in params.quantiles:
+
+        q_str = 'q'+str(int(quantile*100))
+
+        for k in range(1,params.kfold_n+1):
+
+            # save qr
+            model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=kstco.vae_run_n, quantile=quantile, sig_id=params.sig_sample_id, sig_xsec=0, strategy_id=params.score_strategy_id)
+            model_str = model_str[:-3] + '_fold' + str(k) + model_str[-3:]
+            model_full_path = os.path.join(qr_model_dir, model_str)
+            model_paths[q_str]['fold' + str(k)] = model_full_path
+
+    return model_paths

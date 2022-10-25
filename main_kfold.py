@@ -15,11 +15,12 @@ import dadrah.kfold_pipeline.kfold_string_constants as kstco
 if __name__ == '__main__':
 
 
-    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, sig_sample_id, read_n, layers_n, nodes_n, epochs, batch_sz, lr, env_n')
+    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, sig_sample_id, score_strategy_id, read_n, layers_n, nodes_n, epochs, batch_sz, lr, env_n')
     params = Parameters(qr_run_n=402,
                         kfold_n=5,
                         quantiles=[0.3, 0.5, 0.7, 0.9],
                         sig_sample_id='GtoWW35naReco',
+                        score_strategy_id='rk5_05',
                         read_n=int(1e5),
                         layers_n=1,
                         nodes_n=10,
@@ -49,7 +50,7 @@ if __name__ == '__main__':
 
     else:
 
-        model_paths = ... # todo: load model paths
+        model_paths = kutil.get_model_paths(qr_model_dir,params)
 
     # ****************************************************
     #                calculate cut envelope
