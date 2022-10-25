@@ -348,7 +348,7 @@ class CustomTuner(kt.BayesianOptimization):
         self.warmup = warmup
 
     def on_epoch_end(self, trial, model, epoch, logs=None): 
-        if epoch < self.warmup: # neglect objective value when in warmup-phase
+        if epoch <= self.warmup: # neglect objective value when in warmup-phase
             logs['val_2ndDiff'] = 1.0
         super(CustomTuner,self).on_epoch_end(trial, model, epoch, logs)
 
@@ -379,7 +379,7 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=241,
+                    qr_run_n=242,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
@@ -388,7 +388,7 @@ if __name__ == '__main__':
                     read_n=int(5e5),
                     objective='val_2ndDiff',
                     max_trials=23,
-                    quantile=0.5
+                    quantile=0.3
                     )
 
     # logging
@@ -491,6 +491,6 @@ if __name__ == '__main__':
         # print image to tensorboard
         img = plot_discriminator_cut(top_model, qcd_test_sample, score_strategy, fig_dir=fig_dir, plot_suffix='_model'+str(i))
         with img_file_writer.as_default():
-            tf.summary.image("Training data and cut model " +str(i), img, step=1000)
+            tf.summary.image("Test data and cut model " +str(i), img, step=1000)
         img_file_writer.flush() 
     img_file_writer.close()

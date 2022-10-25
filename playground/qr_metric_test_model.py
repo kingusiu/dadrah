@@ -247,7 +247,7 @@ def plot_log_transformed_results(model, x_train, y_train, fig_dir):
     plt.close()
 
 
-def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix='',xlim=True):
+def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix='', xlim=False):
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])
     x_max = np.max(sample[feature_key])
