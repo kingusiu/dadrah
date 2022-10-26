@@ -4,9 +4,11 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+from collections import defaultdict
 
 import pofah.jet_sample as jesa
 import dadrah.util.string_constants as stco
+import dadrah.kfold_pipeline.kfold_string_constants as kstco
 
 
 def read_kfold_datasets(path, kfold_n, read_n=None): # -> list(jesa.JetSample)
@@ -40,7 +42,7 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     return image
 
 
-def get_model_paths(qr_model_dir, params):
+def get_model_paths(params, qr_model_dir):
 
     model_paths = defaultdict(dict)
 

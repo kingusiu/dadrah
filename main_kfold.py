@@ -1,10 +1,12 @@
 from recordtype import recordtype
 import pathlib
 import os
+import numpy as np
 
 import dadrah.kfold_pipeline.kfold_training as ktrain
 import dadrah.kfold_pipeline.kfold_envelope as kenlo
 import dadrah.kfold_pipeline.kfold_string_constants as kstco
+import dadrah.kfold_pipeline.kfold_util as kutil
 
 
 # ******************************************** #
@@ -33,14 +35,19 @@ if __name__ == '__main__':
     train_models = False
     calc_envelope = True
 
+
+    ### paths
+
+    # models written to: /eos/home-k/kiwoznia/data/QR_models/vae_run_113/qr_run_$run_n_qr$
+    qr_model_dir = '/eos/home-k/kiwoznia/data/QR_models/vae_run_' + str(kstco.vae_run_n) + '/qr_run_' + str(params.qr_run_n)
+    pathlib.Path(qr_model_dir).mkdir(parents=True, exist_ok=True)
+
+
     if train_models:
 
         # ****************************************************
         #                   train k models
 
-        # models written to: /eos/home-k/kiwoznia/data/QR_models/vae_run_113/qr_run_$run_n_qr$
-        qr_model_dir = '/eos/home-k/kiwoznia/data/QR_models/vae_run_' + str(kstco.vae_run_n) + '/qr_run_' + str(params.qr_run_n)
-        pathlib.Path(qr_model_dir).mkdir(parents=True, exist_ok=True)
         fig_dir = 'fig/qr_run_' + str(params.qr_run_n)
         pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
         tb_base_dir = 'logs/tensorboard/' + str(params.qr_run_n)
@@ -50,7 +57,7 @@ if __name__ == '__main__':
 
     else:
 
-        model_paths = kutil.get_model_paths(qr_model_dir,params)
+        model_paths = kutil.get_model_paths(params, qr_model_dir)
 
     # ****************************************************
     #                calculate cut envelope
@@ -63,7 +70,7 @@ if __name__ == '__main__':
                             2305, 2406, 2512, 2620, 2733, 2849, 2969, 3093, 3221, 3353, 3490, 3632, 3778, 3928, 
                             4084, 4245, 4411, 4583, 4760, 4943, 5132, 5327, 5574, 5737, 5951, 6173, 6402, 6638, 6882]).astype('float')
 
-        envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges, quantiles)
+        envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges)
 
     else:
 

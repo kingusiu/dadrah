@@ -12,8 +12,6 @@ import vande.vae.layers as layers
 
 class QrModel(tf.keras.Model):
 
-    def __init__(self, *args, **kwargs):
-        (super().__init__)(*args, **kwargs)
 
     def compile(self, loss, metric_fn, optimizer, run_eagerly=True, **kwargs):
         (super().compile)(optimizer=optimizer, run_eagerly=run_eagerly, **kwargs)
@@ -77,9 +75,9 @@ class QrModel(tf.keras.Model):
         return metrics
 
 
-    @classmethod
-    def from_config(cls, config):
-        return cls(**config)
+    # @classmethod
+    # def from_config(cls, config):
+    #     return cls(**config)
 
 
 

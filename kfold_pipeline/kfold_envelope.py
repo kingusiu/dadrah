@@ -1,9 +1,13 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import setGPU
+import tensorflow as tf
 import numpy as np
 from collections import defaultdict
 import pathlib
 import json
 
+import dadrah.selection.quantile_regression as qure
 import dadrah.util.string_constants as stco
 import dadrah.util.logging as log
 import vande.vae.layers as layers
@@ -21,7 +25,7 @@ logger = log.get_logger(__name__)
 #
 #**********************************************************************************#
 
-def compute_kfold_envelope(params, model_paths, bin_edges, quantiles):
+def compute_kfold_envelope(params, model_paths, bin_edges):
 
     # ********************************************************
     #       load models and compute cuts for bin centers
@@ -29,7 +33,7 @@ def compute_kfold_envelope(params, model_paths, bin_edges, quantiles):
 
     cuts_all_models = defaultdict(lambda: np.empty([0, len(bin_edges)]))
 
-    for quantile in quantiles:
+    for quantile in params.quantiles:
 
         q_str = 'q'+str(int(quantile*100))
 
@@ -38,7 +42,7 @@ def compute_kfold_envelope(params, model_paths, bin_edges, quantiles):
             # ***********************
             #       read in model
 
-            model = tf.keras.models.load_model(model_paths[q_str]['fold'+str(k)], custom_objects={'Normalization': layers.StdNormalization})
+            model = tf.keras.models.load_model(model_paths[q_str]['fold'+str(k)], custom_objects={'QrModel': qure.QrModel, 'StdNormalization': layers.StdNormalization}, compile=False)
 
             # predict cut values per bin
             cuts_per_bin = model.predict(bin_edges)

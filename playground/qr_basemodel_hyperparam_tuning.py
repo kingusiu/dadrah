@@ -348,6 +348,7 @@ class CustomTuner(kt.BayesianOptimization):
         self.warmup = warmup
 
     def on_epoch_end(self, trial, model, epoch, logs=None): 
+        ''' metric warmup '''
         if epoch <= self.warmup: # neglect objective value when in warmup-phase
             logs['val_2ndDiff'] = 1.0
         super(CustomTuner,self).on_epoch_end(trial, model, epoch, logs)
@@ -387,8 +388,8 @@ if __name__ == '__main__':
                     epochs=50,
                     read_n=int(5e5),
                     objective='val_2ndDiff',
-                    max_trials=23,
-                    quantile=0.3
+                    max_trials=24,
+                    quantile=0.5
                     )
 
     # logging
