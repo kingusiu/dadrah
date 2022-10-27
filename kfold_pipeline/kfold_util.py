@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from collections import defaultdict
+import pathlib
 
 import pofah.jet_sample as jesa
 import dadrah.util.string_constants as stco
@@ -42,6 +43,11 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     return image
 
 
+
+# *********************************************************************************#
+#                           paths
+
+
 def get_model_paths(params, qr_model_dir):
 
     model_paths = defaultdict(dict)
@@ -59,3 +65,21 @@ def get_model_paths(params, qr_model_dir):
             model_paths[q_str]['fold' + str(k)] = model_full_path
 
     return model_paths
+
+
+def get_envelope_path(params):
+
+    envelope_dir = kstco.qr_results_base_dir + '/qr_run_'+str(params.qr_run_n)+'/sig_'+params.sig_sample_id+'/xsec_'+str(int(params.sig_xsec))+'/loss_rk5_05/envelope_'+str(params.env_run_n)
+    pathlib.Path(envelope_dir).mkdir(parents=True, exist_ok=True)
+
+    return envelope_dir
+
+
+
+def get_polys_json_path(params):
+
+    poly_dir = os.path.join(get_envelope_path(params),'poly_'+str(params.poly_run_n))
+    pathlib.Path(poly_dir).mkdir(parents=True, exist_ok=True)
+    polys_json_path = os.path.join(poly_dir, 'polynomials_allQ_allFolds_GtoWW35naReco_xsec_0.json')
+    
+    return polys_json_path

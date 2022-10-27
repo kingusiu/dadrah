@@ -1,7 +1,47 @@
 import os
+import json
+import pathlib
+import numpy as np
+import matplotlib.pyplot as plt
+from lmfit import minimize, Parameters
+
+import dadrah.util.data_processing as dapr
+import dadrah.kfold_pipeline.kfold_util as kutil
 
 
 eps = 1e-6
+
+bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
+
+
+# ******************************************
+#               uncertainties
+
+def uncertainty_minmax(envelope):
+    return envelope[:,max_idx]-envelope[:,min_idx]
+
+
+def uncertainty_yerr(envelope):
+    y = envelope[:,mu_idx]
+    return np.asarray([y-envelope[:,min_idx], envelope[:,max_idx]-y])
+
+
+def uncertainty_updown(envelope):
+    y      = envelope[:,mu_idx]
+    y_down = np.fabs(y-envelope[:,min_idx])
+    y_up   = np.fabs(y-envelope[:,max_idx])
+    return y_down+y_up
+
+
+# ******************************************
+#               lmfit
+
+
+def residual(params, x, y, uncert, x_shift):
+    
+    y_hat = np.poly1d(params)(x-x_shift) # shift first bin to zero & fix bias
+    
+    return (y - y_hat)/uncert
 
 
 def fit_lm(degree, x, y, uncert, x_shift):
@@ -24,8 +64,6 @@ def fit_lm_coeff(degree, x, y, uncert, x_shift):
 
 
 def fit_poly_from_envelope(fit_fun, uncert_fun, degree, envelope, quantiles, *fit_args):
-    
-    bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
 
     fits = {}
 
@@ -57,8 +95,46 @@ def fit_poly_from_envelope_forall_folds(fit_fun, uncert_fun, degree, envelope_pe
 
 def compute_lm_fits(degree, envelope_per_fold, quantiles, params, x_shift):
     fit_fun = fit_lm_coeff
-    uncert_fun = uncertainty_minmax #uncertainty_stddev #uncertainty_yerr #uncertainty_rmse
+    uncert_fun = uncertainty_yerr #uncertainty_minmax #uncertainty_stddev #uncertainty_yerr #uncertainty_rmse
     return fit_poly_from_envelope_forall_folds(fit_fun, uncert_fun, degree, envelope_per_fold, quantiles, params, x_shift)
+
+
+# *********************************************************************************#
+#                               plotting
+
+def plot_poly_fits(envelope_per_fold, poly_fits_per_fold, quantiles, params, plot_name_suffix, x_shift=0, fig_dir='fig'):
+    
+    bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
+    
+    for q in quantiles:
+        
+        fig, axs = plt.subplots(2, params.kfold_n+1, figsize=(30,6), gridspec_kw={'height_ratios': [3, 1]}, sharex=True, sharey='row')
+        
+        for k, ax, ax_ratio in zip(range(params.kfold_n+1), axs.flat, axs.flat[int(len(axs.flat)/2):]):
+            
+            envelope_q = np.asarray(envelope_per_fold['fold_{}'.format(k+1)][str(q)])
+            poly_fit_q = poly_fits_per_fold['fold_{}'.format(k+1)][q]
+            
+            x = envelope_q[:,bin_idx]
+            y = envelope_q[:,mu_idx]
+            y_hat = poly_fit_q(x-x_shift)
+            yerr = [y-envelope_q[:,min_idx], envelope_q[:,max_idx]-y]
+            
+            ax.errorbar(x, y, yerr=yerr, fmt='o', ms=1.5, zorder=1)
+            ax.plot(x, y_hat, c='r',lw=1, zorder=2)
+            ax.set_title('fold {}'.format(k+1))
+            
+            ax_ratio.plot(x, (y-y_hat)/uncertainty_minmax(envelope_q), 'o', ms=1.7)
+            ax_ratio.grid(True, which='major', axis='y')
+            #ax_ratio.set_ylim([0.995,1.005])
+        
+        for ax in axs.flat:
+            ax.label_outer()
+        
+        plt.suptitle('quantile {}'.format(q))
+        plt.savefig(os.path.join(fig_dir,'poly_fit_q{}_{}.pdf'.format(int(q*100), plot_name_suffix)))
+
+
 
 
 
@@ -71,7 +147,11 @@ def compute_lm_fits(degree, envelope_per_fold, quantiles, params, x_shift):
 #**********************************************************************************#
 
 
-def fit_polynomials(paramsm, envelope_dir):
+def fit_kfold_polynomials(params, envelope_dir):
+
+    # paths: polynomial jsons and figures
+    fig_dir = 'fig/poly_analysis/poly_'+str(params.poly_run_n)
+    pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
 
     # ***********************
     #       read envelope
@@ -85,10 +165,13 @@ def fit_polynomials(paramsm, envelope_dir):
         ff = open(envelope_json_path)
         envelope_per_fold['fold_{}'.format(k+1)] = json.load(ff)
         
-    x_shift = np.asarray(envelope_per_fold['fold_1'][str(quantiles[0])])[0,bin_idx]
+    x_shift = np.asarray(envelope_per_fold['fold_1'][str(params.quantiles[0])])[0,bin_idx]
 
-    lm_fits_per_fold = compute_lm_fits(params.degree, envelope_per_fold, quantiles, params, x_shift)
-    plot_poly_fits(envelope_per_fold, lm_fits_per_fold, quantiles, params, 'lmfit_ord'+str(params.degree)+'_qr'+str(params.poly_out_qr_run_n), x_shift)
+    lm_fits_per_fold = compute_lm_fits(params.poly_order, envelope_per_fold, params.quantiles, params, x_shift)
+    plot_poly_fits(envelope_per_fold, lm_fits_per_fold, params.quantiles, params, 'lmfit_ord'+str(params.poly_order)+'_poly'+str(params.poly_run_n), x_shift, fig_dir)
 
     # write polynomials to file
-    dapr.write_polynomials_to_json(make_polys_json_path(params.poly_out_qr_run_n), lm_fits_per_fold)
+    polys_json_path = kutil.get_polys_json_path(params)
+    dapr.write_polynomials_to_json(polys_json_path, lm_fits_per_fold)
+
+    return polys_json_path

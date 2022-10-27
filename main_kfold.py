@@ -5,6 +5,7 @@ import numpy as np
 
 import dadrah.kfold_pipeline.kfold_training as ktrain
 import dadrah.kfold_pipeline.kfold_envelope as kenlo
+import dadrah.kfold_pipeline.kfold_poly_fitting as kpofi
 import dadrah.kfold_pipeline.kfold_string_constants as kstco
 import dadrah.kfold_pipeline.kfold_util as kutil
 
@@ -17,11 +18,12 @@ import dadrah.kfold_pipeline.kfold_util as kutil
 if __name__ == '__main__':
 
 
-    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, sig_sample_id, score_strategy_id, read_n, layers_n, nodes_n, epochs, batch_sz, lr, env_n')
+    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, epochs, batch_sz, lr, env_run_n, poly_run_n, poly_order')
     params = Parameters(qr_run_n=402,
                         kfold_n=5,
                         quantiles=[0.3, 0.5, 0.7, 0.9],
                         sig_sample_id='GtoWW35naReco',
+                        sig_xsec=0,
                         score_strategy_id='rk5_05',
                         read_n=int(1e5),
                         layers_n=1,
@@ -29,11 +31,15 @@ if __name__ == '__main__':
                         epochs=16,
                         batch_sz=16,
                         lr=3e-3,
-                        env_n=4020,
+                        env_run_n=4020,
+                        poly_run_n=40200,
+                        poly_order=11
                         )
 
     train_models = False
-    calc_envelope = True
+    calc_envelope = False
+    fit_polynomials = True
+    predict = True
 
 
     ### paths
@@ -47,6 +53,7 @@ if __name__ == '__main__':
 
         # ****************************************************
         #                   train k models
+        # ****************************************************
 
         fig_dir = 'fig/qr_run_' + str(params.qr_run_n)
         pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
@@ -59,10 +66,13 @@ if __name__ == '__main__':
 
         model_paths = kutil.get_model_paths(params, qr_model_dir)
 
-    # ****************************************************
-    #                calculate cut envelope
 
     if calc_envelope:
+
+        # ****************************************************
+        #                calculate cut envelope
+        # ****************************************************
+
 
         ### bin edges
         # multiple binning options: dijet, linear, exponential
@@ -74,6 +84,32 @@ if __name__ == '__main__':
 
     else:
 
-        envelope_path = ... # load envelope path
+        envelope_path = kutil.get_envelope_path(params) # load envelope path
 
     
+    if fit_polynomials:
+
+        # ****************************************************
+        #                fit polynomials
+        # ****************************************************
+
+        polynomial_paths = kpofi.fit_kfold_polynomials(params, envelope_path)
+
+    else:
+
+        polynomial_paths = kutil.get_polys_json_path(params)
+
+
+
+    if predict:
+
+        # ****************************************************
+        #                predict background and signal
+        # ****************************************************
+
+        pass
+
+    else:
+
+        pass        
+
