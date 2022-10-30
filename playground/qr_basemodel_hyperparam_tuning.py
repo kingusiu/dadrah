@@ -341,7 +341,7 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
 
 class CustomTuner(kt.BayesianOptimization):
 
-    def __init__(self, qcd_sample, score_strategy, *args, warmup=5, **kwargs):
+    def __init__(self, qcd_sample, score_strategy, *args, warmup=7, **kwargs):
         super(CustomTuner, self).__init__(**kwargs)
         self.qcd_sample = qcd_sample
         self.score_strategy = score_strategy
@@ -380,7 +380,7 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=242,
+                    qr_run_n=243,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
@@ -389,7 +389,7 @@ if __name__ == '__main__':
                     read_n=int(5e5),
                     objective='val_2ndDiff',
                     max_trials=24,
-                    quantile=0.5
+                    quantile=0.3
                     )
 
     # logging

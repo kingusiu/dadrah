@@ -19,27 +19,27 @@ if __name__ == '__main__':
 
 
     Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, epochs, batch_sz, lr, env_run_n, poly_run_n, poly_order')
-    params = Parameters(qr_run_n=402,
+    params = Parameters(qr_run_n=401,
                         kfold_n=5,
-                        quantiles=[0.3, 0.5, 0.7, 0.9],
+                        quantiles=[0.9], # 0.3, 0.5, 0.7, 
                         sig_sample_id='GtoWW35naReco',
                         sig_xsec=0,
                         score_strategy_id='rk5_05',
-                        read_n=int(1e5),
-                        layers_n=1,
-                        nodes_n=10,
-                        epochs=16,
-                        batch_sz=16,
-                        lr=3e-3,
+                        read_n=None,
+                        layers_n=4,
+                        nodes_n=5,
+                        epochs=50,
+                        batch_sz=32,
+                        lr=1e-3,
                         env_run_n=4020,
                         poly_run_n=40200,
                         poly_order=11
                         )
 
-    train_models = False
+    train_models = True
     calc_envelope = False
-    fit_polynomials = True
-    predict = True
+    fit_polynomials = False
+    predict = False
 
 
     ### paths

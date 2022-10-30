@@ -54,7 +54,7 @@ def read_polynomials_from_json(json_path, quantiles, kfold_n):
     return polys_out
 
 
-def write_polynomials_to_json(json_path, polynomials):
+def write_polynomials_to_json(json_path, polynomials, x_shift=0.):
 
     print('writing polynomials to ' + json_path)
 
@@ -62,6 +62,8 @@ def write_polynomials_to_json(json_path, polynomials):
 
     with open(json_path, 'w') as ff:
         json.dump(polynomials_serializable, ff)
+        json.dump({'x_shift':x_shift}, ff)
+
 
 
 def std_normalizing_fun(x_train):

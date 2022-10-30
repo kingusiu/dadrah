@@ -137,7 +137,6 @@ def plot_poly_fits(envelope_per_fold, poly_fits_per_fold, quantiles, params, plo
 
 
 
-
 #**********************************************************************************#
 #
 #
@@ -172,6 +171,6 @@ def fit_kfold_polynomials(params, envelope_dir):
 
     # write polynomials to file
     polys_json_path = kutil.get_polys_json_path(params)
-    dapr.write_polynomials_to_json(polys_json_path, lm_fits_per_fold)
+    dapr.write_polynomials_to_json(polys_json_path, lm_fits_per_fold, x_shift)
 
     return polys_json_path

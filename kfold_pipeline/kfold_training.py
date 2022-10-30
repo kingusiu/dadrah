@@ -131,7 +131,7 @@ def train_k_models(params, qr_model_dir, fig_dir, tb_base_dir, score_strategy_id
     #             train and save 5 models
     #****************************************#
         
-    model_paths = kutil.get_model_paths(qr_model_dir, params)
+    model_paths = kutil.get_model_paths(params, qr_model_dir)
 
     for quantile in params.quantiles:
 
