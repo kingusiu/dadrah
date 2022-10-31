@@ -7,6 +7,15 @@ logger = log.get_logger(__name__)
 
 
 
+def predict(sample, strategy_id, quantile, polynomials, xshift=0.):
+
+    loss_strategy = ansc.an_score_strategy_dict[strategy_id]
+    loss = loss_strategy(sample)
+    loss_cut = polynomials[quantile]
+    
+    return loss > loss_cut(sample['mJJ']-xshift) # shift x by min mjj for bias fixed lmfits
+
+
 def predict_with_polynomials(params, polys_path):
     
     #****************************************#
@@ -14,7 +23,7 @@ def predict_with_polynomials(params, polys_path):
     #****************************************#
 
     logger.info('reading polynomials from ' + polys_path)
-    polynomials_folds = dapr.read_polynomials_from_json(polys_path, params.quantiles, params.kfold_n)
+    polynomials_folds, x_shift = dapr.read_polynomials_from_json(polys_path, params.quantiles, params.kfold_n)
 
     #****************************************#
     #           read in all qcd data
@@ -26,19 +35,21 @@ def predict_with_polynomials(params, polys_path):
     #      predict & write: make selections from fitted polynomials
     #************************************************************#
 
+    output_path = kstco.poly_select_base_dir+'/qr_run_'+str(int(qr_run_n))+'/'+params.sig_sample_id+'/'+str(int(params.sig_xsec))+'/'+params.strategy_id+'/env_run_n'+str(int(params.env_run_n))+'/poly_run_n'+str(int(params.poly_run_n))
+    pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
 
     ### predict and write qcd
 
     for k, sample in zip(range(1, params.kfold_n+1), qcd_sample_parts):
         for quantile in params.quantiles:
-            selection = qrwf.fitted_selection(sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(k)], params.xshift)
+            selection = predict(sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(k)], x_shift)
             sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 
     qcd_sample_results = qcd_sample_parts[0]
     for k in range(1, params.kfold_n):
         qcd_sample_results = qcd_sample_results.merge(qcd_sample_parts[k])
 
-    qcd_sample_results.dump(result_paths.sample_file_path(params.qcd_sample_id, mkdir=True))
+    qcd_sample_results.dump(os.path.join(output_path,params.qcd_sample_id+'.h5'))
 
 
     #### predict and write signals
@@ -55,10 +66,10 @@ def predict_with_polynomials(params, polys_path):
         sig_sample = jesa.JetSample.from_input_dir(sig_sample_id, input_paths_sig.sample_dir_path(sig_sample_id), read_n=params.read_n, **cuco.signalregion_cuts)
 
         for quantile in quantiles:
-            selection = qrwf.fitted_selection(sig_sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(sig_kfold_n)], params.xshift)
+            selection = predict(sig_sample, params.strategy_id, quantile, polynomials_folds['fold_{}'.format(sig_kfold_n)], params.xshift)
             sig_sample.add_feature('sel_q{:02}'.format(int(quantile*100)), selection)
 
-        sig_sample.dump(result_paths.sample_file_path(sig_sample_id, mkdir=True))
+        sig_sample.dump(os.path.join(output_path,params.qcd_sample_id+'.h5'))
 
 
 
