@@ -39,7 +39,7 @@ def read_polynomials_from_json(json_path, quantiles, kfold_n):
     ff = open(json_path)
     polys_json = json.load(ff)
     polys_coeff = polys_json[0]
-    x_shift = polys_json[1]
+    x_shift = polys_json[1]['x_shift']
 
     polys_out = {}
 

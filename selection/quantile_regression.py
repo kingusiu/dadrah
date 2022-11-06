@@ -12,6 +12,11 @@ import vande.vae.layers as layers
 
 class QrModel(tf.keras.Model):
 
+    def __init__(self, *args, **kwargs):
+
+        self.regularizer = kwargs.pop('regularizer', None)
+        super().__init__(*args, **kwargs)
+
 
     def compile(self, loss, metric_fn, optimizer, run_eagerly=True, **kwargs):
         (super().compile)(optimizer=optimizer, run_eagerly=run_eagerly, **kwargs)
@@ -19,7 +24,9 @@ class QrModel(tf.keras.Model):
         self.metric_fn = metric_fn
         self.loss_mean = tf.keras.metrics.Mean('loss')
         self.metric_mean = tf.keras.metrics.Mean(self.metric_fn.name)
+        self.reg_mean = tf.keras.metrics.Mean('reg')
 
+    @tf.function
     def train_step(self, data):
 
         inputs, targets = data
@@ -27,9 +34,11 @@ class QrModel(tf.keras.Model):
         with tf.GradientTape() as (tape):
             predictions = self([inputs, targets], training=True)
             loss = self.quant_loss_fn(targets, predictions)
+            reg_loss = tf.add_n(model.losses) # add regularization loss
+            total_loss = loss + reg_loss
         
         trainable_variables = self.trainable_variables
-        grads = tape.gradient(loss, trainable_variables)
+        grads = tape.gradient(total_loss, trainable_variables)
         self.optimizer.apply_gradients(zip(grads, trainable_variables))
         
         delta = self.metric_fn.delta
@@ -42,8 +51,9 @@ class QrModel(tf.keras.Model):
 
         self.loss_mean.update_state(loss)
         self.metric_mean.update_state(metric_val)
+        self.reg_mean.update_state(reg_loss)
 
-        return {'loss':self.loss_mean.result(), self.metric_fn.name : self.metric_mean.result()}
+        return {'loss':self.loss_mean.result(), self.metric_fn.name : self.metric_mean.result(), 'reg' : self.reg_mean.result()}
 
 
     def test_step(self, data):

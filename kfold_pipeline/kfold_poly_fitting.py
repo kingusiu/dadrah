@@ -7,6 +7,7 @@ from lmfit import minimize, Parameters
 
 import dadrah.util.data_processing as dapr
 import dadrah.kfold_pipeline.kfold_util as kutil
+import dadrah.kfold_pipeline.kfold_string_constants as kstco
 
 
 eps = 1e-6
@@ -149,8 +150,7 @@ def plot_poly_fits(envelope_per_fold, poly_fits_per_fold, quantiles, params, plo
 def fit_kfold_polynomials(params, envelope_dir):
 
     # paths: polynomial jsons and figures
-    fig_dir = 'fig/poly_analysis/poly_'+str(params.poly_run_n)
-    pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
+    fig_dir = kstco.get_polynomials_fig_dir(params)
 
     # ***********************
     #       read envelope
@@ -160,7 +160,7 @@ def fit_kfold_polynomials(params, envelope_dir):
 
     envelope_per_fold = {}
     for k in range(params.kfold_n+1):
-        envelope_json_path = os.path.join(envelope_dir, 'cut_stats_allQ_fold'+str(k+1)+'_'+ params.sig_sample_id + '_xsec_' + str(params.sig_xsec) + '.json')
+        envelope_json_path = os.path.join(envelope_dir, kstco.get_envelope_file_name(params,k))
         ff = open(envelope_json_path)
         envelope_per_fold['fold_{}'.format(k+1)] = json.load(ff)
         
@@ -170,7 +170,7 @@ def fit_kfold_polynomials(params, envelope_dir):
     plot_poly_fits(envelope_per_fold, lm_fits_per_fold, params.quantiles, params, 'lmfit_ord'+str(params.poly_order)+'_poly'+str(params.poly_run_n), x_shift, fig_dir)
 
     # write polynomials to file
-    polys_json_path = kutil.get_polys_json_path(params)
+    polys_json_path = kstco.get_polynomials_full_file_path(params)
     dapr.write_polynomials_to_json(polys_json_path, lm_fits_per_fold, x_shift)
 
     return polys_json_path

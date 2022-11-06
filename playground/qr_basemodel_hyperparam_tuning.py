@@ -211,14 +211,14 @@ def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initiali
 
     # sample hyperparameters
     layers_n = hp.Int(name='layers_n',min_value=1,max_value=5)
-    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=14)
+    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=60)
     # optimizer = hp.Choice("optimizer", values=["sgd", "adam"])
     lr_ini = hp.Float('learning_rate', min_value=1e-5, max_value=1e-2, sampling='log')
-    # wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
+    wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
     # lr_schedule = tf.optimizers.schedules.ExponentialDecay(lr_ini, 10000, 0.97)
     # wd_schedule = tf.optimizers.schedules.ExponentialDecay(wd_ini, 10000, 0.97)
     # optimizer = tfa.optimizers.AdamW(learning_rate=lr_schedule, weight_decay=lambda:None)
-    # optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
+    optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
     # optimizer.weight_decay = lambda : wd_schedule(optimizer.iterations)
     # if optimizer == "sgd":
     #     optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.9) # todo: add momentum
@@ -227,7 +227,7 @@ def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initiali
     # else:
     #     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
     #     regularizer = None
-    optimizer = tf.keras.optimizers.Adam(learning_rate=lr_ini)
+    # optimizer = tf.keras.optimizers.Adam(learning_rate=lr_ini)
     activation = hp.Choice('activation', values=['elu', 'swish'])
 
     # model architecture
@@ -380,16 +380,16 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=243,
+                    qr_run_n=246,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
                     epochs=50,
                     read_n=int(5e5),
-                    objective='val_2ndDiff',
-                    max_trials=24,
-                    quantile=0.3
+                    objective='val_loss',#'val_2ndDiff',
+                    max_trials=28,
+                    quantile=0.5
                     )
 
     # logging

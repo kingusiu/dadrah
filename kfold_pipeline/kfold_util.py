@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from collections import defaultdict
 import pathlib
+import matplotlib.pyplot as plt
+plt.rcParams.update({
+"text.usetex": True,
+"font.family": "sans-serif",
+"font.sans-serif": ["Helvetica"]})
 
 import pofah.jet_sample as jesa
 import dadrah.util.string_constants as stco
@@ -28,7 +33,7 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()),bins=100)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
-    plt.ylabel('L1 & L2 > LT')
+    plt.ylabel('L1 \& L2 > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.colorbar()
     plt.legend(loc='best')
@@ -58,28 +63,20 @@ def get_model_paths(params, qr_model_dir):
 
         for k in range(1,params.kfold_n+1):
 
-            # save qr
-            model_str = stco.make_qr_model_str(run_n_qr=params.qr_run_n, run_n_vae=kstco.vae_run_n, quantile=quantile, sig_id=params.sig_sample_id, sig_xsec=0, strategy_id=params.score_strategy_id)
-            model_str = model_str[:-3] + '_fold' + str(k) + model_str[-3:]
-            model_full_path = os.path.join(qr_model_dir, model_str)
-            model_paths[q_str]['fold' + str(k)] = model_full_path
+            # qr full file path
+            model_dir = kstco.get_qr_model_dir(params)
+            model_str = kstco.get_qr_model_file_name(params,quantile,k)
+            model_paths[q_str]['fold' + str(k)] = os.path.join(qr_model_dir, model_str)
 
     return model_paths
 
 
-def get_envelope_path(params):
+# *************************************************************************#
+#                           binnings
 
-    envelope_dir = kstco.qr_results_base_dir + '/qr_run_'+str(params.qr_run_n)+'/sig_'+params.sig_sample_id+'/xsec_'+str(int(params.sig_xsec))+'/loss_rk5_05/envelope_'+str(params.env_run_n)
-    pathlib.Path(envelope_dir).mkdir(parents=True, exist_ok=True)
+def get_dijet_bins():
 
-    return envelope_dir
-
-
-
-def get_polys_json_path(params):
-
-    poly_dir = os.path.join(get_envelope_path(params),'poly_'+str(params.poly_run_n))
-    pathlib.Path(poly_dir).mkdir(parents=True, exist_ok=True)
-    polys_json_path = os.path.join(poly_dir, 'polynomials_allQ_allFolds_GtoWW35naReco_xsec_0.json')
-    
-    return polys_json_path
+    bins = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
+                    2305, 2406, 2512, 2620, 2733, 2849, 2969, 3093, 3221, 3353, 3490, 3632, 3778, 3928, 
+                    4084, 4245, 4411, 4583, 4760, 4943, 5132, 5327, 5574, 5737, 5951, 6173, 6402, 6638, 6882]).astype('float')
+    return bins

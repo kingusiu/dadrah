@@ -6,12 +6,16 @@ import numpy as np
 from collections import defaultdict
 import pathlib
 import json
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+mpl.rcParams.update(mpl.rcParamsDefault)
+plt.rc('text', usetex=True)
 
 import dadrah.selection.quantile_regression as qure
 import dadrah.util.string_constants as stco
 import dadrah.util.logging as log
 import dadrah.kfold_pipeline.kfold_string_constants as kstco
+import dadrah.kfold_pipeline.kfold_util as kutil
 import dadrah.selection.qr_workflow as qrwf
 import vande.vae.layers as layers
 
@@ -83,6 +87,33 @@ def calc_uncertainty_band_per_quantile(uncert_per_fold, quantiles, params, bins)
     return uncert_band_per_quantile
 
 
+def calc_rmse_band_per_quantile(envelope_per_fold, quantiles, params, bins):
+    
+    bin_idx, mu_idx, rmse_idx, min_idx, max_idx = range(5)
+    
+    rmse_band_per_quantile = {}
+    
+    for q in quantiles:
+        
+        mm = np.empty([0, len(bins)])
+        rr = np.empty([0, len(bins)])
+        
+        for k in range(params.kfold_n):
+        
+            envelope_q = envelope_per_fold['fold_{}'.format(k+1)]     
+            envelope_q = np.asarray(envelope_q[str(q)])
+            
+            mm = np.append(mm, envelope_q[np.newaxis,:,mu_idx], axis=0)
+            rr = np.append(rr, envelope_q[np.newaxis,:,rmse_idx], axis=0)
+            
+        mu_all_folds = np.mean(mm, axis=0)
+        rmse_all_folds = np.max(rr, axis=0)
+        
+        rmse_band_per_quantile[str(q)] = (mu_all_folds, rmse_all_folds)
+        
+    return rmse_band_per_quantile
+
+
 
 def plot_uncertainty_band_per_quantile(uncert_band_per_quantile, quantiles, params, bins, fig_dir):
     
@@ -105,7 +136,28 @@ def plot_uncertainty_band_per_quantile(uncert_band_per_quantile, quantiles, para
         #ax.set_xlim(right=4000)
         #ax.set_ylim(top=3)
         
-    plt.savefig(fig_dir+'uncertainty_band_quantiles.pdf')
+    plt.savefig(os.path.join(fig_dir,'uncertainty_band_quantiles.pdf'))
+
+
+def plot_rmse_band_per_quantile(rmse_band_per_quantile, quantiles, params, bins, fig_dir):
+        
+    fig, axs = plt.subplots(1, len(quantiles), figsize=(20,4), sharex=True, sharey=True)
+    
+    for q, ax in zip(quantiles, axs.flat):
+        
+        mus, rmses = rmse_band_per_quantile[str(q)]
+            
+        ax.plot(bins, mus, lw=1.5)
+        ax.fill_between(bins, mus-rmses, mus+rmses, alpha=0.4, linewidth=0)
+            
+        ax.set_title('Q {}'.format(q))
+        ax.grid()
+        ax.set_xlabel('mJJ')
+        axs.flat[0].set_ylabel('min \& max around mu')
+        #ax.set_xlim(right=4000)
+        #ax.set_ylim(top=3)
+        
+    plt.savefig(os.path.join(fig_dir,'rmse_band_quantiles.pdf'))
 
 
 
@@ -133,11 +185,13 @@ def plot_envelope_uncerts(envelope_per_fold, quantiles, params, fig_dir):
         ax.legend()
         ax.grid()
         ax.set_xlabel('mJJ')
-        axs.flat[0].set_ylabel(r'$\frac{\textrm{max}-\textrm{min}}{\mu}$')
+        axs.flat[0].set_ylabel('(max-min)/mu')
+        # axs.flat[0].set_ylabel(r'$\frac{\textrm{max}-\textrm{min}}{\mu}$')
         #ax.set_xlim(right=5000)
         #ax.set_ylim(top=0.1)
         
-    plt.savefig(fig_dir+'relative_uncertainty_quantiles.pdf')
+    plt.savefig(os.path.join(fig_dir,'relative_uncertainty_quantiles.pdf'))
+
 
 
 
@@ -151,8 +205,10 @@ def plot_envelope_uncerts(envelope_per_fold, quantiles, params, fig_dir):
 
 def compute_kfold_envelope(params, model_paths, bin_edges):
 
+    logger.info('calculating k-fold envelope no.{} for qr {}'.format(params.env_run_n, params.qr_run_n))
+
     # figure path
-    fig_dir = '../fig/env_analysis/env_'+str(params.env_n) +'/'
+    fig_dir = kstco.get_envelope_fig_dir(params)
 
     # ********************************************************
     #       load models and compute cuts for bin centers
@@ -203,21 +259,22 @@ def compute_kfold_envelope(params, model_paths, bin_edges):
 
     plot_envelope_uncerts(envelope_folds, params.quantiles, params, fig_dir)
 
-    rel_uncert_per_fold = calc_relative_uncertainties(envelope_folds, quantiles, params)
-    uncert_band_per_quantile = calc_uncertainty_band_per_quantile(rel_uncert_per_fold, quantiles, params, bin_edges)
-    plot_uncertainty_band_per_quantile(uncert_band_per_quantile, quantiles, params, bin_edges)
+    rel_uncert_per_fold = calc_relative_uncertainties(envelope_folds, params.quantiles, params)
+    uncert_band_per_quantile = calc_uncertainty_band_per_quantile(rel_uncert_per_fold, params.quantiles, params, bin_edges)
+    plot_uncertainty_band_per_quantile(uncert_band_per_quantile, params.quantiles, params, bin_edges, fig_dir)
+    rmse_band_per_quantile = calc_rmse_band_per_quantile(envelope_folds, params.quantiles, params, bin_edges)
+    plot_rmse_band_per_quantile(rmse_band_per_quantile, params.quantiles, params, bin_edges, fig_dir)
 
 
     # ***********************
     #       save envelope
 
-    envelope_dir = kutil.get_envelope_dir(params)
+    envelope_dir = kstco.get_envelope_dir(params)
 
     for k in range(params.kfold_n+1):
-        envelope_json_path = os.path.join(envelope_dir, 'cut_stats_allQ_fold'+str(k+1)+'_'+ params.sig_sample_id + '_xsec_' + str(int(params.sig_xsec)) + '.json')
+        envelope_json_path = os.path.join(envelope_dir, kstco.get_envelope_file_name(params,k))
         logger.info('writing envelope results to ' + envelope_json_path)
         with open(envelope_json_path, 'w') as ff:
             json.dump(envelope_folds['fold_{}'.format(k+1)], ff) # do this separately for each fold (one envelope file per fold)
-
 
     return envelope_dir
