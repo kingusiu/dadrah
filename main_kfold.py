@@ -20,10 +20,10 @@ import dadrah.util.logging as log
 if __name__ == '__main__':
 
 
-    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, epochs, optimizer, batch_sz, lr, env_run_n, binning, poly_run_n, poly_order')
-    params = Parameters(qr_run_n=403, 
+    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, epochs, optimizer, reg_coeff, batch_sz, lr, env_run_n, binning, poly_run_n, poly_order')
+    params = Parameters(qr_run_n=404, 
                         kfold_n=5, 
-                        quantiles=[0.9], # [0.3,0.5,0.7,0.9]
+                        quantiles=[0.3,0.5,0.7,0.9],
                         qcd_sample_id='qcdSigAll', 
                         sig_sample_id='GtoWW35naReco', 
                         sig_xsec=0, 
@@ -32,19 +32,20 @@ if __name__ == '__main__':
                         layers_n=5, 
                         nodes_n=60, 
                         epochs=50, 
-                        optimizer='adam', 
+                        optimizer='adam',
+                        reg_coeff=0., 
                         batch_sz=256, 
                         lr=0.001, 
-                        env_run_n=0, 
+                        env_run_n=1, 
                         binning='dijet', 
                         poly_run_n=0, 
                         poly_order=11
                         )
 
-    train_models = True
-    calc_envelope = False
-    fit_polynomials = False
-    predict = False
+    train_models = False
+    calc_envelope = True
+    fit_polynomials = True
+    predict = True
 
 
     # logging
@@ -82,7 +83,8 @@ if __name__ == '__main__':
 
         ### bin edges
         # multiple binning options: dijet, linear, exponential
-        bin_edges = kutil.get_dijet_bins()
+        bin_edges = kutil.get_dijet_bins(start=1, bin_centers=True)
+        logger.info('envelope bins ' + ','.join([str(b) for b in bin_edges]))
 
         envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges)
 

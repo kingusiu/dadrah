@@ -77,6 +77,9 @@ def get_envelope_dir(params):
 def get_envelope_file_name(params,k):
     return 'envelope_run_'+str(int(params.env_run_n))+'_qr_run_'+str(int(params.qr_run_n))+'_allQ_'+params.sig_sample_id+'_sigx'+str(int(params.sig_xsec))+'_'+params.binning+'Bin'+'_fold'+str(int(k))+'.json'
 
+def get_envelope_full_path(params,k):
+    return os.path.join(get_envelope_dir(params),get_envelope_file_name(params,k))
+
 
 # polynomials dir, based on envelope, function of order
 # e.g. /eos/user/k/kiwoznia/data/QR_results/models//qr_run_402/env_run_0/poly_run_0/polynomials_allQ_allFolds_GtoWW35naReco_xsec_0.json

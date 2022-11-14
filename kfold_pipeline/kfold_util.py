@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+import matplotlib.cm as cm
 from collections import defaultdict
 import pathlib
 import matplotlib.pyplot as plt
@@ -30,7 +31,7 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     an_score = score_strategy(sample)
     x_top = np.percentile(sample[feature_key], 99.999) if xlim else x_max
     x_range = ((x_min * 0.9,x_top), (np.min(an_score), np.percentile(an_score, 99.99)))
-    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()),bins=100)
+    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()), bins=100, cmap=cm.get_cmap('Blues'), cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 \& L2 > LT')
@@ -74,9 +75,23 @@ def get_model_paths(params, qr_model_dir):
 # *************************************************************************#
 #                           binnings
 
-def get_dijet_bins():
+def get_dijet_bins(start=0,bin_centers=False):
 
     bins = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
                     2305, 2406, 2512, 2620, 2733, 2849, 2969, 3093, 3221, 3353, 3490, 3632, 3778, 3928, 
                     4084, 4245, 4411, 4583, 4760, 4943, 5132, 5327, 5574, 5737, 5951, 6173, 6402, 6638, 6882]).astype('float')
-    return bins
+    if bin_centers:
+        bins = [(high+low)/2. for low, high in zip(bins[:-1], bins[1:])]
+
+    return np.array(bins[start:])
+
+
+def get_bins_from_envelope(params):
+
+    bin_idx = 0
+    envelope_json_path = kstco.get_envelope_full_path(params,k=1) # load envelope path
+
+    ff = open(envelope_json_path)
+    env = json.load(ff)
+        
+    return np.asarray(env[str(params.quantiles[0])])[:,bin_idx]

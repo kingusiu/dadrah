@@ -12,12 +12,6 @@ import vande.vae.layers as layers
 
 class QrModel(tf.keras.Model):
 
-    def __init__(self, *args, **kwargs):
-
-        self.regularizer = kwargs.pop('regularizer', None)
-        super().__init__(*args, **kwargs)
-
-
     def compile(self, loss, metric_fn, optimizer, run_eagerly=True, **kwargs):
         (super().compile)(optimizer=optimizer, run_eagerly=run_eagerly, **kwargs)
         self.quant_loss_fn = loss
@@ -34,7 +28,7 @@ class QrModel(tf.keras.Model):
         with tf.GradientTape() as (tape):
             predictions = self([inputs, targets], training=True)
             loss = self.quant_loss_fn(targets, predictions)
-            reg_loss = tf.add_n(model.losses) # add regularization loss
+            reg_loss = tf.add_n(self.losses) # add regularization loss
             total_loss = loss + reg_loss
         
         trainable_variables = self.trainable_variables

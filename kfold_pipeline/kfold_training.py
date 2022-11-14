@@ -88,11 +88,10 @@ def train_model(params, quantile, qcd_train, qcd_valid, score_strategy, k, tb_di
     ### build model
 
     initializer = 'he_uniform'
-    regularizer = None
     activation = 'swish'
-    regularizer = tf.keras.regularizers.L2(0.001)
+    regularizer = tf.keras.regularizers.L2(params.reg_coeff)
     wd_ini = 0.0001
-    quant_loss = lome.quantile_loss_smooth(quantile) #quantile_loss(params.quantile)
+    quant_loss = lome.quantile_loss(quantile) # lome.quantile_loss_smooth(quantile)
     ratio_metric = lome.scnd_fini_diff_metric() #binned_quantile_dev_loss(params.quantile, accuracy_bins)
 
     logger.info('loss fun ' + quant_loss.name + ', metric fun ' + ratio_metric.name)
@@ -104,12 +103,13 @@ def train_model(params, quantile, qcd_train, qcd_valid, score_strategy, k, tb_di
     ### setup callbacks
 
     tensorboard_callb = tf.keras.callbacks.TensorBoard(log_dir=tb_dir, histogram_freq=1)
-    es_callb = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=6)
+    es_callb = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=7)
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-08)
- 
+    callbacks = [tensorboard_callb, es_callb, reduce_lr] # [tensorboard_callb, reduce_lr]
+
     ### fit model
 
-    model.fit(x=x_train, y=y_train, batch_size=params.batch_sz, epochs=params.epochs, shuffle=True, validation_data=(x_valid, y_valid), callbacks=[tensorboard_callb, es_callb, reduce_lr], verbose=2)
+    model.fit(x=x_train, y=y_train, batch_size=params.batch_sz, epochs=params.epochs, shuffle=True, validation_data=(x_valid, y_valid), callbacks=callbacks, verbose=2)
     
     return model
 
@@ -146,8 +146,8 @@ def train_k_models(params, qr_model_dir, tb_base_dir, score_strategy_id='rk5_05'
         logger.info('starting training for quantile ' + q_str)
 
 
-        # for k, qcd_sample_part in zip(range(1,params.kfold_n+1), qcd_sample_parts):
-        for k, qcd_sample_part in zip([5], [qcd_sample_parts[4]]):    
+        for k, qcd_sample_part in zip(range(1,params.kfold_n+1), qcd_sample_parts):
+        # for k, qcd_sample_part in zip([5], [qcd_sample_parts[4]]):    
 
             qcd_train, qcd_valid = jesa.split_jet_sample_train_test(qcd_sample_part, frac=0.7)
             tb_dir = os.path.join(tb_base_dir, q_str,'f'+str(k)) # separate tensorboard dir for every quantile and every fold

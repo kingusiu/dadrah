@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 import matplotlib.cm as cm
+from matplotlib import colors
 from sklearn import preprocessing
 import pathlib
 
@@ -107,7 +108,7 @@ class scnd_fini_diff_metric():
         self.name=name
         self.delta = tf.constant(delta) # delta to approximate second derivative, applied before normalization -> to O(1K)
 
-    # @tf.function
+    @tf.function
     def __call__(self, pred, pred_delta_plus, pred_delta_minus, delta): # for integration in regular TF -> compute predictions for delta-shifted inputs in outside train/test step
         # import ipdb; ipdb.set_trace()
         pred = tf.squeeze(pred)
@@ -207,18 +208,19 @@ class QrModel(tf.keras.Model):
 
 
 
-def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initializer='glorot_uniform'):
+def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), optimizer_id='adam'):
 
     # sample hyperparameters
+    initializer = hp.Choice('initializer', values=['he_uniform', 'glorot_uniform'])
     layers_n = hp.Int(name='layers_n',min_value=1,max_value=5)
-    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=60)
+    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=80)
     # optimizer = hp.Choice("optimizer", values=["sgd", "adam"])
     lr_ini = hp.Float('learning_rate', min_value=1e-5, max_value=1e-2, sampling='log')
-    wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
+    #wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
     # lr_schedule = tf.optimizers.schedules.ExponentialDecay(lr_ini, 10000, 0.97)
     # wd_schedule = tf.optimizers.schedules.ExponentialDecay(wd_ini, 10000, 0.97)
     # optimizer = tfa.optimizers.AdamW(learning_rate=lr_schedule, weight_decay=lambda:None)
-    optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
+    #optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
     # optimizer.weight_decay = lambda : wd_schedule(optimizer.iterations)
     # if optimizer == "sgd":
     #     optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.9) # todo: add momentum
@@ -227,7 +229,11 @@ def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initiali
     # else:
     #     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
     #     regularizer = None
-    # optimizer = tf.keras.optimizers.Adam(learning_rate=lr_ini)
+    if optimizer_id == 'adam':
+        optimizer = tf.keras.optimizers.Adam(learning_rate=lr_ini)
+    elif optimizer_id == 'adamW':
+        wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
+        optimizer = tfa.optimizers.AdamW(learning_rate=lr_ini, weight_decay=wd_ini)
     activation = hp.Choice('activation', values=['elu', 'swish'])
 
     # model architecture
@@ -246,17 +252,18 @@ def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), initiali
 
 class QrHyperparamModel(kt.HyperModel):
 
-    def __init__(self, quantile_loss, metric_fn, x_mu_std):
+    def __init__(self, quantile_loss, metric_fn, x_mu_std, optimizer_id):
         self.quantile_loss = quantile_loss
         self.metric_fn = metric_fn
         self.x_mu_std = x_mu_std
+        self.optimizer_id = optimizer_id
 
     def build(self, hp):
-        return build_model_with_hp(hp, self.quantile_loss, self.metric_fn, self.x_mu_std)
+        return build_model_with_hp(hp, self.quantile_loss, self.metric_fn, self.x_mu_std, self.optimizer_id)
 
     def fit(self, hp, model, x, y, **kwargs):
         # import ipdb; ipdb.set_trace()
-        batch_sz = hp.Choice(name='batch_sz',values=[16,32,128,256,512,1024,2048,4096])
+        batch_sz = hp.Choice(name='batch_sz',values=[16,32,128,256,512,1024,2048,4096,8192])
         print('batch_sz: ' + str(batch_sz))
         return model.fit(x, y, batch_size=batch_sz, **kwargs)
 
@@ -297,13 +304,21 @@ class WeightDecayLogger(tf.keras.callbacks.Callback):
 # ******************************************** #
 
 def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix='',xlim=True):
+
+    # setup colormap
+    cmap = cm.get_cmap('Blues')
+    xc = np.linspace(0.0, 1.0, 150)
+    color_list = cmap(xc)
+    color_list = np.vstack((color_list[0], color_list[35:])) # keep white, drop light colors 
+    my_cm = colors.ListedColormap(color_list)
+
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])
     x_max = np.max(sample[feature_key])
     an_score = score_strategy(sample)
     x_top = np.percentile(sample[feature_key], 99.999) if xlim else x_max
     x_range = ((x_min * 0.9,x_top), (np.min(an_score), np.percentile(an_score, 99.99)))
-    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()),bins=100)
+    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()), bins=100, cmap=my_cm, cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
     plt.ylabel('L1 & L2 > LT')
@@ -341,7 +356,7 @@ class PlotCutCallback(tf.keras.callbacks.Callback):
 
 class CustomTuner(kt.BayesianOptimization):
 
-    def __init__(self, qcd_sample, score_strategy, *args, warmup=7, **kwargs):
+    def __init__(self, qcd_sample, score_strategy, *args, warmup=5, **kwargs):
         super(CustomTuner, self).__init__(**kwargs)
         self.qcd_sample = qcd_sample
         self.score_strategy = score_strategy
@@ -377,19 +392,21 @@ if __name__ == '__main__':
     # tf.keras.utils.set_random_seed(42) # also sets python and numpy random seeds
 
     Parameters = recordtype('Parameters','vae_run_n, qr_run_n, qcd_train_sample_id, qcd_test_sample_id, \
-        sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile')
+        sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile, optimizer_id, reg_coeff')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=246,
+                    qr_run_n=250,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
-                    epochs=50,
+                    epochs=40,
                     read_n=int(5e5),
                     objective='val_loss',#'val_2ndDiff',
-                    max_trials=28,
-                    quantile=0.5
+                    max_trials=35,
+                    quantile=0.3,
+                    optimizer_id='adam',
+                    reg_coeff=0.0
                     )
 
     # logging
@@ -459,8 +476,7 @@ if __name__ == '__main__':
     #           build model
     #****************************************#
 
-    initializer = 'he_uniform'
-    quant_loss = quantile_loss_smooth(params.quantile) #quantile_loss(params.quantile)
+    quant_loss = quantile_loss(params.quantile) # quantile_loss_smooth(params.quantile)
     metric_fn = scnd_fini_diff_metric() #binned_quantile_dev_loss(params.quantile, accuracy_bins)
 
     logger.info('loss fun ' + quant_loss.name + ', metric fun ' + metric_fn.name)
@@ -468,13 +484,13 @@ if __name__ == '__main__':
     # hyperparams tuner
     objective = kt.Objective(name=params.objective, direction='min')
     # tuner = kt.BayesianOptimization(...)
-    tuner = CustomTuner(hypermodel=QrHyperparamModel(quant_loss, metric_fn, x_mu_std=x_mu_std), 
+    tuner = CustomTuner(hypermodel=QrHyperparamModel(quant_loss, metric_fn, x_mu_std=x_mu_std, optimizer_id=params.optimizer_id), 
                             objective=objective, max_trials=params.max_trials, overwrite=True, 
                             directory='logs',project_name='bayes_tune_'+str(params.qr_run_n),qcd_sample=qcd_test_sample, score_strategy=score_strategy)
 
     tensorboard_callb = tf.keras.callbacks.TensorBoard(log_dir=tuner.project_dir+'/tensorboard', histogram_freq=1)
-    es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=6)
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-9) # only with sgd!?
+    es_callb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=5)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=4, min_lr=1e-8) # only with sgd!?
 
     tuner.search(x=x_train, y=y_train, epochs=params.epochs, shuffle=True, validation_data=(x_test, y_test), 
             callbacks=[tensorboard_callb, es_callb, reduce_lr, PrintLearningRate()], verbose=2)

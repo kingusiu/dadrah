@@ -228,6 +228,7 @@ def compute_kfold_envelope(params, model_paths, bin_edges):
             model = tf.keras.models.load_model(model_paths[q_str]['fold'+str(k)], custom_objects={'QrModel': qure.QrModel, 'StdNormalization': layers.StdNormalization}, compile=False)
 
             # predict cut values per bin
+            # import ipdb; ipdb.set_trace()
             cuts_per_bin = np.squeeze(model.predict([bin_edges,bin_edges]))
             cuts_all_models[quantile] = np.append(cuts_all_models[quantile], cuts_per_bin[np.newaxis,:], axis=0)
 
@@ -271,10 +272,10 @@ def compute_kfold_envelope(params, model_paths, bin_edges):
 
     envelope_dir = kstco.get_envelope_dir(params)
 
-    for k in range(params.kfold_n+1):
+    for k in range(1,params.kfold_n+2):
         envelope_json_path = os.path.join(envelope_dir, kstco.get_envelope_file_name(params,k))
         logger.info('writing envelope results to ' + envelope_json_path)
         with open(envelope_json_path, 'w') as ff:
-            json.dump(envelope_folds['fold_{}'.format(k+1)], ff) # do this separately for each fold (one envelope file per fold)
+            json.dump(envelope_folds['fold_{}'.format(k)], ff) # do this separately for each fold (one envelope file per fold)
 
     return envelope_dir
