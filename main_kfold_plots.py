@@ -27,9 +27,9 @@ def plot_model_cuts(params, models_fold, sample, score_strategy, k, fig_dir, xli
 
     # setup colormap for 2dhist
     cmap = cm.get_cmap('Blues')
-    xc = np.linspace(0.0, 1.0, 100)
+    xc = np.linspace(0.0, 1.0, 150)
     color_list = cmap(xc)
-    color_list = np.vstack((color_list[0], color_list[40:])) # keep white, drop light colors 
+    color_list = np.vstack((color_list[0], color_list[35:])) # keep white, drop light colors 
     my_cm = colors.ListedColormap(color_list)
 
     # setup colors for cut lines
@@ -47,7 +47,7 @@ def plot_model_cuts(params, models_fold, sample, score_strategy, k, fig_dir, xli
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     for q, c in zip(params.quantiles, palette):
         model = models_fold[q]
-        cuts = np.squeeze(model.predict(xs)) #np.squeeze(model.predict([xs,xs]))
+        cuts =  np.squeeze(model.predict([xs,xs])) # np.squeeze(model.predict(xs))
         plt.plot(xs, cuts, '-', lw=2.5, label='Q '+str(int(q*100))+'%', color=c)
     plt.ylabel('min(L1,L2)')
     plt.xlabel('$M_{jj}$ [GeV]')

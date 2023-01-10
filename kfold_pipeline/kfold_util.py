@@ -1,10 +1,12 @@
 import os
 import io
+import json
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 import matplotlib.cm as cm
+from matplotlib import colors
 from collections import defaultdict
 import pathlib
 import matplotlib.pyplot as plt
@@ -25,16 +27,26 @@ def read_kfold_datasets(path, kfold_n, read_n=None): # -> list(jesa.JetSample)
 
 
 def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='mJJ', plot_name='discr_cut', fig_dir=None, plot_suffix='', xlim=False):
+
+    # setup colormap for 2dhist
+    cmap = cm.get_cmap('Blues')
+    xc = np.linspace(0.0, 1.0, 100)
+    color_list = cmap(xc)
+    color_list = np.vstack((color_list[0], color_list[40:])) # keep white, drop light colors 
+    my_cm = colors.ListedColormap(color_list)
+
+    feature_key = 'mJJ'
+
     fig = plt.figure(figsize=(8, 8))
     x_min = np.min(sample[feature_key])
     x_max = np.max(sample[feature_key])
     an_score = score_strategy(sample)
     x_top = np.percentile(sample[feature_key], 99.999) if xlim else x_max
     x_range = ((x_min * 0.9,x_top), (np.min(an_score), np.percentile(an_score, 99.99)))
-    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()), bins=100, cmap=cm.get_cmap('Blues'), cmin=0.001)
+    plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()), bins=100, cmap=my_cm, cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
-    plt.ylabel('L1 \& L2 > LT')
+    plt.ylabel('min(L1,L2) > LT')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.colorbar()
     plt.legend(loc='best')

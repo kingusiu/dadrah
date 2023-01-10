@@ -2,6 +2,7 @@ from recordtype import recordtype
 import pathlib
 import os
 import numpy as np
+import argparse
 
 import dadrah.kfold_pipeline.kfold_training as ktrain
 import dadrah.kfold_pipeline.kfold_envelope as kenlo
@@ -19,37 +20,49 @@ import dadrah.util.logging as log
 
 if __name__ == '__main__':
 
+    # command line
+    parser = argparse.ArgumentParser(description='read arguments for k-fold QR training')
+    parser.add_argument('-r', dest='qr_run_n', type=int, help='experiment run number')
+    parser.add_argument('-ln', dest='layers_n', type=int, help='number of layers')
+    parser.add_argument('-nn', dest='nodes_n', type=int, help='number of nodes')
+    parser.add_argument('-bn', dest='batch_sz', type=int, help='batch size')
+    parser.add_argument('-lr', dest='lr', type=float, help='learning rate')
+    args = parser.parse_args()
 
-    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, epochs, optimizer, reg_coeff, batch_sz, lr, env_run_n, binning, poly_run_n, poly_order')
-    params = Parameters(qr_run_n=404, 
+    # logging
+    logger = log.get_logger(__name__)
+    logger.info('\n'+'*'*60+'\n'+'\t\t\t PREDICTION RUN \n'+str(args)+'\n'+'*'*60)
+
+
+    # fixed 
+    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, batch_sz, lr, epochs, optimizer, reg_coeff, env_run_n, binning, poly_run_n, poly_order')
+    params = Parameters(qr_run_n=args.qr_run_n,
                         kfold_n=5, 
                         quantiles=[0.3,0.5,0.7,0.9],
                         qcd_sample_id='qcdSigAll', 
                         sig_sample_id='GtoWW35naReco', 
                         sig_xsec=0, 
                         score_strategy_id='rk5_05', 
-                        read_n=None, 
-                        layers_n=5, 
-                        nodes_n=60, 
+                        read_n=None,
+                        layers_n=args.layers_n,
+                        nodes_n=args.nodes_n,
+                        batch_sz=args.batch_sz,
+                        lr=args.lr, 
                         epochs=50, 
                         optimizer='adam',
                         reg_coeff=0., 
-                        batch_sz=256, 
-                        lr=0.001, 
-                        env_run_n=1, 
+                        env_run_n=0, 
                         binning='dijet', 
                         poly_run_n=0, 
                         poly_order=11
                         )
 
-    train_models = False
+    train_models = True
     calc_envelope = True
     fit_polynomials = True
     predict = True
 
 
-    # logging
-    logger = log.get_logger(__name__)
     logger.info('\n'+'*'*70+'\n'+'\t\t\t MAIN K-FOLD SCRIPT \n'+str(params)+'\n'+'*'*70)
 
     ### paths
@@ -64,7 +77,7 @@ if __name__ == '__main__':
         #                   train k models
         # ****************************************************
 
-        tb_base_dir = 'logs/tensorboard/' + str(params.qr_run_n)
+        tb_base_dir = 'logs/tensorboard/' + str(args.qr_run_n)
         #os.system('rm -rf ' + tb_base_dir)
         
         model_paths = ktrain.train_k_models(params, qr_model_dir, tb_base_dir)

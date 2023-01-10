@@ -212,8 +212,8 @@ def build_model_with_hp(hp, quantile_loss, metric_fn, x_mu_std=(0.,1.), optimize
 
     # sample hyperparameters
     initializer = hp.Choice('initializer', values=['he_uniform', 'glorot_uniform'])
-    layers_n = hp.Int(name='layers_n',min_value=1,max_value=5)
-    nodes_n = hp.Int(name='nodes_n',min_value=4,max_value=80)
+    layers_n = hp.Int(name='layers_n',min_value=3,max_value=7)
+    nodes_n = hp.Int(name='nodes_n',min_value=40,max_value=150)
     # optimizer = hp.Choice("optimizer", values=["sgd", "adam"])
     lr_ini = hp.Float('learning_rate', min_value=1e-5, max_value=1e-2, sampling='log')
     #wd_ini = hp.Float('weight_decay', min_value=1e-6, max_value=1e-3, sampling='log')
@@ -263,7 +263,7 @@ class QrHyperparamModel(kt.HyperModel):
 
     def fit(self, hp, model, x, y, **kwargs):
         # import ipdb; ipdb.set_trace()
-        batch_sz = hp.Choice(name='batch_sz',values=[16,32,128,256,512,1024,2048,4096,8192])
+        batch_sz = hp.Choice(name='batch_sz',values=[16,32,128,256,512,1024,2048,4096])
         print('batch_sz: ' + str(batch_sz))
         return model.fit(x, y, batch_size=batch_sz, **kwargs)
 
@@ -321,7 +321,7 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()), bins=100, cmap=my_cm, cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
-    plt.ylabel('L1 & L2 > LT')
+    plt.ylabel('min(L1,L2)')
     plt.xlabel('$M_{jj}$ [GeV]')
     plt.colorbar()
     plt.legend(loc='best')
@@ -395,15 +395,15 @@ if __name__ == '__main__':
         sig_sample_id, strategy_id, epochs, read_n, objective, max_trials, quantile, optimizer_id, reg_coeff')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=250,
+                    qr_run_n=257,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',
                     strategy_id='rk5_05',
-                    epochs=40,
+                    epochs=50,
                     read_n=int(5e5),
                     objective='val_loss',#'val_2ndDiff',
-                    max_trials=35,
+                    max_trials=60,
                     quantile=0.3,
                     optimizer_id='adam',
                     reg_coeff=0.0

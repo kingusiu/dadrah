@@ -285,7 +285,7 @@ if __name__ == '__main__':
                             sig_sample_id, strategy_id, epochs, read_n, lr_ini, batch_sz, quantile, norm')
     params = Parameters(
                     vae_run_n=113,
-                    qr_run_n=228,
+                    qr_run_n=222,
                     qcd_train_sample_id='qcdSigAllTrain'+str(int(train_split*100))+'pct', 
                     qcd_test_sample_id='qcdSigAllTest'+str(int((1-train_split)*100))+'pct',
                     sig_sample_id='GtoWW35naReco',

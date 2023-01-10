@@ -104,7 +104,7 @@ def train_model(params, quantile, qcd_train, qcd_valid, score_strategy, k, tb_di
 
     tensorboard_callb = tf.keras.callbacks.TensorBoard(log_dir=tb_dir, histogram_freq=1)
     es_callb = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=7)
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-08)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=4, min_lr=1e-08)
     callbacks = [tensorboard_callb, es_callb, reduce_lr] # [tensorboard_callb, reduce_lr]
 
     ### fit model
