@@ -23,10 +23,15 @@ if __name__ == '__main__':
     # command line
     parser = argparse.ArgumentParser(description='read arguments for k-fold QR training')
     parser.add_argument('-r', dest='qr_run_n', type=int, help='experiment run number')
-    parser.add_argument('-ln', dest='layers_n', type=int, help='number of layers')
-    parser.add_argument('-nn', dest='nodes_n', type=int, help='number of nodes')
-    parser.add_argument('-bn', dest='batch_sz', type=int, help='batch size')
-    parser.add_argument('-lr', dest='lr', type=float, help='learning rate')
+    parser.add_argument('-ln', dest='layers_n', type=int, help='number of layers', default=5)
+    parser.add_argument('-nn', dest='nodes_n', type=int, help='number of nodes', default=60)
+    parser.add_argument('-bn', dest='batch_sz', type=int, help='batch size', default=256)
+    parser.add_argument('-lr', dest='lr', type=float, help='learning rate', default=1e-2)
+    parser.add_argument('-ac', dest='acti', type=str, help='activation function', default='swish')
+    parser.add_argument('-in', dest='initial', type=str, help='weight initializer', default='glorot_uniform')
+    parser.add_argument('-read', dest='read_n', type=int, help='number of samples to read', default=None)
+    parser.add_argument('-en', dest='env_run_n', type=int, help='envelope number (f of bins)', default=0)
+    parser.add_argument('-pn', dest='poly_run_n', type=int, help='polyfit number (f of order)', default=0)
     args = parser.parse_args()
 
     # logging
@@ -35,7 +40,7 @@ if __name__ == '__main__':
 
 
     # fixed 
-    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, batch_sz, lr, epochs, optimizer, reg_coeff, env_run_n, binning, poly_run_n, poly_order')
+    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, batch_sz, acti, initial, lr, epochs, optimizer, reg_coeff, env_run_n, binning, poly_run_n, poly_order')
     params = Parameters(qr_run_n=args.qr_run_n,
                         kfold_n=5, 
                         quantiles=[0.3,0.5,0.7,0.9],
@@ -43,17 +48,19 @@ if __name__ == '__main__':
                         sig_sample_id='GtoWW35naReco', 
                         sig_xsec=0, 
                         score_strategy_id='rk5_05', 
-                        read_n=None,
+                        read_n=args.read_n,
                         layers_n=args.layers_n,
                         nodes_n=args.nodes_n,
                         batch_sz=args.batch_sz,
+                        acti=args.acti,
+                        initial=args.initial,
                         lr=args.lr, 
                         epochs=50, 
                         optimizer='adam',
                         reg_coeff=0., 
-                        env_run_n=0, 
+                        env_run_n=args.env_run_n, 
                         binning='dijet', 
-                        poly_run_n=0, 
+                        poly_run_n=args.poly_run_n, 
                         poly_order=11
                         )
 

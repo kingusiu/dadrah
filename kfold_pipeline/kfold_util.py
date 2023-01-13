@@ -10,10 +10,10 @@ from matplotlib import colors
 from collections import defaultdict
 import pathlib
 import matplotlib.pyplot as plt
-plt.rcParams.update({
-"text.usetex": True,
-"font.family": "sans-serif",
-"font.sans-serif": ["Helvetica"]})
+# plt.rcParams.update({
+# "text.usetex": False,
+# "font.family": "sans-serif",})
+# "font.sans-serif": ["Helvetica"]
 
 import pofah.jet_sample as jesa
 import dadrah.util.string_constants as stco
@@ -46,8 +46,9 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
     plt.hist2d((sample[feature_key]), an_score, range=x_range, norm=(LogNorm()), bins=100, cmap=my_cm, cmin=0.001)
     xs = np.arange(x_min, x_max, 0.001 * (x_max - x_min))
     plt.plot(xs, (discriminator.predict([xs, xs])), '-', color='m', lw=2.5, label='selection cut')
-    plt.ylabel('min(L1,L2) > LT')
-    plt.xlabel('$M_{jj}$ [GeV]')
+    plt.ylabel('min(L1,L2)')
+    # plt.xlabel('$M_{jj}$ [GeV]')
+    plt.xlabel('Mjj [GeV]')
     plt.colorbar()
     plt.legend(loc='best')
     buf = io.BytesIO()

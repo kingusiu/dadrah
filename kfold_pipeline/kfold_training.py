@@ -87,8 +87,8 @@ def train_model(params, quantile, qcd_train, qcd_valid, score_strategy, k, tb_di
 
     ### build model
 
-    initializer = 'he_uniform'
-    activation = 'swish'
+    initializer = params.initial
+    activation = params.acti
     regularizer = tf.keras.regularizers.L2(params.reg_coeff)
     wd_ini = 0.0001
     quant_loss = lome.quantile_loss(quantile) # lome.quantile_loss_smooth(quantile)
