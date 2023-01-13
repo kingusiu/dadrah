@@ -32,6 +32,9 @@ if __name__ == '__main__':
     parser.add_argument('-read', dest='read_n', type=int, help='number of samples to read', default=None)
     parser.add_argument('-en', dest='env_run_n', type=int, help='envelope number (f of bins)', default=0)
     parser.add_argument('-pn', dest='poly_run_n', type=int, help='polyfit number (f of order)', default=0)
+    parser.add_argument('--loadqr', dest='train_models', action="store_false", help='load previously trained qr models')
+    parser.add_argument('--loadenv', dest='calc_envelope', action="store_false", help='load previously calulated envelope')
+    parser.add_argument('--loadpoly', dest='fit_polynomials', action="store_false", help='load previously fitted polynomials')
     args = parser.parse_args()
 
     # logging
@@ -64,9 +67,6 @@ if __name__ == '__main__':
                         poly_order=11
                         )
 
-    train_models = True
-    calc_envelope = True
-    fit_polynomials = True
     predict = True
 
 
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     qr_model_dir = kstco.get_qr_model_dir(params)
 
 
-    if train_models:
+    if args.train_models:
 
         # ****************************************************
         #                   train k models
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         model_paths = kutil.get_model_paths(params, qr_model_dir)
 
 
-    if calc_envelope:
+    if args.calc_envelope:
 
         # ****************************************************
         #                calculate cut envelope
@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
         ### bin edges
         # multiple binning options: dijet, linear, exponential
-        bin_edges = kutil.get_dijet_bins(start=1, bin_centers=True)
+        bin_edges = kutil.get_dijet_bins(start=0, bin_centers=True)
         logger.info('envelope bins ' + ','.join([str(b) for b in bin_edges]))
 
         envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges)
@@ -113,7 +113,7 @@ if __name__ == '__main__':
         envelope_path = kstco.get_envelope_dir(params) # load envelope path
 
     
-    if fit_polynomials:
+    if args.fit_polynomials:
 
         # ****************************************************
         #                fit polynomials
