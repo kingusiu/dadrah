@@ -116,20 +116,20 @@ def get_expo_bins(n_bins=40, min_mjj=1200., max_mjj=6000, bin_centers=True):
     bins = exp_bins*(max_mjj-min_mjj)+min_mjj
     if bin_centers:
         bins = [(high+low)/2. for low, high in zip(bins[:-1], bins[1:])]
-    return bins
+    return np.asarray(bins)
 
 
 def get_linear_bins(n_bins=40, min_mjj=1200., max_mjj=6000, bin_centers=True):
     bins = np.array(np.linspace(min_mjj, max_mjj, n_bins).tolist()).astype('float')
-     if bin_centers:
+    if bin_centers:
         bins = [(high+low)/2. for low, high in zip(bins[:-1], bins[1:])]
-    return bins
+    return np.asarray(bins)
 
 
 def get_bins_from_envelope(params):
 
     bin_idx = 0
-    envelope_json_path = kstco.get_envelope_full_path(params,k=1) # load envelope path
+    envelope_json_path = kstco.get_envelope_file(params,k=1) # load envelope path
 
     ff = open(envelope_json_path)
     env = json.load(ff)

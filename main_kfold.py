@@ -121,7 +121,7 @@ if __name__ == '__main__':
         ### bin edges
         # multiple binning options: dijet, linear, exponential
         bin_edges = kutil.get_bins(bin_type=params.binning, **kwargs_bins)
-        logger.info('calculating envelope ' +str(params.env_run_n)+ ' with bins ' + ','.join([str(b) for b in bin_edges]))
+        logger.info('calculating envelope ' +str(params.env_run_n)+ ' with bins ' + ','.join(['{:.2f}'.format(b) for b in bin_edges]))
 
         envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges)
 
