@@ -32,9 +32,11 @@ if __name__ == '__main__':
     parser.add_argument('-read', dest='read_n', type=int, help='number of samples to read', default=None)
     parser.add_argument('-en', dest='env_run_n', type=int, help='envelope number (f of bins)', default=0)
     parser.add_argument('-pn', dest='poly_run_n', type=int, help='polyfit number (f of order)', default=0)
+    parser.add_argument('bi', dest='binning', choices=['linear', 'expo', 'dijet'], help='binning basis for envelope', default='dijet')
     parser.add_argument('--loadqr', dest='train_models', action="store_false", help='load previously trained qr models')
     parser.add_argument('--loadenv', dest='calc_envelope', action="store_false", help='load previously calulated envelope')
     parser.add_argument('--loadpoly', dest='fit_polynomials', action="store_false", help='load previously fitted polynomials')
+    parser.add_argument('--siginject', dest='sig_inject', action='store_true', help='inject signal into qr training')
     args = parser.parse_args()
 
     # logging
@@ -62,7 +64,7 @@ if __name__ == '__main__':
                         optimizer='adam',
                         reg_coeff=0., 
                         env_run_n=args.env_run_n, 
-                        binning='dijet', 
+                        binning=args.binning, 
                         poly_run_n=args.poly_run_n, 
                         poly_order=11
                         )
@@ -84,12 +86,16 @@ if __name__ == '__main__':
         #                   train k models
         # ****************************************************
 
+        logger.info('training QR model ' + str(args.qr_run_n))
+
         tb_base_dir = 'logs/tensorboard/' + str(args.qr_run_n)
         #os.system('rm -rf ' + tb_base_dir)
         
         model_paths = ktrain.train_k_models(params, qr_model_dir, tb_base_dir)
 
     else:
+
+        logger.info('loading QR model ' + str(args.qr_run_n))
 
         model_paths = kutil.get_model_paths(params, qr_model_dir)
 
@@ -103,13 +109,14 @@ if __name__ == '__main__':
 
         ### bin edges
         # multiple binning options: dijet, linear, exponential
-        bin_edges = kutil.get_dijet_bins(start=0, bin_centers=True)
-        logger.info('envelope bins ' + ','.join([str(b) for b in bin_edges]))
+        bin_edges = kutil.get_bins(params.binning)
+        logger.info('calculating envelope ' +str(params.env_run_n)+ ' with bins ' + ','.join([str(b) for b in bin_edges]))
 
         envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges)
 
     else:
 
+        logger.info('loading envelope nr ' +str(params.env_run_n)+)
         envelope_path = kstco.get_envelope_dir(params) # load envelope path
 
     
@@ -119,10 +126,11 @@ if __name__ == '__main__':
         #                fit polynomials
         # ****************************************************
 
+        logger.info('fitting polynomials nr '+str(params.poly_run_n)+' of order '+str(params.poly_order))
         polynomial_paths = kpofi.fit_kfold_polynomials(params, envelope_path)
 
     else:
-
+        logger.info('loading polynomials nr '+str(params.poly_run_n))
         polynomial_paths = kstco.get_polynomials_full_file_path(params)
 
 
