@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     else:
 
-        logger.info('loading envelope nr ' +str(params.env_run_n)+)
+        logger.info('loading envelope nr ' +str(params.env_run_n))
         envelope_path = kstco.get_envelope_dir(params) # load envelope path
 
     
