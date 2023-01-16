@@ -97,7 +97,7 @@ def get_bins(bin_type, **kwargs):
         return get_linear_bins(**kwargs)
 
 
-def get_dijet_bins(start=0,bin_centers=True):
+def get_dijet_bins(bin_start=0,bin_centers=True):
 
     bins = np.array([1200, 1255, 1320, 1387, 1457, 1529, 1604, 1681, 1761, 1844, 1930, 2019, 2111, 2206, 
                     2305, 2406, 2512, 2620, 2733, 2849, 2969, 3093, 3221, 3353, 3490, 3632, 3778, 3928, 
@@ -105,10 +105,10 @@ def get_dijet_bins(start=0,bin_centers=True):
     if bin_centers:
         bins = [(high+low)/2. for low, high in zip(bins[:-1], bins[1:])]
 
-    return np.array(bins[start:])
+    return np.array(bins[bin_start:])
 
 
-def get_expo_bins(n_bins=40, min_mjj=1200., max_mjj=6400):
+def get_expo_bins(n_bins=40, min_mjj=1200., max_mjj=6000):
     ''' exponentially expanding bin-width '''
     x_shift = 3
     lin_bins = np.linspace(0.,1.,n_bins)
@@ -117,7 +117,7 @@ def get_expo_bins(n_bins=40, min_mjj=1200., max_mjj=6400):
     return bin_edges
 
 
-def get_linear_bins(n_bins=40, min_mjj=1200., max_mjj=6800):
+def get_linear_bins(n_bins=40, min_mjj=1200., max_mjj=600):
     return np.array(np.linspace(min_mjj, max_mjj, n_bins).tolist()).astype('float')
 
 

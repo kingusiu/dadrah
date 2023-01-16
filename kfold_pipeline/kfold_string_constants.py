@@ -1,5 +1,6 @@
 import pathlib
 import os
+import glob
 
 
 # categories
@@ -74,11 +75,13 @@ def get_envelope_dir(params):
     pathlib.Path(env_out_dir).mkdir(parents=True, exist_ok=True)
     return env_out_dir
 
+
 def get_envelope_file_name(params,k):
     return 'envelope_run_'+str(int(params.env_run_n))+'_qr_run_'+str(int(params.qr_run_n))+'_allQ_'+params.sig_sample_id+'_sigx'+str(int(params.sig_xsec))+'_'+params.binning+'Bin'+'_fold'+str(int(k))+'.json'
 
-def get_envelope_full_path(params,k):
-    return os.path.join(get_envelope_dir(params),get_envelope_file_name(params,k))
+
+def get_envelope_file(params,k):
+    return glob.glob(get_envelope_dir(params)+'/*'+params.sig_sample_id+'*fold'+str(k)+'.json')[0]
 
 
 # polynomials dir, based on envelope, function of order

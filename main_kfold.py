@@ -29,15 +29,26 @@ if __name__ == '__main__':
     parser.add_argument('-lr', dest='lr', type=float, help='learning rate', default=1e-2)
     parser.add_argument('-ac', dest='acti', type=str, help='activation function', default='swish')
     parser.add_argument('-in', dest='initial', type=str, help='weight initializer', default='glorot_uniform')
+    # number of samples
     parser.add_argument('-read', dest='read_n', type=int, help='number of samples to read', default=None)
+    # envelope and polynomials run n
     parser.add_argument('-en', dest='env_run_n', type=int, help='envelope number (f of bins)', default=0)
     parser.add_argument('-pn', dest='poly_run_n', type=int, help='polyfit number (f of order)', default=0)
-    parser.add_argument('bi', dest='binning', choices=['linear', 'expo', 'dijet'], help='binning basis for envelope', default='dijet')
+    # loading options
     parser.add_argument('--loadqr', dest='train_models', action="store_false", help='load previously trained qr models')
     parser.add_argument('--loadenv', dest='calc_envelope', action="store_false", help='load previously calulated envelope')
     parser.add_argument('--loadpoly', dest='fit_polynomials', action="store_false", help='load previously fitted polynomials')
     parser.add_argument('--siginject', dest='sig_inject', action='store_true', help='inject signal into qr training')
+    # binning options
+    parser.add_argument('-bi', dest='binning', choices=['linear', 'expo', 'dijet'], help='binning basis for envelope', default='dijet')
+    parser.add_argument('-bis', dest='bin_start', type=int)
+    parser.add_argument('-bin', dest='n_bins', type=int)
+    parser.add_argument('-bimi', dest='min_mjj', type=float)
+    parser.add_argument('-bima', dest='max_mjj', type=float)
+    parser.add_argument('--bie', dest='bin_centers', action='store_false')
     args = parser.parse_args()
+    # optional binning kwargs
+    kwargs_bins = {k:v for k,v in vars(args).items() if k in ['bin_start','bin_centers','n_bins','min_mjj','max_mjj'] and v is not None} 
 
     # logging
     logger = log.get_logger(__name__)
@@ -109,7 +120,7 @@ if __name__ == '__main__':
 
         ### bin edges
         # multiple binning options: dijet, linear, exponential
-        bin_edges = kutil.get_bins(params.binning)
+        bin_edges = kutil.get_bins(bin_type=params.binning, **kwargs_bins)
         logger.info('calculating envelope ' +str(params.env_run_n)+ ' with bins ' + ','.join([str(b) for b in bin_edges]))
 
         envelope_path = kenlo.compute_kfold_envelope(params, model_paths, bin_edges)

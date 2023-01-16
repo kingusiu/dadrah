@@ -160,7 +160,7 @@ def fit_kfold_polynomials(params, envelope_dir):
 
     envelope_per_fold = {}
     for k in range(1,params.kfold_n+2): # k: 1-6
-        envelope_json_path = os.path.join(envelope_dir, kstco.get_envelope_file_name(params,k))
+        envelope_json_path = kstco.get_envelope_file(params,k)
         ff = open(envelope_json_path)
         envelope_per_fold['fold_{}'.format(k)] = json.load(ff)
         
