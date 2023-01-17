@@ -16,6 +16,7 @@ import pofah.util.sample_factory as sf
 import dadrah.kfold_pipeline.kfold_util as kutil
 import dadrah.kfold_pipeline.kfold_string_constants as kstco
 import dadrah.selection.losses_and_metrics as lome
+import dadrah.util.data_processing as dapr
 import vande.vae.layers as layers
 
 
@@ -133,6 +134,12 @@ def train_k_models(params, qr_model_dir, tb_base_dir, score_strategy_id='rk5_05'
     qcd_sample_parts = kutil.read_kfold_datasets(kstco.vae_out_dir_kfold_qcd, params.kfold_n, read_n=params.read_n)
     score_strategy = ansc.an_score_strategy_dict[score_strategy_id]
 
+    #****************************************#
+    #           inject signal
+    #****************************************#
+    if params.sig_xsec != 0:
+        qcd_sample_parts = dapr.inject_signal_kfold_dataset(params, qcd_sample_parts)
+        
     #****************************************#
     #             train and save 5 models
     #****************************************#

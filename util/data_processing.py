@@ -2,7 +2,13 @@ import os
 import json
 import numpy as np
 import pofah.jet_sample as js
+import dadrah.util.logging as log
+import dadrah.kfold_pipeline.kfold_string_constants as kstco
+import pofah.jet_sample as jesa
+import pofah.phase_space.cut_constants as cuco
 
+
+logger = log.get_logger(__name__)
 
 def merge_qcd_base_and_ext_datasets(params, paths, **cuts):
     # read qcd & qcd ext
@@ -32,6 +38,36 @@ def inject_signal(qcd_train_sample, sig_sample, sig_in_training_num, train_vs_va
     # split training data into train and validation set
     mixed_sample_train, mixed_sample_valid = js.split_jet_sample_train_test(mixed_sample, train_vs_valid_split)
     return mixed_sample_train, mixed_sample_valid
+
+
+def inject_signal_kfold_dataset(params, qcd_sample_parts):
+    
+    sample_path_sig = os.path.join(kstco.vae_out_dir, kstco.vae_out_sample_dir_dict[params.sig_sample_id])
+    logger.info('reading signal ' + sample_path_sig + ' for injection')
+    sig_sample = jesa.JetSample.from_input_dir(params.sig_sample_id, sample_path_sig, read_n=params.read_n, **cuco.signalregion_cuts)
+
+    sig_training_n_total = kstco.signal_contamin[params.sig_sample_id][params.sig_xsec]
+    sig_injected_n = 0
+
+    mixed_sample_parts = []
+    # first k-1 folds
+    for k, qcd_sample_part in zip(range(params.kfold_n-1),qcd_sample_parts): # k-1 degrees of freedom to select signal samples per fold
+        sig_training_n_per_fold = np.random.poisson(sig_training_n_total/float(params.kfold_n)) # sample fold_n from poisson with mu=N/k
+        sig_injected_n += sig_training_n_per_fold
+        # sample random sig_in_train_num events from signal sample
+        sig_train_sample = sig_sample.sample(n=sig_training_n_per_fold)
+        # merge qcd and signal
+        mixed_sample = qcd_sample_part.merge(sig_train_sample)
+        mixed_sample_parts.append(mixed_sample)
+    # last fold: remaining signal samples
+    sig_training_n_per_fold = sig_training_n_total-sig_injected_n
+    sig_train_sample = sig_sample.sample(n=sig_training_n_per_fold)
+    # merge qcd and signal
+    mixed_sample = qcd_sample_parts[-1].merge(sig_train_sample)
+    mixed_sample_parts.append(mixed_sample)
+
+    return mixed_sample_parts
+
 
 
 def read_polynomials_from_json(json_path, quantiles, kfold_n):

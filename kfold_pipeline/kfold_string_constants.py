@@ -119,3 +119,27 @@ def get_polynomials_fig_dir(params):
     fig_dir = 'fig/qr_run_' + str(int(params.qr_run_n))+'/env_run_'+ str(int(params.env_run_n))+'/poly_run_'+str(int(params.poly_run_n))
     pathlib.Path(fig_dir).mkdir(parents=True, exist_ok=True)
     return fig_dir    
+
+#****************************************#
+#           SIGNAL INJECTION
+#****************************************#
+
+grs_na_15_x10fb = 106.12 # number of expected events of g_rs narrow at 1.5TeV
+grs_na_25_x10fb = 110.06 # number of expected events of g_rs narrow at 2.5TeV
+grs_na_35_x10fb = 112.27 # number of expected events of g_rs narrow at 3.5TeV
+grs_na_45_x10fb = 113.98 # number of expected events of g_rs narrow at 4.5TeV
+
+signal_contamin = { 'GtoWW35naReco' : { 0: 0,
+                                        10: int(grs_na_35_x10fb),
+                                        20: int(grs_na_35_x10fb*2),
+                                        40: int(grs_na_35_x10fb*4),
+                                        60: int(grs_na_35_x10fb*6),
+                                        80: int(grs_na_35_x10fb*8),
+                                        100: 1123,
+                                      }, 
+                    'GtoWW35brReco' : { 
+                        0: 0,
+                        100: 1113, # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
+                                    }
+                    }
+

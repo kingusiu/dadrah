@@ -41,11 +41,14 @@ if __name__ == '__main__':
     parser.add_argument('--siginject', dest='sig_inject', action='store_true', help='inject signal into qr training')
     # binning options
     parser.add_argument('-bi', dest='binning', choices=['linear', 'expo', 'dijet'], help='binning basis for envelope', default='dijet')
-    parser.add_argument('-bis', dest='bin_start', type=int)
-    parser.add_argument('-bin', dest='n_bins', type=int)
-    parser.add_argument('-bimi', dest='min_mjj', type=float)
-    parser.add_argument('-bima', dest='max_mjj', type=float)
+    parser.add_argument('-bis', dest='bin_start', type=int, help='index of first bin')
+    parser.add_argument('-bin', dest='n_bins', type=int, help='total number of bins')
+    parser.add_argument('-bimi', dest='min_mjj', type=float, help='maximal mjj')
+    parser.add_argument('-bima', dest='max_mjj', type=float, help='minimal mjj')
     parser.add_argument('--bie', dest='bin_centers', action='store_false')
+    # signal injection
+    parser.add_argument('--siginj', dest='sig_injected', help='inject signal (at 100fb)', action='store_true')
+
     args = parser.parse_args()
     # optional binning kwargs
     kwargs_bins = {k:v for k,v in vars(args).items() if k in ['bin_start','bin_centers','n_bins','min_mjj','max_mjj'] and v is not None} 
@@ -62,7 +65,7 @@ if __name__ == '__main__':
                         quantiles=[0.3,0.5,0.7,0.9],
                         qcd_sample_id='qcdSigAll', 
                         sig_sample_id='GtoWW35naReco', 
-                        sig_xsec=0, 
+                        sig_xsec=(100 if args.sig_injected else 0), 
                         score_strategy_id='rk5_05', 
                         read_n=args.read_n,
                         layers_n=args.layers_n,
@@ -77,7 +80,7 @@ if __name__ == '__main__':
                         env_run_n=args.env_run_n, 
                         binning=args.binning, 
                         poly_run_n=args.poly_run_n, 
-                        poly_order=11
+                        poly_order=11,
                         )
 
     predict = True
@@ -102,6 +105,7 @@ if __name__ == '__main__':
         tb_base_dir = 'logs/tensorboard/' + str(args.qr_run_n)
         #os.system('rm -rf ' + tb_base_dir)
         
+        # import ipdb; ipdb.set_trace()
         model_paths = ktrain.train_k_models(params, qr_model_dir, tb_base_dir)
 
     else:
