@@ -8,6 +8,7 @@ from matplotlib import colors
 import tensorflow as tf
 import mplhep as hep
 import matplotlib.cm as cm
+import argparse
 
 import dadrah.kfold_pipeline.kfold_poly_fitting as kpofi
 import dadrah.kfold_pipeline.kfold_string_constants as kstco
@@ -69,42 +70,32 @@ def plot_model_cuts(params, models_fold, sample, score_strategy, k, fig_dir, xli
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser(description='arguments for QR plotting')
+    parser.add_argument('-r', dest='qr_run_n', type=int, help='experiment run number')
+    # loading options
+    parser.add_argument('--pltmod', dest='plot_models', action="store_true", help='plot qr model selection functions')
+    parser.add_argument('--pltenv', dest='plot_envelope', action="store_true", help='plot envelope')
+    parser.add_argument('--pltpol', dest='plot_polynomials', action="store_true", help='plot polynomials')
+    parser.add_argument('--pltpre', dest='plot_predict', action='store_true', help='plot selections')
+    args = parser.parse_args()
 
-    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n, layers_n, nodes_n, epochs, optimizer, batch_sz, lr, env_run_n, binning, poly_run_n, poly_order')
-    params = Parameters(qr_run_n=32, 
+    Parameters = recordtype('Parameters','qr_run_n, kfold_n, quantiles, qcd_sample_id, sig_sample_id, sig_xsec, score_strategy_id, read_n')
+    params = Parameters(qr_run_n=args.qr_run_n,
                         kfold_n=5, 
                         quantiles=[0.3,0.5,0.7,0.9], # [0.9]
                         qcd_sample_id='qcdSigAll', 
                         sig_sample_id='GtoWW35naReco', 
                         sig_xsec=0, 
                         score_strategy_id='rk5_05', 
-                        read_n=None, 
-                        layers_n=5, 
-                        nodes_n=60, 
-                        epochs=50, 
-                        optimizer='adam', 
-                        batch_sz=256, 
-                        lr=0.001, 
-                        env_run_n=0, 
-                        binning='dijet', 
-                        poly_run_n=0, 
-                        poly_order=11
+                        read_n=None,
                         )
-
-    plot_models = True
-    plot_envelope = False
-    plot_polynomials = False
-    plot_predict = False
 
 
     # logging
     logger = log.get_logger(__name__)
+    logger.info('\n'+'*'*70+'\n'+'\t\t\t PLOTTING \n'+str(args)+'\n'+'*'*70)
     logger.info('\n'+'*'*70+'\n'+'\t\t\t MAIN K-FOLD PLOTTING SCRIPT \n'+str(params)+'\n'+'*'*70)
 
-    ### paths
-
-    # models written to: /eos/home-k/kiwoznia/data/QR_models/vae_run_113/qr_run_$run_n_qr$
-    qr_model_dir = kstco.get_qr_model_dir(params)
 
     #****************************************#
     #           read in all qcd data
@@ -114,13 +105,13 @@ if __name__ == '__main__':
     score_strategy = ansc.an_score_strategy_dict[params.score_strategy_id]
 
 
-    if plot_models:
+    if args.plot_models:
 
         # ****************************************************
         #          plot multi-quantile cuts per fold
         # ****************************************************
 
-        model_paths = kutil.get_model_paths(params, qr_model_dir)
+        model_paths = kutil.get_model_paths(params)
         fig_dir = kstco.get_qr_model_fig_dir(params)
         logger.info('plotting QR model cuts per fold to ' + fig_dir)
 
@@ -140,35 +131,26 @@ if __name__ == '__main__':
 
         # end for each fold of k
 
-    if plot_envelope:
+    if args.plot_envelope:
 
         # ****************************************************
-        #                calculate cut envelope
+        #                plot envelope
         # ****************************************************
-
-
-        ### bin edges
-        # multiple binning options: dijet, linear, exponential
-        bin_edges = kutil.get_dijet_bins()
 
         envelope_path = kstco.get_envelope_dir(params) # load envelope path
 
     
-    if plot_polynomials:
+    if args.plot_polynomials:
 
         # ****************************************************
-        #                fit polynomials
+        #                plot polynomials
         # ****************************************************
-
-        polynomial_paths = kpofi.fit_kfold_polynomials(params, envelope_path)
-
-    else:
 
         polynomial_paths = kstco.get_polynomials_full_file_path(params)
 
 
 
-    if plot_predict:
+    if args.plot_predict:
 
         # ****************************************************
         #                predict background and signal

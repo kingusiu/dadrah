@@ -125,7 +125,7 @@ def train_model(params, quantile, qcd_train, qcd_valid, score_strategy, k, tb_di
 #**************************************************************************#
 
 
-def train_k_models(params, qr_model_dir, tb_base_dir, score_strategy_id='rk5_05'):
+def train_k_models(params, tb_base_dir, score_strategy_id='rk5_05'):
 
     #****************************************#
     #           read in all qcd data
@@ -144,7 +144,7 @@ def train_k_models(params, qr_model_dir, tb_base_dir, score_strategy_id='rk5_05'
     #             train and save 5 models
     #****************************************#
         
-    model_paths = kutil.get_model_paths(params, qr_model_dir)
+    model_paths = kutil.make_model_paths(params)
     fig_dir = kstco.get_qr_model_fig_dir(params)
 
     for quantile in params.quantiles:

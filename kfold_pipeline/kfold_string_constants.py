@@ -30,7 +30,8 @@ vae_out_dir = '/eos/user/k/kiwoznia/data/VAE_results/events/run_'+str(vae_run_n)
 vae_out_dir_kfold_qcd = vae_out_dir+'/qcd_sqrtshatTeV_13TeV_PU40_NEW_5fold_signalregion_parts'
 
 vae_out_sample_dir_dict = {
-    'GtoWW35naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts'
+    'GtoWW15brReco' : 'RSGraviton_WW_BROAD_13TeV_PU40_1.5TeV_NEW_parts',
+    'GtoWW35naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts',
 } 
 
 # polys - out - data (polynomials cut outputs with 'sel' columns per quantile)
@@ -53,19 +54,22 @@ def get_polynomials_out_data_dir(params):
 
 
 # qr k models trained base dir
-qr_out_model_dir = '/eos/user/k/kiwoznia/data/QR_results/models'
+qr_out_model_basedir = '/eos/user/k/kiwoznia/data/QR_results/models'
 
 
 # qr - out - models (quantile regressions)
 # envelope - in - models (quantile regressions)
 # e.g.: /eos/user/k/kiwoznia/data/QR_results/models/qr_run_401/QRmodel_run_401_q90_GtoWW35naReco_sigx0_fold4.h5
 def get_qr_model_dir(params):
-    qr_model_dir = os.path.join(qr_out_model_dir,'qr_run_'+str(int(params.qr_run_n)))
+    qr_model_dir = os.path.join(qr_out_model_basedir,'qr_run_'+str(int(params.qr_run_n)))
     pathlib.Path(qr_model_dir).mkdir(parents=True, exist_ok=True)
     return qr_model_dir
 
 def get_qr_model_file_name(params,q,k):
     return 'QRmodel_run_'+str(int(params.qr_run_n))+'_q'+str(int(q*100))+'_'+params.sig_sample_id+'_sigx'+str(int(params.sig_xsec))+'_fold'+str(int(k))+'.h5'
+
+def get_qr_model_file(params,q,k):
+    return glob.glob(get_qr_model_dir(params)+'/*'+'q'+str(int(q*100))+'*fold'+str(k)+'.h5')[0]
 
 
 # envelope dir, based on qr model, function of binning
@@ -81,7 +85,7 @@ def get_envelope_file_name(params,k):
 
 
 def get_envelope_file(params,k):
-    return glob.glob(get_envelope_dir(params)+'/*'+params.sig_sample_id+'*fold'+str(k)+'.json')[0]
+    return glob.glob(get_envelope_dir(params)+'/*fold'+str(k)+'.json')[0]
 
 
 # polynomials dir, based on envelope, function of order
@@ -128,8 +132,17 @@ grs_na_15_x10fb = 106.12 # number of expected events of g_rs narrow at 1.5TeV
 grs_na_25_x10fb = 110.06 # number of expected events of g_rs narrow at 2.5TeV
 grs_na_35_x10fb = 112.27 # number of expected events of g_rs narrow at 3.5TeV
 grs_na_45_x10fb = 113.98 # number of expected events of g_rs narrow at 4.5TeV
+grs_br_15_x10fb = 106.54 # number of expected events of g_rs narrow at 1.5TeV
 
-signal_contamin = { 'GtoWW35naReco' : { 0: 0,
+signal_contamin = { 'GtoWW15brReco' : { 0: 0,
+                                        10: int(grs_br_15_x10fb),
+                                        20: int(grs_br_15_x10fb*2),
+                                        40: int(grs_br_15_x10fb*4),
+                                        60: int(grs_br_15_x10fb*6),
+                                        80: int(grs_br_15_x10fb*8),
+                                        100: int(grs_br_15_x10fb*10),
+                                      }, 
+                    'GtoWW35naReco' : { 0: 0,
                                         10: int(grs_na_35_x10fb),
                                         20: int(grs_na_35_x10fb*2),
                                         40: int(grs_na_35_x10fb*4),

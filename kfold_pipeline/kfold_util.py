@@ -67,7 +67,7 @@ def plot_discriminator_cut(discriminator, sample, score_strategy, feature_key='m
 #                           paths
 
 
-def get_model_paths(params, qr_model_dir):
+def make_model_paths(params):
 
     model_paths = defaultdict(dict)
 
@@ -80,7 +80,24 @@ def get_model_paths(params, qr_model_dir):
             # qr full file path
             model_dir = kstco.get_qr_model_dir(params)
             model_str = kstco.get_qr_model_file_name(params,quantile,k)
-            model_paths[q_str]['fold' + str(k)] = os.path.join(qr_model_dir, model_str)
+            model_paths[q_str]['fold' + str(k)] = os.path.join(model_dir, model_str)
+
+    return model_paths
+
+
+def get_model_paths(params):
+
+    model_paths = defaultdict(dict)
+
+    for quantile in params.quantiles:
+
+        q_str = 'q'+str(int(quantile*100))
+
+        for k in range(1,params.kfold_n+1):
+
+            # qr full file path
+            model_path = kstco.get_qr_model_file(params,quantile,k)
+            model_paths[q_str]['fold' + str(k)] = model_path
 
     return model_paths
 
