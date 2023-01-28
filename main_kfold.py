@@ -49,7 +49,7 @@ if __name__ == '__main__':
     parser.add_argument('--bie', dest='bin_centers', action='store_false')
     # signal injection
     parser.add_argument('--siginj', dest='sig_injected', help='inject signal (at 100fb)', action='store_true')
-    parser.add_argument('-siid', dest='sig_sample_id', choices=['GtoWW35na','GtoWW15br'], default='GtoWW35na')
+    parser.add_argument('-siid', dest='sig_sample_id', choices=['GtoWW15na', 'GtoWW25na', 'GtoWW35na', 'GtoWW45na', 'GtoWW15br', 'GtoWW25br'], default='GtoWW35na')
 
     args = parser.parse_args()
     # optional binning kwargs
@@ -74,7 +74,7 @@ if __name__ == '__main__':
                         nodes_n=args.nodes_n,
                         batch_sz=args.batch_sz,
                         acti=args.acti,
-                        initial=args.initial+'_uniform',
+                        initial=(args.initial+'_uniform' if args.initial is not None else None),
                         lr=args.lr, 
                         epochs=50, 
                         optimizer='adam',

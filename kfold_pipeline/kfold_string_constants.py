@@ -31,7 +31,9 @@ vae_out_dir_kfold_qcd = vae_out_dir+'/qcd_sqrtshatTeV_13TeV_PU40_NEW_5fold_signa
 
 vae_out_sample_dir_dict = {
     'GtoWW15brReco' : 'RSGraviton_WW_BROAD_13TeV_PU40_1.5TeV_NEW_parts',
+    'GtoWW25naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_2.5TeV_NEW_parts',
     'GtoWW35naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_3.5TeV_NEW_parts',
+    'GtoWW45naReco' : 'RSGraviton_WW_NARROW_13TeV_PU40_4.5TeV_NEW_parts',
 } 
 
 # polys - out - data (polynomials cut outputs with 'sel' columns per quantile)
@@ -128,11 +130,12 @@ def get_polynomials_fig_dir(params):
 #           SIGNAL INJECTION
 #****************************************#
 
-grs_na_15_x10fb = 106.12 # number of expected events of g_rs narrow at 1.5TeV
-grs_na_25_x10fb = 110.06 # number of expected events of g_rs narrow at 2.5TeV
-grs_na_35_x10fb = 112.27 # number of expected events of g_rs narrow at 3.5TeV
-grs_na_45_x10fb = 113.98 # number of expected events of g_rs narrow at 4.5TeV
-grs_br_15_x10fb = 106.54 # number of expected events of g_rs narrow at 1.5TeV
+grs_na_15_x10fb = 259.77 # number of expected events of g_rs narrow at 1.5TeV
+grs_na_25_x10fb = 320.12 # number of expected events of g_rs narrow at 2.5TeV
+grs_na_35_x10fb = 346.33 # number of expected events of g_rs narrow at 3.5TeV
+grs_na_45_x10fb = 367.71 # number of expected events of g_rs narrow at 4.5TeV
+grs_br_15_x10fb = 225.33 # number of expected events of g_rs narrow at 1.5TeV
+grs_br_25_x10fb = 304.536 # number of expected events of g_rs narrow at 1.5TeV
 
 signal_contamin = { 'GtoWW15brReco' : { 0: 0,
                                         10: int(grs_br_15_x10fb),
@@ -141,18 +144,42 @@ signal_contamin = { 'GtoWW15brReco' : { 0: 0,
                                         60: int(grs_br_15_x10fb*6),
                                         80: int(grs_br_15_x10fb*8),
                                         100: int(grs_br_15_x10fb*10),
-                                      }, 
+                                      },
+                    'GtoWW25naReco' : { 0: 0,
+                                        10: int(grs_na_25_x10fb),
+                                        20: int(grs_na_25_x10fb*2),
+                                        40: int(grs_na_25_x10fb*4),
+                                        60: int(grs_na_25_x10fb*6),
+                                        80: int(grs_na_25_x10fb*8),
+                                        100: int(grs_na_25_x10fb*10),
+                                      },  
+                    'GtoWW25brReco' : { 0: 0,
+                                        10: int(grs_br_25_x10fb),
+                                        20: int(grs_br_25_x10fb*2),
+                                        40: int(grs_br_25_x10fb*4),
+                                        60: int(grs_br_25_x10fb*6),
+                                        80: int(grs_br_25_x10fb*8),
+                                        100: int(grs_br_25_x10fb*10),
+                                      },  
                     'GtoWW35naReco' : { 0: 0,
                                         10: int(grs_na_35_x10fb),
                                         20: int(grs_na_35_x10fb*2),
                                         40: int(grs_na_35_x10fb*4),
                                         60: int(grs_na_35_x10fb*6),
                                         80: int(grs_na_35_x10fb*8),
-                                        100: 1123,
+                                        100: int(grs_na_35_x10fb*10),
                                       }, 
                     'GtoWW35brReco' : { 
                         0: 0,
                         100: 1113, # broad signal. number of signal contamination; len(sig_in_training_nums) == len(signals)
-                                    }
+                                    },
+                    'GtoWW45naReco' : { 0: 0,
+                                        10: int(grs_na_45_x10fb),
+                                        20: int(grs_na_45_x10fb*2),
+                                        40: int(grs_na_45_x10fb*4),
+                                        60: int(grs_na_45_x10fb*6),
+                                        80: int(grs_na_45_x10fb*8),
+                                        100: int(grs_na_45_x10fb*10),
+                                      },  
                     }
 
