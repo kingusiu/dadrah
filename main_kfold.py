@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument('-bima', dest='max_mjj', type=float, help='minimal mjj')
     parser.add_argument('--bie', dest='bin_centers', action='store_false')
     # signal injection
-    parser.add_argument('--siginj', dest='sig_injected', help='inject signal (at 100fb)', action='store_true')
+    parser.add_argument('-xs', dest='sig_xsec', type=int, help='signal injection rate [femtobarn]', default='0')
     parser.add_argument('-siid', dest='sig_sample_id', choices=['GtoWW15na', 'GtoWW25na', 'GtoWW35na', 'GtoWW45na', 'GtoWW15br', 'GtoWW25br'], default='GtoWW35na')
 
     args = parser.parse_args()
@@ -67,7 +67,7 @@ if __name__ == '__main__':
                         quantiles=[0.3,0.5,0.7,0.9],
                         qcd_sample_id='qcdSigAll', 
                         sig_sample_id=args.sig_sample_id+'Reco', 
-                        sig_xsec=(100 if args.sig_injected else 0), 
+                        sig_xsec=args.sig_xsec, 
                         score_strategy_id='rk5_05', 
                         read_n=args.read_n,
                         layers_n=args.layers_n,

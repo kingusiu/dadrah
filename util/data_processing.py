@@ -46,7 +46,7 @@ def inject_signal_kfold_dataset(params, qcd_sample_parts):
     logger.info('reading signal ' + sample_path_sig + ' for injection')
     sig_sample = jesa.JetSample.from_input_dir(params.sig_sample_id, sample_path_sig, read_n=params.read_n, **cuco.signalregion_cuts)
 
-    sig_training_n_total = kstco.signal_contamin[params.sig_sample_id][params.sig_xsec]
+    sig_training_n_total = kstco.get_signal_contamination(params.sig_sample_id,params.sig_xsec)
     sig_injected_n = 0
 
     mixed_sample_parts = []
@@ -65,6 +65,8 @@ def inject_signal_kfold_dataset(params, qcd_sample_parts):
     # merge qcd and signal
     mixed_sample = qcd_sample_parts[-1].merge(sig_train_sample)
     mixed_sample_parts.append(mixed_sample)
+
+    logger.info('injected ' + str(sig_injected_n+sig_training_n_per_fold) + ' signals across all folds')
 
     return mixed_sample_parts
 
