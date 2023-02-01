@@ -39,7 +39,6 @@ if __name__ == '__main__':
     parser.add_argument('--loadqr', dest='train_models', action="store_false", help='load previously trained qr models')
     parser.add_argument('--loadenv', dest='calc_envelope', action="store_false", help='load previously calulated envelope')
     parser.add_argument('--loadpoly', dest='fit_polynomials', action="store_false", help='load previously fitted polynomials')
-    parser.add_argument('--siginject', dest='sig_inject', action='store_true', help='inject signal into qr training')
     # binning options
     parser.add_argument('-bi', dest='binning', choices=['linear', 'expo', 'dijet'], help='binning basis for envelope', default='dijet')
     parser.add_argument('-bis', dest='bin_start', type=int, help='index of first bin')
